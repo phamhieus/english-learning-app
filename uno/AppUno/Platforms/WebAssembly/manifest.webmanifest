@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "AppUno",
+  "display": "standalone",
+  "name": "AppUno",
+  "short_name": "AppUno",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

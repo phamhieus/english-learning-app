@@ -7,17 +7,6 @@ export type SpeakingMode =
   | "ielts_part_3"
   | "free_speaking";
 
-export type SpeakingSessionStatus =
-  | "idle"
-  | "requesting_permission"
-  | "recording"
-  | "fake_transcribing"
-  | "stopping"
-  | "transcribing_with_whisper"
-  | "analyzing"
-  | "completed"
-  | "error";
-
 export interface SpeakingPrompt {
   id: string | number;
   mode: SpeakingMode;
@@ -29,13 +18,6 @@ export interface SpeakingPrompt {
   image?: string;
   level?: string;
   type?: string;
-}
-
-export interface FakeTranscriptState {
-  previewText: string;
-  isRunning: boolean;
-  isFake: true;
-  updatedAt: number;
 }
 
 export interface SpeakingTranscript {

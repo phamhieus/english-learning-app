@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 import { cn } from './Sidebar'; // Ensure this exists, or use tailwind-merge directly if you prefer, but cn is in Sidebar here
@@ -29,21 +29,23 @@ export const useToast = () => {
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = (message: string, type: ToastType) => {
+  const addToast = useCallback((message: string, type: ToastType) => {
     const id = Math.random().toString(36).substr(2, 9);
     setToasts(prev => [...prev, { id, message, type }]);
     
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 3000);
-  };
+  }, []);
 
-  const success = (message: string) => addToast(message, 'success');
-  const error = (message: string) => addToast(message, 'error');
-  const info = (message: string) => addToast(message, 'info');
+  const success = useCallback((message: string) => addToast(message, 'success'), [addToast]);
+  const error = useCallback((message: string) => addToast(message, 'error'), [addToast]);
+  const info = useCallback((message: string) => addToast(message, 'info'), [addToast]);
+
+  const contextValue = useMemo(() => ({ addToast, success, error, info }), [addToast, success, error, info]);
 
   return (
-    <ToastContext.Provider value={{ addToast, success, error, info }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
         {toasts.map(toast => (

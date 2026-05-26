@@ -25,6 +25,33 @@ const SettingsView = () => {
 
       <div className="space-y-8">
 
+        {/* Theme */}
+        <section className="glass-card rounded-3xl p-8">
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+            {theme === 'dark' ? <Moon className="w-5 h-5 text-indigo-500" /> : <Sun className="w-5 h-5 text-indigo-500" />} Appearance
+          </h2>
+          <div className="flex gap-3">
+            {([
+              { value: 'light' as const, icon: Sun, label: 'Light' },
+              { value: 'dark' as const, icon: Moon, label: 'Dark' },
+              { value: 'system' as const, icon: Monitor, label: 'System' },
+            ]).map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setTheme(opt.value)}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all",
+                  theme === opt.value
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                )}
+              >
+                <opt.icon className="w-4 h-4" />
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </section>
 
         {/* AI Models */}
         <section className="glass-card rounded-3xl p-8">

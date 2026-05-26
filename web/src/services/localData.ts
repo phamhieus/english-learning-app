@@ -8,6 +8,33 @@ const mapLevel = (levelStr: string) => {
   return 'Medium';
 };
 
+interface TopicData {
+  topicName: string;
+  taskType: string;
+  level: string;
+  section?: string;
+  topicGroup?: string;
+  imageUrl?: string;
+  thumbnailUrl?: string;
+  photo?: {
+    imageUrl?: string;
+  };
+}
+
+const matchesFilter = (topic: TopicData, filter: string, hasImage: boolean) => {
+  const fLower = filter.toLowerCase();
+  const taskType = topic.taskType?.toLowerCase() ?? '';
+  const section = topic.section?.toLowerCase() ?? '';
+  const topicGroup = topic.topicGroup?.toLowerCase() ?? '';
+
+  if (fLower === 'all' || fLower === 'general practice') return true;
+  if (fLower.includes('picture')) return hasImage && (taskType.includes('picture') || section.includes('picture'));
+  if (fLower.includes('email') || fLower.includes('request')) return taskType.includes('email') || taskType.includes('written request');
+  if (fLower.includes('essay')) return taskType.includes('essay');
+
+  return taskType.includes(fLower) || section.includes(fLower) || topicGroup.includes(fLower);
+};
+
 export const generateLocalPractices = (domain: 'speaking' | 'writing', filter: string): Practice[] => {
   // Find matching topics from JSON
   const allTopics: Practice[] = [];
@@ -15,33 +42,16 @@ export const generateLocalPractices = (domain: 'speaking' | 'writing', filter: s
   topicsData.topicBank.forEach(bank => {
     if (bank.skill.toLowerCase() === domain) {
       bank.topics.forEach(t => {
-        const anyT = t as any;
-        const img = anyT.imageUrl || anyT.thumbnailUrl || (anyT.photo && anyT.photo.imageUrl);
-
-        // Advanced filter mapping logic
-        const fLower = filter.toLowerCase();
-        let match = false;
-        if (fLower === 'all' || fLower === 'general practice') {
-          match = true;
-        } else if (fLower.includes('picture')) {
-          match = anyT.taskType?.toLowerCase().includes('picture') || anyT.section?.toLowerCase().includes('picture');
-          // If we explicitly request a picture task, make sure it has an image in JSON
-          if (match && !img) match = false;
-        } else if (fLower.includes('email') || fLower.includes('request')) {
-          match = anyT.taskType?.toLowerCase().includes('email') || anyT.taskType?.toLowerCase().includes('written request');
-        } else if (fLower.includes('essay')) {
-          match = anyT.taskType?.toLowerCase().includes('essay');
-        } else {
-          // generic fallback
-          match = anyT.taskType?.toLowerCase().includes(fLower) || anyT.section?.toLowerCase().includes(fLower) || anyT.topicGroup?.toLowerCase().includes(fLower);
-        }
+        const topic = t as TopicData;
+        const img = topic.imageUrl || topic.thumbnailUrl || topic.photo?.imageUrl;
+        const match = matchesFilter(topic, filter, Boolean(img));
 
         if (match) {
           const practice: Practice = {
             id: Date.now() + Math.floor(Math.random() * 10000),
-            title: t.topicName,
-            type: t.taskType,
-            level: mapLevel(t.level),
+            title: topic.topicName,
+            type: topic.taskType,
+            level: mapLevel(topic.level),
             duration: '5 mins'
           };
           

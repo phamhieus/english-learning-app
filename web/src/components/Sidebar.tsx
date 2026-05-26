@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Mic2, Edit3, History, Settings, Sparkles } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from './classNames';
 
 export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
   const location = useLocation();
@@ -34,7 +29,7 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
     updateIndicator();
     const t = setTimeout(updateIndicator, 100);
     return () => clearTimeout(t);
-  }, [location.pathname]);
+  }, [isInitialized, location.pathname]);
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/' },

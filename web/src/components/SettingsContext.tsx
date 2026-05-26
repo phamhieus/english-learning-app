@@ -1,24 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { SettingsContext, type AIProvider } from './settings-context';
 
-export type AIProvider = 'gemini' | 'openai' | 'deepseek';
-
-export interface AppSettings {
-  aiProvider: AIProvider;
-  geminiKey: string;
-  openAiKey: string;
-  deepseekKey: string;
-  textModel: string;
-}
-
-interface SettingsContextType extends AppSettings {
-  setAiProvider: (provider: AIProvider) => void;
-  setGeminiKey: (key: string) => void;
-  setOpenAiKey: (key: string) => void;
-  setDeepseekKey: (key: string) => void;
-  setTextModel: (model: string) => void;
-}
-
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+export type { AIProvider, AppSettings } from './settings-context';
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Migrate existing apiKey to geminiKey if needed
@@ -50,9 +33,3 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     </SettingsContext.Provider>
   );
 }
-
-export const useSettings = () => {
-  const context = useContext(SettingsContext);
-  if (context === undefined) throw new Error('useSettings must be used within a SettingsProvider');
-  return context;
-};

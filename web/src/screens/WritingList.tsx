@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { PenTool, Clock, BarChart } from 'lucide-react';
+import { PenTool, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
+import { cn } from '../components/classNames';
 
 const FILTER_TYPES = ['Email', 'Short Report', 'Describe Picture', 'Chart Analysis', 'IELTS Task 1', 'IELTS Task 2', 'TOEIC Writing'];
 
-import { useSettings } from '../components/SettingsContext';
+import { useSettings } from '../components/useSettings';
 import { generatePracticeList } from '../services/ai';
 import { getPractices, savePractices } from '../services/storage';
 import { generateLocalPractices } from '../services/localData';

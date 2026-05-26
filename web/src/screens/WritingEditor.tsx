@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Clock, Type, Info, Check } from 'lucide-react';
+import { Send, Clock, Type, Check } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
-import { useSettings } from '../components/SettingsContext';
+import { cn } from '../components/classNames';
+import { useSettings } from '../components/useSettings';
 import { evaluateWriting } from '../services/ai';
 import { addHistory } from '../services/storage';
-import { useToast } from '../components/ToastContext';
+import { useToast } from '../components/useToast';
 
 const WritingEditor = () => {
   const navigate = useNavigate();
@@ -30,8 +30,6 @@ const WritingEditor = () => {
     setText(e.target.value);
     setWordCount(e.target.value.trim().split(/\s+/).filter(w => w.length > 0).length);
   };
-
-  console.log("Rendering WritingEditor with practice:", practice);
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       {/* Header */}

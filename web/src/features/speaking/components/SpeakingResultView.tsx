@@ -1,17 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import type { SpeakingAnalysisResult, SpeakingPrompt } from "../types/speaking.types";
+import type { ProsodyResult, SpeakingAnalysisResult, SpeakingIssue, SpeakingPrompt } from "../types/speaking.types";
 import { SpeakingScoreCards } from "./SpeakingScoreCards";
 import { TranscriptCompare } from "./TranscriptCompare";
 import { ProsodyPreviewPanel } from "./ProsodyPreviewPanel";
 import { RotateCcw, ArrowRight, AlertTriangle, CheckCircle, Sparkles } from "lucide-react";
 
 interface SpeakingResultViewProps {
-  result: SpeakingAnalysisResult;
+  result: SpeakingResultData;
   practice: SpeakingPrompt;
   recognizedText: string;
   transcript: string;
 }
+
+type SpeakingResultData = Omit<Partial<SpeakingAnalysisResult>, "feedback"> & {
+  score?: number;
+  feedback?: string | string[];
+  improvementTips?: string[];
+  issues?: SpeakingIssue[];
+  prosody?: ProsodyResult;
+};
 
 export function SpeakingResultView({
   result,
@@ -22,7 +30,7 @@ export function SpeakingResultView({
   const navigate = useNavigate();
 
   // Normalize scores and values between SpeakingFeedback and SpeakingAnalysisResult
-  const overall = result.overallScore !== undefined ? result.overallScore : ((result as any).score || 0);
+  const overall = result.overallScore ?? result.score ?? 0;
   const pronunciation = result.pronunciationScore || 0;
   const fluency = result.fluencyScore || 0;
   const rhythm = result.rhythmScore !== undefined ? result.rhythmScore : Math.max(0, Math.round(fluency * 0.96));
@@ -37,7 +45,7 @@ export function SpeakingResultView({
     ? [rawFeedback]
     : [];
 
-  const improvementList: string[] = (result as any).improvementTips || [];
+  const improvementList = result.improvementTips || [];
   const issuesList = result.issues || [];
   const prosodyData = result.prosody || {
     totalDurationSeconds: 0,

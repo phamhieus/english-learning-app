@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, Send, MoreVertical, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
-import { useSettings } from '../components/SettingsContext';
+import { cn } from '../components/classNames';
+import { useSettings } from '../components/useSettings';
 import { UnifiedChatSession } from '../services/ai';
+import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
 
 const MockDialogue = () => {
   const navigate = useNavigate();
@@ -18,8 +19,8 @@ const MockDialogue = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [timer, setTimer] = useState(120); // 2 mins
   
-  const chatSessionRef = React.useRef<any>(null);
-  const recognitionRef = React.useRef<any>(null);
+  const chatSessionRef = React.useRef<UnifiedChatSession | null>(null);
+  const recognitionRef = React.useRef<SpeechRecognition | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,15 +44,14 @@ const MockDialogue = () => {
     initChat();
 
     // Initialize SpeechRecognition
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
+    const recognition = createSpeechRecognition();
+    if (recognition) {
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
 
       let finalTrans = '';
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         let interimTrans = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {

@@ -1,13 +1,11 @@
 import React from 'react';
-import { Moon, Sun, Monitor, Save, AudioLines, BrainCircuit } from 'lucide-react';
-import { useTheme } from '../components/ThemeContext';
-import { useSettings } from '../components/SettingsContext';
-import { useToast } from '../components/ToastContext';
-import { cn } from '../components/Sidebar';
+import { Save, AudioLines, BrainCircuit } from 'lucide-react';
+import { useSettings } from '../components/useSettings';
+import { useToast } from '../components/useToast';
+import type { AIProvider } from '../components/settings-context';
 
 const SettingsView = () => {
   const toast = useToast();
-  const { theme, setTheme } = useTheme();
   const { 
     aiProvider, setAiProvider, 
     geminiKey, setGeminiKey, 
@@ -63,7 +61,7 @@ const SettingsView = () => {
               <select 
                 value={aiProvider}
                 onChange={(e) => {
-                  const newProvider = e.target.value as any;
+                  const newProvider = e.target.value as AIProvider;
                   setAiProvider(newProvider);
                   if (newProvider === 'gemini') setTextModel('gemini-2.0-flash');
                   if (newProvider === 'openai') setTextModel('gpt-4o-mini');

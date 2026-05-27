@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, RotateCcw, Check, Volume2, Activity } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
-import { useSettings } from '../components/SettingsContext';
+import { cn } from '../components/classNames';
+import { useSettings } from '../components/useSettings';
 import { evaluateSpeaking, generateSpeakingTranscript } from '../services/ai';
 import { addHistory } from '../services/storage';
-import { useToast } from '../components/ToastContext';
+import { useToast } from '../components/useToast';
+import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
 
 const SpeakingRecording = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const settings = useSettings();
-  const toast = useToast();
+  const { error: showError, success: showSuccess } = useToast();
   const practice = location.state?.practice || { title: "General Practice", level: "Medium", type: "Paragraph" };
   
   const [isRecording, setIsRecording] = useState(false);
@@ -19,16 +20,16 @@ const SpeakingRecording = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [recognizedText, setRecognizedText] = useState("");
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const recognitionRef = React.useRef<any>(null);
+  const recognitionRef = React.useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
     const generateTranscript = async () => {
       try {
         const text = await generateSpeakingTranscript(settings, practice.title, practice.level, practice.type);
         setTranscript(text);
-      } catch (e) {
+      } catch {
         setTranscript("We anticipate a significant increase in quarterly revenue due to the new marketing campaign.");
-        toast.error("Failed to generate transcript via AI.");
+        showError("Failed to generate transcript via AI.");
       } finally {
         setIsLoading(false);
       }
@@ -36,15 +37,14 @@ const SpeakingRecording = () => {
     generateTranscript();
 
     // Initialize SpeechRecognition
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
+    const recognition = createSpeechRecognition();
+    if (recognition) {
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
 
       let finalTrans = '';
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         let interimTrans = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
@@ -58,9 +58,9 @@ const SpeakingRecording = () => {
       
       recognitionRef.current = recognition;
     } else {
-      toast.error("Speech Recognition is not supported in this browser.");
+      showError("Speech Recognition is not supported in this browser.");
     }
-  }, [practice.title, settings, practice.level, practice.type]);
+  }, [practice.title, settings, practice.level, practice.type, showError]);
 
   const toggleRecording = () => {
     if (isRecording) {
@@ -79,11 +79,11 @@ const SpeakingRecording = () => {
     try {
       const result = await evaluateSpeaking(settings, transcript, recognizedText);
       addHistory({ title: practice.title, type: practice.type, score: result.score, focus: 'Speaking' });
-      toast.success("Evaluation completed!");
+      showSuccess("Evaluation completed!");
       navigate('/speaking/result', { state: { result, recognizedText, transcript, practice } });
     } catch (e) {
       console.error(e);
-      toast.error("Failed to evaluate speaking.");
+      showError("Failed to evaluate speaking.");
     } finally {
       setIsEvaluating(false);
     }
@@ -111,7 +111,7 @@ const SpeakingRecording = () => {
               if (e.currentTarget.src.includes('loremflickr')) {
                 e.currentTarget.src = `https://picsum.photos/seed/${practice.id}/800/450`;
               } else {
-                toast.error("Lỗi tải ảnh, vui lòng kiểm tra lại link ảnh!");
+                showError("Lỗi tải ảnh, vui lòng kiểm tra lại link ảnh!");
               }
             }}
           />

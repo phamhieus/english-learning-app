@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Play, Mic, Clock, BarChart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
+import { cn } from '../components/classNames';
 
 const FILTER_TYPES = ['1 Sentence', '2 Sentences', 'Paragraph', 'Passage'];
 const FOCUS_TYPES = ['Pronunciation', 'Fluency', 'Both'];
-const EXAM_TYPES = ['General', 'TOEIC', 'IELTS'];
-const DIFFICULTY_TYPES = ['Easy', 'Medium', 'Hard'];
 
-import { useSettings } from '../components/SettingsContext';
+import { useSettings } from '../components/useSettings';
 import { generatePracticeList } from '../services/ai';
 import { getPractices, savePractices } from '../services/storage';
 import { generateLocalPractices } from '../services/localData';
@@ -53,8 +51,8 @@ const SpeakingList = () => {
             savePractices(category, newPractices);
             setPractices(newPractices);
           }
-        } catch (e: any) {
-          setError(e?.message ?? 'Failed to generate practices.');
+        } catch (error) {
+          setError(error instanceof Error ? error.message : 'Failed to generate practices.');
         } finally {
           setLoading(false);
         }

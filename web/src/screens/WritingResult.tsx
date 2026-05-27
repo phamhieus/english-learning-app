@@ -3,11 +3,12 @@ import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight } from 'lucide-re
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { WritingFeedback } from '../services/ai';
 import { DiffViewer } from '../components/DiffViewer';
+import type { Practice } from '../services/storage';
 
 const WritingResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { result, originalText, practice } = (location.state as { result: WritingFeedback, originalText: string, practice: any }) || {};
+  const { result, originalText } = (location.state as { result: WritingFeedback, originalText: string, practice: Practice }) || {};
 
   if (!result) {
     return <div className="p-8 text-center text-slate-500">No result found. Please submit a practice first.</div>;

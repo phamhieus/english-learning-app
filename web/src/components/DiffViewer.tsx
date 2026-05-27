@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { diffWords } from 'diff';
-import { cn } from './Sidebar';
+import { cn } from './classNames';
 
 interface DiffViewerProps {
   original: string;

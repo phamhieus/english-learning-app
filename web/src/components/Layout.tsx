@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
-import { useSettings } from './SettingsContext';
 import { Key, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSettings } from './useSettings';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const { aiProvider, geminiKey, openAiKey, deepseekKey } = useSettings();

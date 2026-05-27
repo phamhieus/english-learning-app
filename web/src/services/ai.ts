@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
-import type { AppSettings } from "../components/SettingsContext";
+import type { AppSettings } from "../components/settings-context";
+import type { Practice } from "./storage";
 
 export interface WritingFeedback {
   score: number;
@@ -27,6 +28,12 @@ export interface SpeakingFeedback {
   improvementTips: string[];
 }
 
+interface PracticeListResponse {
+  data?: Practice[];
+}
+
+type GeminiChatSession = ReturnType<ReturnType<GoogleGenerativeAI['getGenerativeModel']>['startChat']>;
+
 const getOpenAIClient = (settings: AppSettings) => {
   if (settings.aiProvider === 'openai') {
     if (!settings.openAiKey) throw new Error("OpenAI API Key is missing");
@@ -47,7 +54,7 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
       systemInstruction
     });
     
-    const generationConfig: any = {};
+    const generationConfig: { responseMimeType?: string } = {};
     if (isJson) {
       generationConfig.responseMimeType = "application/json";
     }
@@ -69,7 +76,7 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
       model = settings.aiProvider === 'openai' ? 'gpt-4o-mini' : 'deepseek-v4-flash';
     }
 
-    const options: any = {
+    const options: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
       model: model,
       messages: [
         { role: 'system', content: systemInstruction },
@@ -113,7 +120,7 @@ Return your evaluation strictly as a JSON object matching this schema:
     return JSON.parse(responseText);
   } catch (e) {
     console.error("Failed to parse AI response:", e);
-    throw new Error("Invalid response from AI.");
+    throw new Error("Invalid response from AI.", { cause: e });
   }
 };
 
@@ -137,13 +144,13 @@ Return your evaluation strictly as a JSON object matching this schema:
     return JSON.parse(responseText);
   } catch (e) {
     console.error("Failed to parse AI response:", e);
-    throw new Error("Invalid response from AI.");
+    throw new Error("Invalid response from AI.", { cause: e });
   }
 };
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const generatePracticeList = async (settings: AppSettings, type: 'speaking' | 'writing', category: string): Promise<any[]> => {
+export const generatePracticeList = async (settings: AppSettings, type: 'speaking' | 'writing', category: string): Promise<Practice[]> => {
   const schema = type === 'speaking' ? `
   [
     { "id": number (unique random), "title": "string", "duration": "string", "level": "Easy|Medium|Hard", "type": "string", "focus": "string" }
@@ -158,22 +165,22 @@ export const generatePracticeList = async (settings: AppSettings, type: 'speakin
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const responseText = await callAI(settings, systemInstruction, instruction);
-      const parsed = JSON.parse(responseText);
+      const parsed: Practice[] | PracticeListResponse = JSON.parse(responseText);
       // Fallback in case the model ignored "data" wrapper and returned array directly
       if (Array.isArray(parsed)) return parsed;
       return parsed.data || [];
-    } catch (e: any) {
-      const msg: string = e?.message ?? '';
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
       const is429 = msg.includes('429');
       if (is429) {
          if (attempt < 2) {
            await delay(2000 * (attempt + 1));
            continue;
          }
-         throw new Error('API rate limit reached. Please wait a moment and try again.');
+         throw new Error('API rate limit reached. Please wait a moment and try again.', { cause: e });
       }
       console.error("Failed to generate list:", e);
-      throw e;
+      throw new Error('Failed to generate practice list.', { cause: e });
     }
   }
   return [];
@@ -189,8 +196,8 @@ export const generateSpeakingTranscript = async (settings: AppSettings, title: s
 export class UnifiedChatSession {
   private settings: AppSettings;
   private systemInstruction: string;
-  private history: { role: string; content: string }[] = [];
-  private geminiChat: any = null;
+  private history: OpenAI.Chat.ChatCompletionMessageParam[] = [];
+  private geminiChat: GeminiChatSession | null = null;
 
   constructor(settings: AppSettings, systemInstruction: string) {
     this.settings = settings;
@@ -209,6 +216,7 @@ export class UnifiedChatSession {
 
   async sendMessage(text: string): Promise<string> {
     if (this.settings.aiProvider === 'gemini') {
+      if (!this.geminiChat) throw new Error("Gemini chat session is not initialized");
       const result = await this.geminiChat.sendMessage(text);
       return result.response.text();
     } else {
@@ -229,7 +237,7 @@ export class UnifiedChatSession {
         model: model,
         messages: [
           { role: 'system', content: this.systemInstruction },
-          ...this.history as any
+          ...this.history
         ]
       });
       

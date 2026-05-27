@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
-import { Calendar, ChevronRight, TrendingUp } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { Calendar, TrendingUp } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { useNavigate } from 'react-router-dom';
 
 import { getHistory } from '../services/storage';
 import type { HistoryItem } from '../services/storage';
 
 const HistoryView = () => {
-  const navigate = useNavigate();
-  const [data, setData] = useState<any[]>([]);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-
-  React.useEffect(() => {
-    const hist = getHistory();
-    setHistory(hist);
-    
-    const chartData = [...hist].reverse().map((item) => ({
+  const [history] = useState<HistoryItem[]>(() => getHistory());
+  const data = useMemo(
+    () =>
+      [...history].reverse().map((item) => ({
       name: item.date.split(',')[0],
       score: item.score
-    }));
-    setData(chartData);
-  }, []);
+      })),
+    [history]
+  );
 
   return (
     <div className="animate-in fade-in duration-500">

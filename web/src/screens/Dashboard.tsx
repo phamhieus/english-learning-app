@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Play, BookOpen, MessageCircle, BarChart3, TrendingUp, Mic2, Edit3, Headphones } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '../components/Sidebar';
+import { cn } from '../components/classNames';
 
 const Dashboard = () => {
   const navigate = useNavigate();

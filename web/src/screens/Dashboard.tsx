@@ -29,41 +29,28 @@ const Dashboard = () => {
       </section>
 
       {/* Stats row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 group hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center">
-            <TrendingUp className="w-6 h-6" />
+      <div className="grid grid-cols-3 gap-3 md:gap-6 mb-10">
+        {[
+          { icon: TrendingUp, color: "orange", label: "Streak", labelFull: "Daily Streak", value: "12 Days" },
+          { icon: BarChart3, color: "green", label: "Pronunciation", labelFull: "Avg Pronunciation", value: "85%" },
+          { icon: BookOpen, color: "blue", label: "Words", labelFull: "Words Learned", value: "2,405" },
+        ].map((s, i) => (
+          <div key={i} className="glass-card rounded-2xl p-3 md:p-6 flex flex-col md:flex-row items-center gap-2 md:gap-4 group hover:-translate-y-1 transition-transform">
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-${s.color}-100 dark:bg-${s.color}-900/30 text-${s.color}-500 flex items-center justify-center shrink-0`}>
+              <s.icon className="w-5 h-5 md:w-6 md:h-6" />
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium hidden md:block">{s.labelFull}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium md:hidden">{s.label}</p>
+              <p className="text-lg md:text-2xl font-bold">{s.value}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Daily Streak</p>
-            <p className="text-2xl font-bold">12 Days</p>
-          </div>
-        </div>
-        
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 group hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-500 flex items-center justify-center">
-            <BarChart3 className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Avg Pronunciation</p>
-            <p className="text-2xl font-bold">85%</p>
-          </div>
-        </div>
-
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 group hover:-translate-y-1 transition-transform">
-          <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-500 flex items-center justify-center">
-            <BookOpen className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Words Learned</p>
-            <p className="text-2xl font-bold">2,405</p>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Quick Access */}
       <h2 className="text-2xl font-bold mb-6">Quick Access</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-10">
         {[
           { title: "Shadowing", icon: Play, color: "bg-indigo-500", path: "/speaking" },
           { title: "Mock Dialogue", icon: MessageCircle, color: "bg-purple-500", path: "/speaking/mock-dialogue" },
@@ -76,17 +63,17 @@ const Dashboard = () => {
             key={i}
             onClick={() => navigate(item.path)}
             className={cn(
-              "rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-4 hover:-translate-y-1 transition-all group",
+              "rounded-2xl p-4 md:p-6 flex flex-col items-center justify-center text-center gap-3 md:gap-4 hover:-translate-y-1 transition-all group",
               "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700",
               (item.title === "Listening" || item.title === "Reading" || item.title === "Writing Email") 
                 ? "shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.2)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border-indigo-100 dark:border-indigo-900/50" 
                 : "shadow-sm hover:shadow-md"
             )}
           >
-            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg", item.color, "group-hover:scale-110 transition-transform")}>
-              <item.icon className="w-7 h-7" />
+            <div className={cn("w-11 h-11 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-lg", item.color, "group-hover:scale-110 transition-transform")}>
+              <item.icon className="w-5 h-5 md:w-7 md:h-7" />
             </div>
-            <span className="font-semibold text-slate-800 dark:text-slate-200">{item.title}</span>
+            <span className="font-semibold text-sm md:text-base text-slate-800 dark:text-slate-200">{item.title}</span>
           </button>
         ))}
       </div>

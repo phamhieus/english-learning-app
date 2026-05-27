@@ -134,12 +134,23 @@ const SpeakingList = () => {
           ))}
         </div>
       ) : error ? (
-        <div className="glass-card rounded-2xl p-12 text-center flex flex-col items-center justify-center border-dashed border-2 border-red-200 dark:border-red-800">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl">⚠️</span>
+        <div className="glass-card rounded-2xl p-12 text-center flex flex-col items-center justify-center border-dashed border-2 border-slate-200 dark:border-slate-800">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl">📭</span>
           </div>
-          <h3 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">Could not load practices</h3>
-          <p className="text-slate-500 dark:text-slate-400 max-w-md">{error}</p>
+          <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">No practices available</h3>
+          <p className="text-slate-500 dark:text-slate-400 max-w-md mb-6">Could not generate practices. Please check your API key in Settings or use offline topics.</p>
+          <button
+            onClick={() => {
+              const local = generateLocalPractices('speaking', activeType);
+              setPractices(local);
+              savePractices(`speaking_${activeType}_${activeFocus}`, local);
+              setError(null);
+            }}
+            className="px-6 py-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:scale-105 font-bold rounded-xl transition-all shadow-md"
+          >
+            Generate Offline Topics
+          </button>
         </div>
       ) : (
         <div className="glass-card rounded-2xl p-12 text-center flex flex-col items-center justify-center border-dashed border-2 border-slate-200 dark:border-slate-800">

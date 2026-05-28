@@ -1,17 +1,19 @@
-import React from 'react';
-import { Save, AudioLines, BrainCircuit } from 'lucide-react';
+import { Save, AudioLines, BrainCircuit, Sun, Moon, Monitor } from 'lucide-react';
 import { useSettings } from '../components/useSettings';
 import { useToast } from '../components/useToast';
+import { useTheme } from '../components/useTheme';
+import { cn } from '../components/classNames';
 import type { AIProvider } from '../components/settings-context';
 
 const SettingsView = () => {
   const toast = useToast();
-  const { 
-    aiProvider, setAiProvider, 
-    geminiKey, setGeminiKey, 
-    openAiKey, setOpenAiKey, 
-    deepseekKey, setDeepseekKey, 
-    textModel, setTextModel 
+  const { theme, setTheme } = useTheme();
+  const {
+    aiProvider, setAiProvider,
+    geminiKey, setGeminiKey,
+    openAiKey, setOpenAiKey,
+    deepseekKey, setDeepseekKey,
+    textModel, setTextModel
   } = useSettings();
 
   return (

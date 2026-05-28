@@ -47,7 +47,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <h1 className="font-bold text-lg tracking-tight text-[var(--foreground)]">EngCoach</h1>
+        <h1 className="font-bold text-lg tracking-tight text-[var(--foreground)]">Lingua</h1>
       </div>
 
       {/* Sidebar overlay for mobile */}

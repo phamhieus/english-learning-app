@@ -124,6 +124,55 @@ Return your evaluation strictly as a JSON object matching this schema:
   }
 };
 
+export interface ShadowingEvaluation {
+  finalScore: number;
+  pronunciationScore: number;
+  completenessScore: number;
+  fluencyScore: number;
+  rhythmScore: number;
+  intonationScore: number;
+  feedback: string;
+}
+
+export const evaluateShadowing = async (
+  settings: AppSettings,
+  targetText: string,
+  recognizedText: string,
+  audioDurationMs?: number
+): Promise<ShadowingEvaluation> => {
+  const systemInstruction = `You are an expert English pronunciation and shadowing coach. The user listened to a target sentence and tried to shadow (repeat) it. Their speech was transcribed via Speech-to-Text, which mostly reflects what they actually said (mis-recognized words indicate likely mispronunciation).
+
+Compare the user's recognized text against the target text and return STRICT JSON matching this schema:
+{
+  "finalScore": number (0-100 overall shadowing score),
+  "pronunciationScore": number (0-100, lower if many words were mis-recognized),
+  "completenessScore": number (0-100, percentage of target words that appeared),
+  "fluencyScore": number (0-100, smoothness — penalize if user said far fewer words than target for the duration),
+  "rhythmScore": number (0-100, natural English rhythm/timing — estimate from word coverage and length),
+  "intonationScore": number (0-100, pitch variation — estimate similarly),
+  "feedback": "string (1-2 concise sentences with the SINGLE most important actionable advice — mention specific words or sounds when possible)"
+}
+
+Scoring guidelines (be honest, not lenient):
+- 90+ : near-perfect, almost all words correct, smooth
+- 75-89: good attempt, a few minor word errors
+- 60-74: partial — missed several words or mispronounced enough to confuse STT
+- 40-59: weak — missed half or more
+- < 40 : barely intelligible
+- If recognized text is empty or just 1-2 words for a long target: all scores below 25, finalScore around 0-15
+- If recognized text is completely off-topic from target: low pronunciation/completeness, feedback should note it`;
+
+  const userContent = `Target Text:\n"${targetText}"\n\nUser Said (Speech-to-Text):\n"${recognizedText || '(no speech detected)'}"${audioDurationMs ? `\n\nRecording duration: ${(audioDurationMs / 1000).toFixed(1)}s` : ''}`;
+
+  try {
+    const responseText = await callAI(settings, systemInstruction, userContent);
+    return JSON.parse(responseText);
+  } catch (e) {
+    console.error('Failed to parse shadowing evaluation:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
 export const evaluateSpeaking = async (settings: AppSettings, transcript: string, recognizedText: string): Promise<SpeakingFeedback> => {
   const systemInstruction = `You are an expert English speaking coach. Evaluate the user's spoken text (which was transcribed via Speech-to-Text) against the target text they were supposed to say.
 Return your evaluation strictly as a JSON object matching this schema:

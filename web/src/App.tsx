@@ -15,6 +15,7 @@ import WritingEditor from './screens/WritingEditor';
 import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
+import VirtualConversation from './screens/VirtualConversation';
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
               <Route path="/writing/editor" element={<WritingEditor />} />
               <Route path="/writing/result" element={<WritingResult />} />
               
+              <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
+
               <Route path="/history" element={<HistoryView />} />
               <Route path="/settings" element={<SettingsView />} />
             </Routes>

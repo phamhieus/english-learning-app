@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, History, Settings, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, History, Settings, Sparkles, MessageSquare } from 'lucide-react';
 import { cn } from './classNames';
 
 export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
@@ -34,6 +34,7 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
     { name: 'Speaking', icon: Mic2, path: '/speaking' },
+    { name: 'Conversation', icon: MessageSquare, path: '/speaking/virtual-conversation' },
     { name: 'Writing', icon: Edit3, path: '/writing' },
     { name: 'History', icon: History, path: '/history' },
     { name: 'Settings', icon: Settings, path: '/settings' },

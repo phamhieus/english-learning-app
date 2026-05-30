@@ -82,4 +82,14 @@
   .dark .text-gradient {
     background-image: linear-gradient(to right, #818cf8, #c084fc);
   }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
 }

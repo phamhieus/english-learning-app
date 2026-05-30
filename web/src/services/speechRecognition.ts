@@ -22,6 +22,8 @@ export interface SpeechRecognition {
   interimResults: boolean;
   lang: string;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
   start: () => void;
   stop: () => void;
 }

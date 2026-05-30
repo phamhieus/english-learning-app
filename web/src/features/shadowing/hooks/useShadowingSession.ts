@@ -8,6 +8,7 @@ import type {
   ShadowingSessionResult,
 } from '../types/shadowing.types';
 import { shadowingApi } from '../services/shadowingApi';
+import type { AppSettings } from '../../../components/settings-context';
 
 interface UseShadowingSessionReturn {
   session: ShadowingSession | null;
@@ -21,7 +22,9 @@ interface UseShadowingSessionReturn {
   submitAttempt: (
     segmentId: string,
     audioBlob: Blob,
-    originalText: string
+    originalText: string,
+    recognizedText: string,
+    audioDurationMs?: number
   ) => Promise<ShadowingAttempt | undefined>;
   retrySegment: (segmentId: string) => void;
   loadSessionResult: () => Promise<void>;
@@ -29,7 +32,8 @@ interface UseShadowingSessionReturn {
 }
 
 export function useShadowingSession(
-  lesson: ShadowingLesson | null
+  lesson: ShadowingLesson | null,
+  settings?: AppSettings
 ): UseShadowingSessionReturn {
   const [session, setSession] = useState<ShadowingSession | null>(null);
   const [segments, setSegments] = useState<ShadowingSegment[]>([]);
@@ -87,7 +91,9 @@ export function useShadowingSession(
     async (
       segmentId: string,
       audioBlob: Blob,
-      originalText: string
+      originalText: string,
+      recognizedText: string,
+      audioDurationMs?: number
     ): Promise<ShadowingAttempt | undefined> => {
       if (!session || !lesson) return undefined;
 
@@ -97,8 +103,11 @@ export function useShadowingSession(
           sessionId: session.id,
           segmentId,
           audioBlob,
+          audioDurationMs,
           originalText,
+          recognizedText,
           lessonId: lesson.id,
+          settings,
         });
 
         setSegments(prev =>
@@ -131,7 +140,7 @@ export function useShadowingSession(
         setAnalyzingSegmentId(null);
       }
     },
-    [session, lesson]
+    [session, lesson, settings]
   );
 
   const retrySegment = useCallback((segmentId: string) => {

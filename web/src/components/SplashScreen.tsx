@@ -8,7 +8,7 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   const markRef = useRef<HTMLDivElement>(null);
   const [fading, setFading] = useState(false);
 
-  // Inline-load icon-blink.svg so CSS can target .eye and .mouth paths
+  // Inline-load icon-blink.svg so CSS can target .eye / .mouth / .sparkle paths
   useEffect(() => {
     let cancelled = false;
     fetch('/icon-blink.svg')
@@ -91,6 +91,24 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
           75%      { transform: scaleY(1.35) translateY(0.3px); }
         }
 
+        /* Sparkles appear one by one */
+        .lg-mark .sparkle {
+          transform-box: fill-box;
+          transform-origin: center;
+          opacity: 0;
+          animation: lg-sparkle 1.8s ease-in-out infinite;
+        }
+        .lg-mark .s2 { animation-delay: 0s;    }
+        .lg-mark .s1 { animation-delay: 0.22s; }
+        .lg-mark .s3 { animation-delay: 0.44s; }
+        @keyframes lg-sparkle {
+          0%        { opacity: 0; transform: scale(0.3) rotate(-12deg); }
+          18%       { opacity: 1; transform: scale(1.15) rotate(0deg);  }
+          32%       { opacity: 1; transform: scale(1)    rotate(0deg);  }
+          60%       { opacity: 1; transform: scale(1)    rotate(0deg);  }
+          85%, 100% { opacity: 0; transform: scale(0.6)  rotate(8deg);  }
+        }
+
         /* ── Wordmark ─────────────────────────────────── */
         .lg-wordmark {
           font-weight: 700;
@@ -116,11 +134,10 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
           background: #9c66fa;
         }
 
-        /* ── Loading dots ─────────────────────────────── */
+        /* ── Loading label with animated dots ─────────── */
         .lg-loader {
           display: flex;
           align-items: center;
-          gap: 10px;
           margin-top: 4px;
         }
         .lg-loader .lg-label {
@@ -130,18 +147,19 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
           text-transform: uppercase;
           color: rgba(243, 234, 255, 0.55);
         }
-        .lg-loader .lg-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #9c66fa;
-          animation: lg-dot 1.2s ease-in-out infinite;
+        .lg-loader .lg-label::after {
+          content: "";
+          display: inline-block;
+          width: 1.6em;
+          text-align: left;
+          animation: lg-dots 1.4s steps(4, end) infinite;
         }
-        .lg-loader .lg-dot:nth-child(3) { animation-delay: 0.15s; }
-        .lg-loader .lg-dot:nth-child(4) { animation-delay: 0.30s; }
-        @keyframes lg-dot {
-          0%, 100% { opacity: 0.25; transform: translateY(0); }
-          50%      { opacity: 1;    transform: translateY(-3px); }
+        @keyframes lg-dots {
+          0%   { content: ""; }
+          25%  { content: "."; }
+          50%  { content: ".."; }
+          75%  { content: "..."; }
+          100% { content: ""; }
         }
 
         /* ── Floating violet dots ─────────────────────── */
@@ -189,7 +207,7 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         <span className="lg-float-dot d2" />
         <span className="lg-float-dot d3" />
 
-        {/* Animated icon — SVG loaded inline so .eye/.mouth classes work */}
+        {/* Animated icon — SVG loaded inline so .eye/.mouth/.sparkle classes work */}
         <div ref={markRef} className="lg-mark" />
 
         {/* Wordmark: "Lingua" with purple dot on the i */}
@@ -200,9 +218,6 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         {/* Loading indicator */}
         <div className="lg-loader">
           <span className="lg-label">Đang tải</span>
-          <span className="lg-dot" />
-          <span className="lg-dot" />
-          <span className="lg-dot" />
         </div>
       </div>
     </>

@@ -14,6 +14,7 @@ import { ShadowingSessionSummaryBar } from './ShadowingSessionSummaryBar';
 import { ShadowingSegmentCard } from './ShadowingSegmentCard';
 import { ShadowingProgressSidebar } from './ShadowingProgressSidebar';
 import { ShadowingSessionResultPanel } from './ShadowingSessionResultPanel';
+import { useSettings } from '../../../components/useSettings';
 
 const LEVEL_BADGE: Record<string, string> = {
   beginner:
@@ -27,6 +28,7 @@ const LEVEL_BADGE: Record<string, string> = {
 export default function ShadowingPracticePage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const settings = useSettings();
 
   // Lesson can be passed via router state, otherwise use mock
   const lesson: ShadowingLesson =
@@ -45,7 +47,7 @@ export default function ShadowingPracticePage() {
     submitAttempt,
     retrySegment,
     loadSessionResult,
-  } = useShadowingSession(lesson);
+  } = useShadowingSession(lesson, settings);
 
   const [showResultPanel, setShowResultPanel] = useState(false);
   const [isLoadingResult, setIsLoadingResult] = useState(false);
@@ -76,8 +78,20 @@ export default function ShadowingPracticePage() {
   }, [sessionResult, loadSessionResult]);
 
   const handleSubmitAttempt = useCallback(
-    async (segmentId: string, audioBlob: Blob, originalText: string) => {
-      await submitAttempt(segmentId, audioBlob, originalText);
+    async (
+      segmentId: string,
+      audioBlob: Blob,
+      originalText: string,
+      recognizedText: string,
+      audioDurationMs?: number
+    ) => {
+      await submitAttempt(
+        segmentId,
+        audioBlob,
+        originalText,
+        recognizedText,
+        audioDurationMs
+      );
     },
     [submitAttempt]
   );
@@ -162,7 +176,7 @@ export default function ShadowingPracticePage() {
       <div className="flex-1 flex gap-4 min-h-0">
 
         {/* Script Panel — scrollable */}
-        <div className="flex-1 overflow-y-auto pr-1 space-y-4 min-w-0">
+        <div className="flex-1 overflow-y-auto no-scrollbar pr-1 space-y-4 min-w-0">
           {segments.length === 0 && !isInitializing && (
             <div className="flex flex-col items-center justify-center h-40 gap-3 text-slate-400">
               <Loader2 className="w-8 h-8 animate-spin opacity-40" />
@@ -192,7 +206,7 @@ export default function ShadowingPracticePage() {
         </div>
 
         {/* Progress Sidebar — right side, hidden on small screens */}
-        <div className="hidden lg:block w-64 shrink-0 overflow-y-auto">
+        <div className="hidden lg:block w-64 shrink-0 overflow-y-auto no-scrollbar">
           <ShadowingProgressSidebar
             segments={segments}
             activeSegmentId={activeSegmentId}

@@ -14,6 +14,10 @@ import type { ShadowingSegment } from '../types/shadowing.types';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { AudioPlayback } from './AudioPlayback';
 import { SegmentResultInline } from './SegmentResultInline';
+import {
+  createSpeechRecognition,
+  type SpeechRecognition,
+} from '../../../services/speechRecognition';
 
 const STATUS_CONFIG = {
   not_started: {
@@ -52,7 +56,9 @@ interface ShadowingSegmentCardProps {
   onSubmitAttempt: (
     segmentId: string,
     audioBlob: Blob,
-    originalText: string
+    originalText: string,
+    recognizedText: string,
+    audioDurationMs?: number
   ) => Promise<void>;
   onRetry: (segmentId: string) => void;
 }
@@ -75,11 +81,55 @@ export const ShadowingSegmentCard = React.forwardRef<
     const [playbackSpeed, setPlaybackSpeed] = useState<0.75 | 1 | 1.25>(1);
     const [isRetrying, setIsRetrying] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [liveTranscript, setLiveTranscript] = useState('');
+    const [sttUnsupported, setSttUnsupported] = useState(false);
     const sampleAudioRef = useRef<HTMLAudioElement | null>(null);
     const prevAttemptIdRef = useRef<string | undefined>(undefined);
+    const recognitionRef = useRef<SpeechRecognition | null>(null);
+    const finalTranscriptRef = useRef('');
+    const lastRecognizedRef = useRef('');
+    const lastDurationRef = useRef(0);
 
     const recorder = useAudioRecorder({ silenceTimeoutMs: 3000 });
     const config = STATUS_CONFIG[segment.status];
+
+    // Initialize Web Speech Recognition once per segment card
+    useEffect(() => {
+      const recognition = createSpeechRecognition();
+      if (!recognition) {
+        setSttUnsupported(true);
+        return;
+      }
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = event => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            finalTranscriptRef.current += result[0].transcript + ' ';
+          } else {
+            interim += result[0].transcript;
+          }
+        }
+        const combined = (finalTranscriptRef.current + interim).trim();
+        setLiveTranscript(combined);
+        lastRecognizedRef.current = combined;
+      };
+
+      recognitionRef.current = recognition;
+
+      return () => {
+        try {
+          recognition.stop();
+        } catch {
+          /* noop */
+        }
+        recognitionRef.current = null;
+      };
+    }, []);
 
     const hasResult = segment.latestAttempt !== undefined;
     const showRecordingUI = !hasResult || isRetrying || segment.status === 'practicing';
@@ -93,16 +143,35 @@ export const ShadowingSegmentCard = React.forwardRef<
         prevAttemptIdRef.current = newId;
         setIsRetrying(false);
         recorder.reset();
+        setLiveTranscript('');
+        finalTranscriptRef.current = '';
+        lastRecognizedRef.current = '';
       }
     }, [segment.latestAttempt?.id]);
+
+    // Capture latest duration while recording so we can submit it after stop
+    useEffect(() => {
+      if (recorder.status === 'recording' || recorder.status === 'stopping') {
+        lastDurationRef.current = recorder.durationMs;
+      }
+    }, [recorder.durationMs, recorder.status]);
 
     // Auto-submit when recording stops with audio
     useEffect(() => {
       if (recorder.status === 'stopped' && recorder.audioBlob) {
+        try {
+          recognitionRef.current?.stop();
+        } catch {
+          /* noop */
+        }
         setSubmitError(null);
-        onSubmitAttempt(segment.id, recorder.audioBlob, segment.text).catch(
-          () => setSubmitError('Analysis failed. Please try again.')
-        );
+        onSubmitAttempt(
+          segment.id,
+          recorder.audioBlob,
+          segment.text,
+          lastRecognizedRef.current,
+          lastDurationRef.current || undefined
+        ).catch(() => setSubmitError('Analysis failed. Please try again.'));
       }
     }, [recorder.status]);
 
@@ -115,17 +184,34 @@ export const ShadowingSegmentCard = React.forwardRef<
 
     const handleStartRecording = async () => {
       setSubmitError(null);
+      setLiveTranscript('');
+      finalTranscriptRef.current = '';
+      lastRecognizedRef.current = '';
+      lastDurationRef.current = 0;
       onStartPracticing(segment.id);
       await recorder.startRecording();
+      try {
+        recognitionRef.current?.start();
+      } catch {
+        /* already running */
+      }
     };
 
     const handleStopRecording = () => {
+      try {
+        recognitionRef.current?.stop();
+      } catch {
+        /* noop */
+      }
       recorder.stopRecording();
     };
 
     const handleRetry = () => {
       setIsRetrying(true);
       setSubmitError(null);
+      setLiveTranscript('');
+      finalTranscriptRef.current = '';
+      lastRecognizedRef.current = '';
       recorder.reset();
       onRetry(segment.id);
     };
@@ -310,6 +396,32 @@ export const ShadowingSegmentCard = React.forwardRef<
                 </span>
               )}
             </div>
+
+            {/* Live transcript while recording */}
+            {(isActivelyRecording || isStopping) && !sttUnsupported && (
+              <div className="px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-indigo-500 dark:text-indigo-400">
+                    Live transcript
+                  </p>
+                </div>
+                <p className="text-sm leading-relaxed text-indigo-900 dark:text-indigo-100 italic min-h-[1.25rem]">
+                  {liveTranscript || (
+                    <span className="text-indigo-400/70 not-italic">
+                      Listening… start speaking
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
+
+            {(isActivelyRecording || isStopping) && sttUnsupported && (
+              <p className="text-xs text-amber-600 dark:text-amber-400">
+                Live transcript unavailable: this browser doesn't support Speech
+                Recognition. Audio is still being recorded.
+              </p>
+            )}
 
             {isLocked && (
               <p className="text-xs text-slate-400 text-center">

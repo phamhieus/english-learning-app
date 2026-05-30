@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"C:\\\\Users\\\\phamh\\\\.claude\\\\projects\\\\d--Projects-english-app\\\\7ee9906a-07a5-4006-b3b2-ce7c7c27e7a0\\\\tool-results\\\\webfetch-1780113142942-9sqigm.bin\" design.gz)",
+      "Bash(gunzip -c design.gz)",
+      "Bash(grep -c \"class=\\\\\"sparkle\\\\\\\\|class=\\\\\"eye\\\\\\\\|class=\\\\\"mouth\\\\\\\\|class=\\\\\"s1\\\\\\\\|class=\\\\\"s2\\\\\\\\|class=\\\\\"s3\" \"/tmp/design_extract/english-app/project/icon-blink.svg\" \"d:/Projects/english app/web/public/icon-blink.svg\")",
+      "Bash(cp \"/tmp/design_extract/english-app/project/icon-blink.svg\" \"d:/Projects/english app/web/public/icon-blink.svg\" && echo \"copied\")",
+      "Bash(npx tsc *)"
+    ],
+    "additionalDirectories": [
+      "\\tmp\\design_extract\\english-app\\project"
+    ]
+  }
+}

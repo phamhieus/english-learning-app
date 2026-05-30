@@ -18,6 +18,7 @@ import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
+import VirtualConversation from './screens/VirtualConversation';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/writing" element={<WritingList />} />
                   <Route path="/writing/editor" element={<WritingEditor />} />
                   <Route path="/writing/result" element={<WritingResult />} />
+                  <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
 
                   <Route path="/shadowing" element={<ShadowingPracticePage />} />
 

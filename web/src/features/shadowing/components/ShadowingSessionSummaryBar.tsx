@@ -31,8 +31,6 @@ export const ShadowingSessionSummaryBar: React.FC<
       ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
       : null;
 
-  const progressPct = total > 0 ? (completed.length / total) * 100 : 0;
-
   const avgColor =
     avgScore === null
       ? 'text-slate-400'
@@ -49,14 +47,6 @@ export const ShadowingSessionSummaryBar: React.FC<
         className
       )}
     >
-      {/* Progress bar (background) */}
-      <div className="absolute inset-x-0 bottom-0 h-0.5 rounded-b-2xl overflow-hidden bg-slate-100 dark:bg-slate-800">
-        <div
-          className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
-          style={{ width: `${progressPct}%` }}
-        />
-      </div>
-
       {/* Completed count */}
       <div className="flex items-center gap-2">
         <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
-import { Key, Menu, X } from 'lucide-react';
+import { Key, Menu } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSettings } from './useSettings';
 
@@ -15,7 +15,10 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     (aiProvider === 'openai' && openAiKey) ||
     (aiProvider === 'deepseek' && deepseekKey);
 
-  if (!hasKey && location.pathname !== '/settings') {
+  // Video Shadowing runs fully on-device (no cloud AI) — don't gate it on a key.
+  const keyExempt = location.pathname === '/settings' || location.pathname.startsWith('/video-shadowing');
+
+  if (!hasKey && !keyExempt) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-[var(--background)] p-6">
         <div className="glass-card rounded-3xl p-10 max-w-md w-full text-center shadow-xl animate-in fade-in zoom-in-95 duration-500">

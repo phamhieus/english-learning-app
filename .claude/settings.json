@@ -5,10 +5,27 @@
       "Bash(gunzip -c design.gz)",
       "Bash(grep -c \"class=\\\\\"sparkle\\\\\\\\|class=\\\\\"eye\\\\\\\\|class=\\\\\"mouth\\\\\\\\|class=\\\\\"s1\\\\\\\\|class=\\\\\"s2\\\\\\\\|class=\\\\\"s3\" \"/tmp/design_extract/english-app/project/icon-blink.svg\" \"d:/Projects/english app/web/public/icon-blink.svg\")",
       "Bash(cp \"/tmp/design_extract/english-app/project/icon-blink.svg\" \"d:/Projects/english app/web/public/icon-blink.svg\" && echo \"copied\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(tar xzf *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(cp /tmp/design_extract/english-app/README.md \"C:/Users/phamh/AppData/Local/Temp/engcoach_extracted/english-app/README.md\")",
+      "Bash(cp \"/tmp/design_extract/english-app/project/Video Shadowing.html\" \"C:/Users/phamh/AppData/Local/Temp/engcoach_extracted/english-app/project/Video Shadowing.html\")",
+      "Bash(cp /tmp/design_extract/english-app/project/screens-shadowing*.jsx \"C:/Users/phamh/AppData/Local/Temp/engcoach_extracted/english-app/project/\")",
+      "Read(//c/Users/phamh/AppData/Local/Temp/engcoach_extracted/english-app/**)",
+      "Bash(npx eslint *)",
+      "Bash(perl -i -pe 's/\\\\x{FEFF}/\\\\\\\\uFEFF/g' srtParser.ts vttParser.ts)",
+      "Bash(perl -CSD -i -pe 's/\\\\x{FEFF}/\\\\\\\\uFEFF/g' srtParser.ts vttParser.ts)",
+      "Bash(perl -CSD -i -pe 's/\\\\x{FEFF}/\\\\\\\\uFEFF/g' srtParser.ts)",
+      "Bash(perl -CSD -i -pe 's/\\\\x{FEFF}/FEFF/g' vttParser.ts)",
+      "Bash(perl -CSD -i -pe 's/\\\\x{FEFF}/FEFF/g' srtParser.ts vttParser.ts)",
+      "Bash(npx vite *)",
+      "Bash(echo \"=== BUILD EXIT: $? ===\")",
+      "Bash(npm install *)",
+      "Bash(echo \"=== EXIT $? ===\")"
     ],
     "additionalDirectories": [
-      "\\tmp\\design_extract\\english-app\\project"
+      "\\tmp\\design_extract\\english-app\\project",
+      "d:\\"
     ]
   }
 }

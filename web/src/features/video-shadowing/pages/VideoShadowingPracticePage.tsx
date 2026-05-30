@@ -1,0 +1,355 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  ArrowLeft, BadgeCheck, Film, Repeat, EyeOff, Eye, Square, Mic,
+  RotateCcw, ArrowRight, SkipBack, SkipForward, Play, Pause, Captions,
+  GitCompare, CheckCircle, Info, Loader2,
+} from 'lucide-react';
+import { cn } from '../../../components/classNames';
+import { useToast } from '../../../components/useToast';
+import { VideoThumb, Waveform, WAVE, ScorePill } from '../components/primitives';
+import { useVideoShadowingSession } from '../hooks/useVideoShadowingSession';
+import { useVideoSegmentPlayer, type PlaybackRate } from '../hooks/useVideoSegmentPlayer';
+import { useAudioRecorder } from '../hooks/useAudioRecorder';
+import { fileStorage } from '../services/storage/opfsFileStorage';
+import { getBuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
+import { transcriptionService } from '../services/transcription/transcriptionService';
+import { formatClock } from '../utils/timestampUtils';
+import type { VideoShadowingAttempt } from '../models/session';
+
+const RATES: PlaybackRate[] = [0.75, 1, 1.25];
+
+export default function VideoShadowingPracticePage() {
+  const { lessonId = '' } = useParams();
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { lesson, segments, attempts, loading, activeIndex, setActiveIndex, saveAttempt, completeSession } =
+    useVideoShadowingSession(lessonId);
+
+  const [loop, setLoop] = useState(true);
+  const [rate, setRate] = useState<PlaybackRate>(1);
+  const [showScript, setShowScript] = useState(true);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [scoring, setScoring] = useState(false);
+  const [scoringMsg, setScoringMsg] = useState('Đang chấm…');
+  const userAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const active = segments[activeIndex] ?? null;
+  const grad = getBuiltInVoaLesson(lessonId)?.grad ?? 'amber';
+
+  const { videoRef, isPlaying, currentTimeMs, durationMs, playSegment, pause } = useVideoSegmentPlayer({
+    segments,
+    activeSegmentId: active?.id ?? null,
+    loopEnabled: loop,
+    playbackRate: rate,
+  });
+
+  const recorder = useAudioRecorder();
+
+  // Resolve a playable URL for user uploads / direct links (VOA has none yet).
+  useEffect(() => {
+    let url: string | null = null;
+    let revoke = false;
+    (async () => {
+      if (!lesson) return;
+      if (lesson.localVideoFileId) {
+        url = (await fileStorage.getObjectUrl(lesson.localVideoFileId)) ?? null;
+        revoke = true;
+      } else if (lesson.sourceUrl) {
+        url = lesson.sourceUrl;
+      }
+      setVideoUrl(url);
+    })();
+    return () => {
+      if (url && revoke) URL.revokeObjectURL(url);
+    };
+  }, [lesson]);
+
+  const doneCount = useMemo(() => new Set(attempts.map((a) => a.segmentId)).size, [attempts]);
+
+  // Latest attempt for the active segment drives the quick-feedback card.
+  const activeAttempt = useMemo(
+    () => (active ? [...attempts].reverse().find((a) => a.segmentId === active.id) : undefined),
+    [attempts, active],
+  );
+
+  // When a recording finishes: transcribe it locally (Whisper), then score +
+  // persist. Audio is always saved even if transcription fails. First run may
+  // download the model (~40 MB), cached afterwards.
+  useEffect(() => {
+    if (recorder.status !== 'stopped' || !recorder.audioBlob || !active) return;
+    const blob = recorder.audioBlob;
+    const seg = active;
+    const durationMs = recorder.durationMs;
+    let cancelled = false;
+
+    (async () => {
+      setScoring(true);
+      let recognizedText = '';
+      try {
+        const buf = await blob.arrayBuffer();
+        const result = await transcriptionService.transcribe(
+          buf,
+          { sampleRate: 16000, returnTimestamps: false },
+          (p) => {
+            if (cancelled) return;
+            setScoringMsg(p.phase === 'loading_model' ? `Đang tải mô hình… ${p.progress}%` : 'Đang chấm…');
+          },
+        );
+        recognizedText = result.text;
+      } catch {
+        // Scoring is optional — keep the recording regardless.
+      }
+      try {
+        await saveAttempt({ segment: seg, audioBlob: blob, audioDurationMs: durationMs, recognizedText });
+      } catch {
+        if (!cancelled) toast.error('Không lưu được bản ghi.');
+      }
+      if (!cancelled) setScoring(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recorder.status]);
+
+  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Đang tải bài luyện…</div>;
+  if (!lesson || !active) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Không tìm thấy bài luyện.</div>;
+
+  const goto = (i: number) => {
+    pause();
+    recorder.reset();
+    setActiveIndex(Math.max(0, Math.min(segments.length - 1, i)));
+  };
+
+  const togglePlay = () => {
+    if (!videoUrl) {
+      toast.info('Bản VOA chưa có file video nội bộ — hãy upload video để phát thử.');
+      return;
+    }
+    if (isPlaying) pause();
+    else playSegment(active.id);
+  };
+
+  const playMyRecording = () => {
+    if (recorder.blobUrl) userAudioRef.current?.play();
+    else toast.info('Chưa có bản ghi để so sánh.');
+  };
+
+  const finish = async () => {
+    await completeSession();
+    navigate(`/video-shadowing/lessons/${lessonId}/result`);
+  };
+
+  // Scrubber position + per-segment ticks.
+  const progressPct = durationMs > 0 ? Math.min(100, (currentTimeMs / durationMs) * 100) : 0;
+  const ticks = durationMs > 0 ? segments.map((s) => (s.startMs / durationMs) * 100) : [];
+  const hasScore = !!activeAttempt && !!activeAttempt.recognizedText;
+
+  return (
+    <div className="h-full flex flex-col">
+      {/* Top bar */}
+      <div className="flex items-center justify-between mb-4 shrink-0 gap-3 flex-wrap">
+        <button onClick={() => navigate('/video-shadowing')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium">
+          <ArrowLeft className="w-4 h-4" /> Exit
+        </button>
+        <div className="flex items-center gap-3">
+          <h2 className="font-bold text-lg">{lesson.title}</h2>
+          {lesson.sourceType === 'BuiltInVoa' && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-300"><BadgeCheck className="w-3.5 h-3.5" /> VOA</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400"><Film className="w-4 h-4" /> Segment {activeIndex + 1} / {segments.length}</div>
+      </div>
+
+      {/* Hero video — single, centered, fills remaining space. */}
+      <div className="flex-1 min-h-0 flex items-center justify-center mb-3">
+        <div className="relative h-full aspect-video max-w-full rounded-3xl overflow-hidden shadow-xl shadow-slate-200/60 dark:shadow-black/40 bg-black">
+          {videoUrl ? (
+            <video ref={videoRef} src={videoUrl} className="w-full h-full object-contain" playsInline />
+          ) : (
+            <VideoThumb grad={grad} source={lesson.sourceType === 'BuiltInVoa' ? 'VOA' : 'Upload'} rounded="rounded-3xl" big />
+          )}
+
+          <div className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-lg bg-black/45 backdrop-blur-md text-white text-xs font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-300" /> Now: segment {activeIndex + 1}
+          </div>
+
+          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+            <div className="flex items-center gap-1 p-1 bg-white/15 backdrop-blur-md rounded-lg">
+              {RATES.map((r) => (
+                <button key={r} onClick={() => setRate(r)} className={cn('px-2.5 py-1 rounded-md text-xs font-bold transition', r === rate ? 'bg-white text-indigo-600' : 'text-white/80 hover:text-white')}>{r}x</button>
+              ))}
+            </div>
+            <button onClick={() => setLoop((v) => !v)} className={cn('px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5', loop ? 'bg-indigo-500 text-white' : 'bg-white/15 text-white')}>
+              <Repeat className="w-3.5 h-3.5" /> Loop
+            </button>
+          </div>
+
+          {showScript && (
+            <div className="absolute bottom-16 inset-x-0 flex justify-center px-6 z-10">
+              <span className="px-4 py-2 rounded-xl bg-black/55 backdrop-blur-md text-white text-lg font-semibold text-center">{active.text}</span>
+            </div>
+          )}
+
+          {/* Scrubber with per-segment ticks (real, from the player hook). */}
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent z-10">
+            <div className="relative h-1.5 rounded-full bg-white/30">
+              <div className="absolute inset-y-0 left-0 rounded-full bg-white" style={{ width: `${progressPct}%` }} />
+              <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow" style={{ left: `${progressPct}%` }} />
+              {ticks.map((p, i) => <span key={i} className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/50" style={{ left: `${p}%` }} />)}
+            </div>
+            <div className="flex items-center justify-between mt-2 text-white text-xs font-mono"><span>{formatClock(currentTimeMs)}</span><span>{formatClock(durationMs || lesson.durationMs)}</span></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Playback controls row */}
+      <div className="shrink-0 flex items-center justify-center gap-3 mb-4 flex-wrap">
+        <button onClick={() => goto(activeIndex - 1)} disabled={activeIndex === 0} className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shadow-sm disabled:opacity-40"><SkipBack className="w-5 h-5" /></button>
+        <button onClick={togglePlay} className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          {isPlaying ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7" style={{ fill: 'currentColor', marginLeft: 2 }} />}
+        </button>
+        <button onClick={() => goto(activeIndex + 1)} disabled={activeIndex >= segments.length - 1} className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shadow-sm disabled:opacity-40"><SkipForward className="w-5 h-5" /></button>
+        <button onClick={() => playSegment(active.id)} className="ml-1 h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2"><Captions className="w-4 h-4" /> Play Original</button>
+        <button onClick={() => setShowScript((v) => !v)} className="h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2">
+          {showScript ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />} {showScript ? 'Hide script' : 'Show script'}
+        </button>
+      </div>
+
+      {/* Practice strip — record (left) + quick feedback (right). */}
+      <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5">
+        {/* Record + script */}
+        <div className="glass-card rounded-2xl p-5 flex flex-col">
+          <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1.5">Repeat after the speaker</p>
+          <p className="text-xl font-bold leading-tight">{active.text}</p>
+          {active.translation && <p className="text-sm text-slate-500 italic mb-4">{active.translation}</p>}
+
+          <div className="mt-auto rounded-2xl bg-indigo-50/60 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 p-4 flex items-center gap-4">
+            {recorder.status === 'recording' ? (
+              <>
+                <div className="flex flex-col items-center gap-1 shrink-0">
+                  <span className="relative inline-flex"><span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-60" /><span className="relative w-2.5 h-2.5 rounded-full bg-red-500" /></span>
+                  <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wide">{formatClock(recorder.durationMs)}</span>
+                </div>
+                <div className="flex-1 h-10 flex items-center"><Waveform heights={WAVE} color="bg-indigo-500/80" /></div>
+                <button onClick={() => recorder.stopRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 text-white text-sm font-bold shadow-md shadow-red-500/25 shrink-0"><Square className="w-4 h-4" style={{ fill: 'currentColor' }} /> Stop</button>
+              </>
+            ) : recorder.blobUrl ? (
+              <>
+                <audio ref={userAudioRef} src={recorder.blobUrl} className="hidden" />
+                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wide shrink-0">Your take</span>
+                <audio src={recorder.blobUrl} controls className="flex-1 h-9 min-w-0" />
+                <button onClick={() => recorder.startRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Re-record</button>
+              </>
+            ) : (
+              <>
+                <Mic className="w-5 h-5 text-indigo-500 shrink-0" />
+                <p className="flex-1 text-sm text-slate-500 dark:text-slate-400">Bấm để ghi âm phần đọc của bạn</p>
+                <button onClick={() => recorder.startRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Record</button>
+              </>
+            )}
+          </div>
+          {recorder.error && <p className="text-[11px] text-red-500 mt-2">{recorder.error}</p>}
+        </div>
+
+        {/* Quick feedback */}
+        <div className="glass-card rounded-2xl p-5 flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Quick feedback</p>
+            {hasScore && activeAttempt && <RatingChip score={activeAttempt.totalScore ?? 0} />}
+          </div>
+
+          {scoring ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 py-3">
+              <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
+              <p className="text-xs text-slate-500 dark:text-slate-400">{scoringMsg}</p>
+            </div>
+          ) : hasScore && activeAttempt ? (
+            <QuickFeedbackBody attempt={activeAttempt} />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 py-3">
+              <Info className="w-5 h-5 text-indigo-400" />
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[18rem]">
+                {recorder.blobUrl
+                  ? 'Bản ghi đã lưu. Không nhận dạng được giọng nói — bạn vẫn có thể nghe lại và thử lại.'
+                  : 'Ghi âm câu này để nhận phản hồi nhanh về phát âm, độ trôi chảy và nhịp.'}
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-2 mt-auto pt-3">
+            <button onClick={() => recorder.reset()} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold"><RotateCcw className="w-4 h-4" /> Retry</button>
+            <button onClick={playMyRecording} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold"><GitCompare className="w-4 h-4" /> Compare</button>
+            {activeIndex >= segments.length - 1 ? (
+              <button onClick={finish} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-green-600 text-white text-xs font-semibold shadow-md shadow-green-500/25">Finish <ArrowRight className="w-4 h-4" /></button>
+            ) : (
+              <button onClick={() => goto(activeIndex + 1)} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold shadow-md shadow-indigo-500/25">Next <ArrowRight className="w-4 h-4" /></button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Segment timeline */}
+      <div className="shrink-0 mt-4 pt-4 border-t border-[var(--border)]">
+        <div className="flex items-center justify-between mb-2.5">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Session timeline</p>
+          <span className="text-[11px] font-bold text-indigo-500">{doneCount}/{segments.length} recorded</span>
+        </div>
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          {segments.map((s, i) => {
+            const recorded = attempts.some((a) => a.segmentId === s.id);
+            const current = i === activeIndex;
+            return (
+              <button
+                key={s.id}
+                onClick={() => goto(i)}
+                className={cn(
+                  'shrink-0 max-w-[160px] flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition',
+                  current ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/30'
+                    : recorded ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-500/15 dark:text-green-300 dark:border-green-500/30'
+                    : 'bg-slate-100 text-slate-400 border-slate-200 dark:bg-slate-800 dark:border-slate-700',
+                )}
+              >
+                <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', current ? 'bg-white' : recorded ? 'bg-green-500' : 'bg-slate-300')} />
+                <span className="truncate">{i + 1}. {s.text || '—'}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RatingChip({ score }: { score: number }) {
+  const good = score >= 85;
+  const ok = score >= 70;
+  return (
+    <span className={cn('text-xs font-bold flex items-center gap-1', good ? 'text-green-600' : ok ? 'text-orange-600' : 'text-red-500')}>
+      <CheckCircle className="w-3.5 h-3.5" /> {good ? 'Good' : ok ? 'OK' : 'Retry'}
+    </span>
+  );
+}
+
+function QuickFeedbackBody({ attempt }: { attempt: VideoShadowingAttempt }) {
+  return (
+    <>
+      <div className="flex gap-3 mb-3">
+        <ScorePill label="Pron." value={attempt.pronunciationScore ?? 0} color="bg-green-500" />
+        <ScorePill label="Fluency" value={attempt.fluencyScore ?? 0} color="bg-indigo-500" />
+        <ScorePill label="Rhythm" value={attempt.rhythmScore ?? 0} color="bg-orange-500" />
+      </div>
+      <div className="flex flex-col gap-1.5 text-xs">
+        {attempt.mispronouncedWords.length > 0 && (
+          <div className="flex items-start gap-2"><span className="text-orange-500 font-bold shrink-0 mt-0.5">Mispron.</span><span className="text-slate-600 dark:text-slate-300">{attempt.mispronouncedWords.slice(0, 4).join(', ')}</span></div>
+        )}
+        {attempt.missingWords.length > 0 && (
+          <div className="flex items-start gap-2"><span className="text-red-500 font-bold shrink-0 mt-0.5">Missing</span><span className="text-slate-600 dark:text-slate-300">{attempt.missingWords.slice(0, 4).join(', ')}</span></div>
+        )}
+        {attempt.feedback && <p className="text-slate-500 dark:text-slate-400 leading-relaxed mt-1">{attempt.feedback}</p>}
+      </div>
+    </>
+  );
+}

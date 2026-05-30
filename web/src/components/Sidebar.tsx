@@ -60,15 +60,15 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
     <aside className="w-[280px] shrink-0 h-full bg-[var(--sidebar)] border-r border-[var(--border)] flex flex-col pt-8 pb-6 px-4 relative z-10">
       {/* ── Brand ─────────────────────────────────── */}
       <div
-        className="flex flex-col items-center gap-2 px-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700"
+        className="flex items-center gap-3 px-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-700"
         style={{ animationFillMode: 'both' }}
       >
         <img
           src="/icon.svg"
           alt="Lingua"
-          className="w-28 h-28 shrink-0 drop-shadow-[0_8px_24px_rgba(156,102,250,0.35)] animate-[sb-bob_4s_ease-in-out_infinite]"
+          className="w-14 h-14 shrink-0 drop-shadow-[0_6px_16px_rgba(156,102,250,0.3)] animate-[sb-bob_4s_ease-in-out_infinite]"
         />
-        <div className="text-center">
+        <div className="min-w-0">
           <h1 className="font-bold text-xl leading-tight tracking-tight text-[var(--foreground)]">
             Lingua
           </h1>

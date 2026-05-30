@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ThemeContext } from './theme-context';
-import type { Theme } from './theme-context';
+import { ThemeContext, type Theme } from './theme-context';
 
 function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';

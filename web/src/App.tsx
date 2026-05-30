@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import { SettingsProvider } from './components/SettingsContext';
 import { ToastProvider } from './components/ToastContext';
 import { Layout } from './components/Layout';
+import { SplashScreen } from './components/SplashScreen';
 
 // Screens
 import Dashboard from './screens/Dashboard';
@@ -15,36 +17,43 @@ import WritingEditor from './screens/WritingEditor';
 import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
+import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
 import VirtualConversation from './screens/VirtualConversation';
 
 function App() {
-  return (
-    <ThemeProvider>
-      <SettingsProvider>
-        <ToastProvider>
-          <HashRouter>
-            <Layout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/speaking" element={<SpeakingList />} />
-              <Route path="/speaking/record" element={<SpeakingRecording />} />
-              <Route path="/speaking/mock-dialogue" element={<MockDialogue />} />
-              <Route path="/speaking/result" element={<SpeakingResult />} />
-              
-              <Route path="/writing" element={<WritingList />} />
-              <Route path="/writing/editor" element={<WritingEditor />} />
-              <Route path="/writing/result" element={<WritingResult />} />
-              
-              <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
+  const [showSplash, setShowSplash] = useState(true);
 
-              <Route path="/history" element={<HistoryView />} />
-              <Route path="/settings" element={<SettingsView />} />
-            </Routes>
-            </Layout>
-          </HashRouter>
-        </ToastProvider>
-      </SettingsProvider>
-    </ThemeProvider>
+  return (
+    <>
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      <ThemeProvider>
+        <SettingsProvider>
+          <ToastProvider>
+            <HashRouter>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/speaking" element={<SpeakingList />} />
+                  <Route path="/speaking/record" element={<SpeakingRecording />} />
+                  <Route path="/speaking/mock-dialogue" element={<MockDialogue />} />
+                  <Route path="/speaking/result" element={<SpeakingResult />} />
+
+                  <Route path="/writing" element={<WritingList />} />
+                  <Route path="/writing/editor" element={<WritingEditor />} />
+                  <Route path="/writing/result" element={<WritingResult />} />
+                  <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
+
+                  <Route path="/shadowing" element={<ShadowingPracticePage />} />
+
+                  <Route path="/history" element={<HistoryView />} />
+                  <Route path="/settings" element={<SettingsView />} />
+                </Routes>
+              </Layout>
+            </HashRouter>
+          </ToastProvider>
+        </SettingsProvider>
+      </ThemeProvider>
+    </>
   );
 }
 

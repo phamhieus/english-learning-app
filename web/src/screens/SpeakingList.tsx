@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Play, Mic, Clock, BarChart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const FILTER_TYPES = ['1 Sentence', '2 Sentences', 'Paragraph', 'Passage'];
 const FOCUS_TYPES = ['Pronunciation', 'Fluency', 'Both'];
@@ -34,6 +36,25 @@ const SpeakingList = () => {
   const [practices, setPractices] = useState<Practice[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Page header entrance
+  useGSAP(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.from('.gs-sp-header',  { y: 28, autoAlpha: 0, duration: 0.55, ease: 'power3.out' });
+    gsap.from('.gs-sp-filters', { y: 16, autoAlpha: 0, duration: 0.45, ease: 'power3.out', delay: 0.15 });
+  }, { scope: containerRef });
+
+  // Cards stagger when data arrives
+  useGSAP(() => {
+    if (!practices.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.from('.gs-sp-card', {
+      y: 32, autoAlpha: 0, scale: 0.97,
+      stagger: { amount: 0.4, from: 'start' },
+      duration: 0.45, ease: 'back.out(1.4)',
+    });
+  }, { scope: containerRef, dependencies: [practices] });
 
   React.useEffect(() => {
     const loadPractices = async () => {
@@ -62,8 +83,8 @@ const SpeakingList = () => {
   }, [activeType, activeFocus, settings]);
 
   return (
-    <div className="animate-in fade-in duration-500">
-      <div className="flex items-center justify-between mb-8">
+    <div ref={containerRef} className="animate-in fade-in duration-300">
+      <div className="gs-sp-header flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Speaking Practice</h1>
           <p className="text-slate-500 dark:text-slate-400">Improve your pronunciation and fluency with AI feedback.</p>
@@ -77,7 +98,7 @@ const SpeakingList = () => {
       </div>
 
       {/* Filters */}
-      <div className="space-y-4 mb-8">
+      <div className="gs-sp-filters space-y-4 mb-8">
         <div className="flex flex-wrap gap-2">
           {FILTER_TYPES.map(f => (
             <FilterChip key={f} label={f} active={activeType === f} onClick={() => setActiveType(f)} />
@@ -100,7 +121,7 @@ const SpeakingList = () => {
       ) : practices.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-6">
           {practices.map((practice) => (
-            <div key={practice.id} className="glass-card dark:bg-gray-800 rounded-2xl shadow p-6 group hover:shadow-xl transition-all border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col">
+            <div key={practice.id} className="gs-sp-card glass-card dark:bg-gray-800 rounded-2xl shadow p-6 group hover:shadow-xl transition-all border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <span className={cn(
                   "px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider",

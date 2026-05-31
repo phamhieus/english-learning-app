@@ -14,10 +14,7 @@ import type { ShadowingSegment } from '../types/shadowing.types';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { AudioPlayback } from './AudioPlayback';
 import { SegmentResultInline } from './SegmentResultInline';
-import {
-  createSpeechRecognition,
-  type SpeechRecognition,
-} from '../../../services/speechRecognition';
+import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 
 const STATUS_CONFIG = {
   not_started: {
@@ -81,55 +78,21 @@ export const ShadowingSegmentCard = React.forwardRef<
     const [playbackSpeed, setPlaybackSpeed] = useState<0.75 | 1 | 1.25>(1);
     const [isRetrying, setIsRetrying] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
-    const [liveTranscript, setLiveTranscript] = useState('');
-    const [sttUnsupported, setSttUnsupported] = useState(false);
     const sampleAudioRef = useRef<HTMLAudioElement | null>(null);
     const prevAttemptIdRef = useRef<string | undefined>(undefined);
-    const recognitionRef = useRef<SpeechRecognition | null>(null);
-    const finalTranscriptRef = useRef('');
     const lastRecognizedRef = useRef('');
     const lastDurationRef = useRef(0);
 
+    const speech = useSpeechRecognition();
+    const sttUnsupported = !speech.isSupported;
+    const liveTranscript = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
+
+    useEffect(() => {
+      lastRecognizedRef.current = liveTranscript;
+    }, [liveTranscript]);
+
     const recorder = useAudioRecorder({ silenceTimeoutMs: 3000 });
     const config = STATUS_CONFIG[segment.status];
-
-    // Initialize Web Speech Recognition once per segment card
-    useEffect(() => {
-      const recognition = createSpeechRecognition();
-      if (!recognition) {
-        setSttUnsupported(true);
-        return;
-      }
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      recognition.onresult = event => {
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (result.isFinal) {
-            finalTranscriptRef.current += result[0].transcript + ' ';
-          } else {
-            interim += result[0].transcript;
-          }
-        }
-        const combined = (finalTranscriptRef.current + interim).trim();
-        setLiveTranscript(combined);
-        lastRecognizedRef.current = combined;
-      };
-
-      recognitionRef.current = recognition;
-
-      return () => {
-        try {
-          recognition.stop();
-        } catch {
-          /* noop */
-        }
-        recognitionRef.current = null;
-      };
-    }, []);
 
     const hasResult = segment.latestAttempt !== undefined;
     const showRecordingUI = !hasResult || isRetrying || segment.status === 'practicing';
@@ -143,8 +106,7 @@ export const ShadowingSegmentCard = React.forwardRef<
         prevAttemptIdRef.current = newId;
         setIsRetrying(false);
         recorder.reset();
-        setLiveTranscript('');
-        finalTranscriptRef.current = '';
+        speech.reset();
         lastRecognizedRef.current = '';
       }
     }, [segment.latestAttempt?.id]);
@@ -159,11 +121,7 @@ export const ShadowingSegmentCard = React.forwardRef<
     // Auto-submit when recording stops with audio
     useEffect(() => {
       if (recorder.status === 'stopped' && recorder.audioBlob) {
-        try {
-          recognitionRef.current?.stop();
-        } catch {
-          /* noop */
-        }
+        speech.stop();
         setSubmitError(null);
         onSubmitAttempt(
           segment.id,
@@ -184,33 +142,23 @@ export const ShadowingSegmentCard = React.forwardRef<
 
     const handleStartRecording = async () => {
       setSubmitError(null);
-      setLiveTranscript('');
-      finalTranscriptRef.current = '';
+      speech.reset();
       lastRecognizedRef.current = '';
       lastDurationRef.current = 0;
       onStartPracticing(segment.id);
       await recorder.startRecording();
-      try {
-        recognitionRef.current?.start();
-      } catch {
-        /* already running */
-      }
+      speech.start();
     };
 
     const handleStopRecording = () => {
-      try {
-        recognitionRef.current?.stop();
-      } catch {
-        /* noop */
-      }
+      speech.stop();
       recorder.stopRecording();
     };
 
     const handleRetry = () => {
       setIsRetrying(true);
       setSubmitError(null);
-      setLiveTranscript('');
-      finalTranscriptRef.current = '';
+      speech.reset();
       lastRecognizedRef.current = '';
       recorder.reset();
       onRetry(segment.id);

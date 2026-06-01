@@ -1,0 +1,214 @@
+[
+  {
+    "id": "voa-lets-learn-ordering-coffee",
+    "title": "Ordering Coffee",
+    "description": "Học cách gọi đồ uống tự nhiên trong quán cà phê — câu hỏi lịch sự, cách đặt món và phản hồi của nhân viên.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-ordering-coffee",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 192000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "Hi! Welcome to the coffee shop." },
+      { "startMs": 4000, "endMs": 9000, "text": "What can I get for you today?" },
+      { "startMs": 9000, "endMs": 14000, "text": "I'd like a medium latte, please." },
+      { "startMs": 14000, "endMs": 19000, "text": "Sure. Would you like anything else?" },
+      { "startMs": 19000, "endMs": 24000, "text": "Yes, a blueberry muffin as well." }
+    ]
+  },
+  {
+    "id": "voa-lets-learn-asking-directions",
+    "title": "Asking for Directions",
+    "description": "Cách hỏi đường lịch sự và hiểu chỉ dẫn cơ bản khi đi bộ trong thành phố.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-asking-directions",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 165000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "blue",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4500, "text": "Excuse me, how do I get to the station?" },
+      { "startMs": 4500, "endMs": 9000, "text": "Go straight and turn left at the corner." },
+      { "startMs": 9000, "endMs": 13500, "text": "It's about a five-minute walk from here." }
+    ]
+  },
+  {
+    "id": "voa-how-to-pronounce-schedule",
+    "title": "How to Pronounce \"Schedule\"",
+    "description": "So sánh hai cách phát âm phổ biến của từ \"schedule\" và cách dùng tự nhiên.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-schedule",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 68000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "violet",
+    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "Today we look at the word schedule." },
+      { "startMs": 4000, "endMs": 8000, "text": "Americans usually say sked-jool." }
+    ]
+  },
+  {
+    "id": "voa-minute-break-the-ice",
+    "title": "Break the Ice",
+    "description": "Học thành ngữ \"break the ice\" và cách dùng trong giao tiếp hằng ngày.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-break-the-ice",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 60000, "level": "B1", "topic": "Vocabulary", "accent": "US", "grad": "cyan",
+    "category": "English in a Minute", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "Let's break the ice with a question." },
+      { "startMs": 4000, "endMs": 8000, "text": "It means to make people feel relaxed." }
+    ]
+  },
+  {
+    "id": "voa-grammar-simple-past",
+    "title": "Simple Past",
+    "description": "Ôn nhanh cách dùng thì quá khứ đơn với động từ thường và bất quy tắc.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-simple-past",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 150000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "emerald",
+    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "Yesterday I walked to the park." },
+      { "startMs": 4000, "endMs": 8000, "text": "She went home after class." }
+    ]
+  },
+  {
+    "id": "voa-lets-learn-meeting-a-friend",
+    "title": "Meeting a Friend",
+    "description": "Mẫu câu chào hỏi và bắt chuyện khi gặp bạn bè trong tình huống thường ngày.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-meeting-a-friend",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 220000, "level": "A1", "topic": "Daily Conversation", "accent": "US", "grad": "indigo",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 3500, "text": "Hey! It's great to see you." },
+      { "startMs": 3500, "endMs": 7500, "text": "How have you been lately?" }
+    ]
+  },
+  {
+    "id": "voa-how-to-pronounce-comfortable",
+    "title": "How to Pronounce \"Comfortable\"",
+    "description": "Cách đọc gọn từ \"comfortable\" như người bản xứ.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-comfortable",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 64000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "rose",
+    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "The word is comfortable." },
+      { "startMs": 4000, "endMs": 8000, "text": "Most people say comf-ter-ble." }
+    ]
+  },
+  {
+    "id": "voa-minute-piece-of-cake",
+    "title": "A Piece of Cake",
+    "description": "Thành ngữ \"a piece of cake\" nghĩa là điều gì đó rất dễ dàng.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-piece-of-cake",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 60000, "level": "A2", "topic": "Vocabulary", "accent": "US", "grad": "amber",
+    "category": "English in a Minute", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "That test was a piece of cake." },
+      { "startMs": 4000, "endMs": 8000, "text": "It means something very easy." }
+    ]
+  },
+  {
+    "id": "voa-grammar-present-continuous",
+    "title": "Present Continuous",
+    "description": "Cách dùng thì hiện tại tiếp diễn để nói về hành động đang xảy ra.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-present-continuous",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 158000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
+    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "I am studying English right now." },
+      { "startMs": 4000, "endMs": 8000, "text": "They are watching a movie." }
+    ]
+  },
+  {
+    "id": "voa-lets-learn-at-the-office",
+    "title": "At the Office",
+    "description": "Mẫu câu lịch sự khi trao đổi công việc ở văn phòng.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-office",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 205000, "level": "B1", "topic": "Office English", "accent": "US", "grad": "blue",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4500, "text": "Could you send me the report?" },
+      { "startMs": 4500, "endMs": 9000, "text": "I'll have it ready by noon." }
+    ]
+  },
+  {
+    "id": "voa-ask-a-teacher-make-vs-do",
+    "title": "Make vs. Do",
+    "description": "Phân biệt hai động từ dễ nhầm \"make\" và \"do\".",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "ask-a-teacher-make-vs-do",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 175000, "level": "B1", "topic": "Grammar", "accent": "US", "grad": "violet",
+    "category": "Ask a Teacher", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "We use make to create something." },
+      { "startMs": 4000, "endMs": 8000, "text": "We use do for activities and tasks." }
+    ]
+  },
+  {
+    "id": "voa-words-stories-hit-the-road",
+    "title": "Hit the Road",
+    "description": "Thành ngữ \"hit the road\" nghĩa là bắt đầu lên đường, rời đi.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "words-and-their-stories-hit-the-road",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 240000, "level": "B2", "topic": "Vocabulary", "accent": "US", "grad": "emerald",
+    "category": "Words and Their Stories", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "It's getting late, let's hit the road." },
+      { "startMs": 4000, "endMs": 8000, "text": "It means to leave or start a journey." }
+    ]
+  },
+  {
+    "id": "voa-lets-learn-at-the-airport",
+    "title": "At the Airport",
+    "description": "Câu hỏi và mẫu câu thường gặp khi làm thủ tục ở sân bay.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-airport",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 198000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "cyan",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4500, "text": "May I see your passport, please?" },
+      { "startMs": 4500, "endMs": 9000, "text": "Here you are. I have one bag to check." }
+    ]
+  },
+  {
+    "id": "voa-how-to-pronounce-wednesday",
+    "title": "How to Pronounce \"Wednesday\"",
+    "description": "Vì sao \"Wednesday\" lại đọc là wenz-day.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-wednesday",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 62000, "level": "A2", "topic": "Pronunciation", "accent": "US", "grad": "rose",
+    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "The word is Wednesday." },
+      { "startMs": 4000, "endMs": 8000, "text": "We say wenz-day, dropping the d." }
+    ]
+  },
+  {
+    "id": "voa-everyday-grammar-comparatives",
+    "title": "Comparatives",
+    "description": "Cách so sánh hơn với tính từ ngắn và dài.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-comparatives",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 162000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
+    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4000, "text": "This box is bigger than that one." },
+      { "startMs": 4000, "endMs": 8000, "text": "My phone is more expensive than yours." }
+    ]
+  },
+  {
+    "id": "voa-lets-learn-at-the-restaurant",
+    "title": "At the Restaurant",
+    "description": "Mẫu câu gọi món và thanh toán khi đi ăn nhà hàng.",
+    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-restaurant",
+    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
+    "durationMs": 210000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",
+    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "segments": [
+      { "startMs": 0, "endMs": 4500, "text": "Are you ready to order?" },
+      { "startMs": 4500, "endMs": 9000, "text": "Yes, I'll have the grilled chicken." }
+    ]
+  }
+]

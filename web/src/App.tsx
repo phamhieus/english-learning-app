@@ -19,6 +19,7 @@ import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
 import VirtualConversation from './screens/VirtualConversation';
+import { videoShadowingRoutes } from './features/video-shadowing/routes';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -44,6 +45,8 @@ function App() {
                   <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
 
                   <Route path="/shadowing" element={<ShadowingPracticePage />} />
+
+                  {videoShadowingRoutes()}
 
                   <Route path="/history" element={<HistoryView />} />
                   <Route path="/settings" element={<SettingsView />} />

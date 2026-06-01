@@ -1,20 +1,20 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, History, Settings, MessageSquare, Headphones } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, History, Settings, Repeat2, Flame, Trophy } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { useUserStats } from '../services/useUserStats';
 
 const navItems = [
   { name: 'Dashboard',    icon: LayoutDashboard, path: '/' },
   { name: 'Speaking',     icon: Mic2,            path: '/speaking' },
-  { name: 'Shadowing',    icon: Headphones,      path: '/shadowing' },
-  { name: 'Conversation', icon: MessageSquare,   path: '/speaking/virtual-conversation' },
   { name: 'Writing',      icon: Edit3,           path: '/writing' },
+  { name: 'Shadowing',    icon: Repeat2,         path: '/shadowing' },
   { name: 'History',      icon: History,         path: '/history' },
   { name: 'Settings',     icon: Settings,        path: '/settings' },
 ];
 
-// The most specific (longest) matching path wins, so /speaking/virtual-conversation
-// does not also light up /speaking.
+// The most specific (longest) matching path wins, so /shadowing/virtual-conversation
+// does not also light up /shadowing.
 const matchScore = (pathname: string, itemPath: string) => {
   if (itemPath === '/') return pathname === '/' ? 1 : 0;
   if (pathname === itemPath) return itemPath.length + 1;
@@ -24,6 +24,7 @@ const matchScore = (pathname: string, itemPath: string) => {
 
 export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
   const location = useLocation();
+  const stats = useUserStats();
 
   const bestScore = Math.max(...navItems.map((i) => matchScore(location.pathname, i.path)));
   const isActive = (path: string) =>
@@ -134,6 +135,36 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
           );
         })}
       </nav>
+
+      {/* ── Stats card ───────────────────────────── */}
+      <div className="mt-4 mx-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 p-4 text-white relative overflow-hidden">
+        <div className="absolute -right-4 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl" />
+        <p className="text-[11px] font-bold text-indigo-100 uppercase tracking-widest relative">My progress</p>
+        <div className="flex items-center gap-3 mt-2 relative">
+          <div className="flex items-center gap-1.5">
+            <Flame className="w-4 h-4 text-orange-200" />
+            <span className="text-base font-bold leading-tight">
+              {stats.streak > 0 ? `${stats.streak}d streak` : 'No streak yet'}
+            </span>
+          </div>
+          {stats.totalSessions > 0 && (
+            <div className="flex items-center gap-1.5">
+              <Trophy className="w-4 h-4 text-yellow-200" />
+              <span className="text-base font-bold leading-tight">{stats.totalSessions} sessions</span>
+            </div>
+          )}
+        </div>
+        {stats.toeicEst !== null || stats.ieltsEst !== null ? (
+          <p className="text-[11px] text-indigo-100 mt-1.5 relative">
+            {[
+              stats.toeicEst !== null ? `TOEIC ~${stats.toeicEst}` : null,
+              stats.ieltsEst !== null ? `IELTS ~${stats.ieltsEst}` : null,
+            ].filter(Boolean).join(' · ')}
+          </p>
+        ) : (
+          <p className="text-[11px] text-indigo-100 mt-1.5 relative">Complete tasks to track your score</p>
+        )}
+      </div>
 
       <style>{`
         @keyframes sb-bob {

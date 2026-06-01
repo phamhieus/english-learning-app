@@ -71,3 +71,37 @@ export const generateLocalPractices = (domain: 'speaking' | 'writing', filter: s
   // Return 6 random topics
   return shuffled.slice(0, 6);
 };
+
+export const getExamTopics = (
+  exam: 'TOEIC' | 'IELTS',
+  skill: 'Speaking' | 'Writing',
+  section: string
+): Practice[] => {
+  const practices: Practice[] = [];
+
+  topicsData.topicBank.forEach(bank => {
+    if (
+      bank.exam === exam &&
+      bank.skill === skill &&
+      bank.section === section
+    ) {
+      bank.topics.forEach(t => {
+        const topic = t as TopicData;
+        const img = topic.imageUrl || topic.thumbnailUrl || topic.photo?.imageUrl;
+        const practice: Practice = {
+          id: Date.now() + Math.floor(Math.random() * 100000),
+          title: topic.topicName,
+          type: topic.taskType,
+          level: mapLevel(topic.level),
+          duration: '5 mins',
+        };
+        if (img) {
+          practice.image = img;
+        }
+        practices.push(practice);
+      });
+    }
+  });
+
+  return practices;
+};

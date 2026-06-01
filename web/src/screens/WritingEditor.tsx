@@ -13,6 +13,8 @@ const WritingEditor = () => {
   const settings = useSettings();
   const toast = useToast();
   const practice = location.state?.practice || { title: "Respond to a Customer Complaint", type: "Email" };
+  const exam = (location.state?.exam as string) || '';
+  const taskLabel = (location.state?.taskLabel as string) || 'Writing';
   
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
@@ -33,12 +35,22 @@ const WritingEditor = () => {
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8 shrink-0">
-        <button onClick={() => navigate(-1)} className="text-slate-500 hover:text-slate-900 dark:hover:text-white">
-          ← Back
+      <div className="flex items-center justify-between mb-6 shrink-0">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white font-medium">
+          ← Exit
         </button>
         <div className="flex gap-2 items-center">
-          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-full text-sm font-semibold">{practice.type}</span>
+          {exam && (
+            <span className={cn(
+              'px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider',
+              exam === 'TOEIC' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400'
+            )}>
+              {exam}
+            </span>
+          )}
+          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-full text-sm font-semibold">
+            Writing · {taskLabel}
+          </span>
         </div>
       </div>
 

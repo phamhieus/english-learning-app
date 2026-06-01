@@ -124,7 +124,6 @@ export function useShadowingSession(
           })
         );
 
-        setActiveSegmentId(null);
         // Invalidate cached session result
         setSessionResult(null);
 
@@ -137,7 +136,9 @@ export function useShadowingSession(
         );
         throw new Error('Analysis failed. Please try again.');
       } finally {
+        // Always clear active/analyzing state so other segments stay unlocked
         setAnalyzingSegmentId(null);
+        setActiveSegmentId(null);
       }
     },
     [session, lesson, settings]

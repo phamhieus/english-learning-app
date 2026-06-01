@@ -1,0 +1,209 @@
+{
+  "sentence": [
+    {
+      "id": "sl-s-001",
+      "title": "The Benefits of Daily Exercise",
+      "description": "Practise speaking about health and fitness with natural, connected speech.",
+      "level": "intermediate",
+      "topic": "Health",
+      "durationMinutes": 8,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-s-001-1", "lessonId": "sl-s-001", "order": 1, "type": "sentence", "text": "Regular physical activity has numerous benefits for both the body and the mind.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-001-2", "lessonId": "sl-s-001", "order": 2, "type": "sentence", "text": "Exercise helps to maintain a healthy weight and reduces the risk of chronic diseases.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-001-3", "lessonId": "sl-s-001", "order": 3, "type": "sentence", "text": "In addition, staying active significantly improves mood and reduces stress levels.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-001-4", "lessonId": "sl-s-001", "order": 4, "type": "sentence", "text": "Studies have shown that people who exercise regularly tend to sleep much better at night.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-001-5", "lessonId": "sl-s-001", "order": 5, "type": "sentence", "text": "Even a thirty-minute walk three times a week can make a significant difference to your health.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-001-6", "lessonId": "sl-s-001", "order": 6, "type": "sentence", "text": "The key is to find an activity that you genuinely enjoy and can sustain over the long term.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-s-002",
+      "title": "Ordering at a Café",
+      "description": "Practise everyday conversational phrases for ordering food and drinks.",
+      "level": "beginner",
+      "topic": "Daily life",
+      "durationMinutes": 6,
+      "totalSegments": 7,
+      "segments": [
+        { "id": "sl-s-002-1", "lessonId": "sl-s-002", "order": 1, "type": "sentence", "text": "Good morning. Could I have a large cappuccino, please?", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-2", "lessonId": "sl-s-002", "order": 2, "type": "sentence", "text": "I'd also like one of those blueberry muffins in the display case.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-3", "lessonId": "sl-s-002", "order": 3, "type": "sentence", "text": "Would it be possible to have the milk on the side?", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-4", "lessonId": "sl-s-002", "order": 4, "type": "sentence", "text": "That's to take away, thank you.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-5", "lessonId": "sl-s-002", "order": 5, "type": "sentence", "text": "How much does that come to in total?", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-6", "lessonId": "sl-s-002", "order": 6, "type": "sentence", "text": "Do you accept contactless payments?", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-002-7", "lessonId": "sl-s-002", "order": 7, "type": "sentence", "text": "Thanks very much. Have a great day!", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-s-003",
+      "title": "Talking About Travel Plans",
+      "description": "Practise future tenses and travel vocabulary in natural sentences.",
+      "level": "intermediate",
+      "topic": "Travel",
+      "durationMinutes": 9,
+      "totalSegments": 7,
+      "segments": [
+        { "id": "sl-s-003-1", "lessonId": "sl-s-003", "order": 1, "type": "sentence", "text": "I'm planning to visit Japan next spring, once the cherry blossoms are in full bloom.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-2", "lessonId": "sl-s-003", "order": 2, "type": "sentence", "text": "I've already booked flights and a small guesthouse near the city centre.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-3", "lessonId": "sl-s-003", "order": 3, "type": "sentence", "text": "One of the things I'm most looking forward to is trying authentic Japanese street food.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-4", "lessonId": "sl-s-003", "order": 4, "type": "sentence", "text": "I've heard the shinkansen is an incredible way to get around the country quickly.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-5", "lessonId": "sl-s-003", "order": 5, "type": "sentence", "text": "I'm also hoping to visit a traditional onsen in the mountains.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-6", "lessonId": "sl-s-003", "order": 6, "type": "sentence", "text": "My friend who went last year said it was the most memorable trip of her life.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-003-7", "lessonId": "sl-s-003", "order": 7, "type": "sentence", "text": "I'll definitely be taking a lot of photos to share when I get back.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-s-004",
+      "title": "Business Small Talk",
+      "description": "Master professional small talk phrases used in meetings and networking.",
+      "level": "advanced",
+      "topic": "Business",
+      "durationMinutes": 10,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-s-004-1", "lessonId": "sl-s-004", "order": 1, "type": "sentence", "text": "It's a pleasure to finally meet you in person after all our video calls.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-004-2", "lessonId": "sl-s-004", "order": 2, "type": "sentence", "text": "I've heard a great deal about the work your team has been doing over the past quarter.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-004-3", "lessonId": "sl-s-004", "order": 3, "type": "sentence", "text": "How are things going at the new branch? I imagine the transition has kept everyone busy.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-004-4", "lessonId": "sl-s-004", "order": 4, "type": "sentence", "text": "Before we get into the agenda, I just wanted to say I really appreciated the report you sent through.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-004-5", "lessonId": "sl-s-004", "order": 5, "type": "sentence", "text": "We should definitely catch up properly after the conference.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-004-6", "lessonId": "sl-s-004", "order": 6, "type": "sentence", "text": "Shall we grab a coffee once the afternoon session wraps up?", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-s-005",
+      "title": "Telling a Past-Tense Story",
+      "description": "Practise past simple and past continuous in a natural narrative flow.",
+      "level": "beginner",
+      "topic": "Grammar",
+      "durationMinutes": 12,
+      "totalSegments": 8,
+      "segments": [
+        { "id": "sl-s-005-1", "lessonId": "sl-s-005", "order": 1, "type": "sentence", "text": "Last weekend, I decided to take a day trip to the countryside.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-2", "lessonId": "sl-s-005", "order": 2, "type": "sentence", "text": "I woke up early and packed a small bag with food and a camera.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-3", "lessonId": "sl-s-005", "order": 3, "type": "sentence", "text": "While I was walking along the trail, I spotted a family of deer in the clearing.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-4", "lessonId": "sl-s-005", "order": 4, "type": "sentence", "text": "I stopped and stood completely still so I wouldn't scare them away.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-5", "lessonId": "sl-s-005", "order": 5, "type": "sentence", "text": "I managed to take a few photographs before they disappeared into the trees.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-6", "lessonId": "sl-s-005", "order": 6, "type": "sentence", "text": "By the time I reached the hilltop, the sun was already beginning to set.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-7", "lessonId": "sl-s-005", "order": 7, "type": "sentence", "text": "The sky turned a deep shade of orange and pink, which was absolutely stunning.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-005-8", "lessonId": "sl-s-005", "order": 8, "type": "sentence", "text": "It was one of the most peaceful afternoons I'd had in a very long time.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-s-006",
+      "title": "Describing People You Admire",
+      "description": "Practise adjectives and relative clauses when talking about inspirational people.",
+      "level": "intermediate",
+      "topic": "People",
+      "durationMinutes": 8,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-s-006-1", "lessonId": "sl-s-006", "order": 1, "type": "sentence", "text": "The person I admire most is my grandmother, who raised five children on her own.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-006-2", "lessonId": "sl-s-006", "order": 2, "type": "sentence", "text": "She's an incredibly resilient woman who never let hardship affect her generous spirit.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-006-3", "lessonId": "sl-s-006", "order": 3, "type": "sentence", "text": "What I find most inspiring about her is her ability to remain calm in difficult situations.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-006-4", "lessonId": "sl-s-006", "order": 4, "type": "sentence", "text": "She taught me that patience and kindness are far more powerful than anger.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-006-5", "lessonId": "sl-s-006", "order": 5, "type": "sentence", "text": "Whenever I face a challenge, I ask myself what she would do in my position.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-006-6", "lessonId": "sl-s-006", "order": 6, "type": "sentence", "text": "She has had an enormous influence on the person I have become.", "status": "not_started", "attempts": [] }
+      ]
+    }
+  ],
+  "paragraph": [
+    {
+      "id": "sl-p-001",
+      "title": "A News Report on Climate Change",
+      "description": "Shadow a formal news-style passage with advanced vocabulary and complex sentence structures.",
+      "level": "advanced",
+      "topic": "News",
+      "durationMinutes": 11,
+      "totalSegments": 4,
+      "segments": [
+        { "id": "sl-p-001-1", "lessonId": "sl-p-001", "order": 1, "type": "paragraph", "paragraphIndex": 1, "text": "Scientists have issued another stark warning about the accelerating pace of climate change, citing record-breaking temperatures recorded across three continents this summer.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-001-2", "lessonId": "sl-p-001", "order": 2, "type": "paragraph", "paragraphIndex": 2, "text": "The latest data from the Intergovernmental Panel on Climate Change suggests that without immediate and decisive action, global temperatures could rise by as much as two degrees Celsius above pre-industrial levels within the next two decades.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-001-3", "lessonId": "sl-p-001", "order": 3, "type": "paragraph", "paragraphIndex": 3, "text": "World leaders are under increasing pressure to move beyond pledges and introduce binding legislation that would compel industries to dramatically reduce their carbon emissions.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-001-4", "lessonId": "sl-p-001", "order": 4, "type": "paragraph", "paragraphIndex": 4, "text": "Environmental campaigners argue that the window for meaningful intervention is narrowing rapidly, and that bold, coordinated global action is the only viable path forward.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-p-002",
+      "title": "A TED-Style Talk Opening",
+      "description": "Shadow a polished public-speaking introduction with rhetorical rhythm and emphasis.",
+      "level": "advanced",
+      "topic": "Speech",
+      "durationMinutes": 9,
+      "totalSegments": 3,
+      "segments": [
+        { "id": "sl-p-002-1", "lessonId": "sl-p-002", "order": 1, "type": "paragraph", "paragraphIndex": 1, "text": "Imagine waking up one morning with absolute certainty about the one thing you were put on this earth to do. No doubt, no hesitation — just a crystal-clear sense of purpose guiding every single decision you make.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-002-2", "lessonId": "sl-p-002", "order": 2, "type": "paragraph", "paragraphIndex": 2, "text": "For most of us, that moment never arrives in such a neat, dramatic fashion. Instead, purpose tends to reveal itself gradually — through the things we keep returning to, the problems we cannot stop trying to solve, and the people who make us feel most fully ourselves.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-002-3", "lessonId": "sl-p-002", "order": 3, "type": "paragraph", "paragraphIndex": 3, "text": "Over the next eighteen minutes, I want to share with you three ideas that I believe can fundamentally shift the way you think about what it means to live and work with intention.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-p-003",
+      "title": "A Short Personal Story",
+      "description": "Shadow a personal narrative with natural rhythm, pausing, and expressive intonation.",
+      "level": "intermediate",
+      "topic": "Narrative",
+      "durationMinutes": 10,
+      "totalSegments": 4,
+      "segments": [
+        { "id": "sl-p-003-1", "lessonId": "sl-p-003", "order": 1, "type": "paragraph", "paragraphIndex": 1, "text": "When I was twelve years old, my parents gave me an old second-hand guitar for my birthday. It was slightly out of tune, and two of the strings were missing, but to me it was the most exciting gift I had ever received.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-003-2", "lessonId": "sl-p-003", "order": 2, "type": "paragraph", "paragraphIndex": 2, "text": "I taught myself to play by watching video tutorials late at night after everyone had gone to sleep. My fingers ached for weeks, but I was completely obsessed.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-003-3", "lessonId": "sl-p-003", "order": 3, "type": "paragraph", "paragraphIndex": 3, "text": "Three months later, I performed a simple song at my school's end-of-year concert. My hands were shaking so badly I nearly knocked the microphone over.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-003-4", "lessonId": "sl-p-003", "order": 4, "type": "paragraph", "paragraphIndex": 4, "text": "But when the audience applauded at the end, I felt a rush of confidence I had never experienced before. That night changed the way I thought about learning and perseverance.", "status": "not_started", "attempts": [] }
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "sl-d-001",
+      "title": "At the Restaurant",
+      "description": "Practise the Customer role in a restaurant conversation — ordering, asking questions, and paying.",
+      "level": "beginner",
+      "topic": "Daily life",
+      "durationMinutes": 7,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-d-001-1", "lessonId": "sl-d-001", "order": 1, "type": "sentence", "speaker": "Waiter",   "text": "Good evening! Welcome. Do you have a reservation with us tonight?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-001-2", "lessonId": "sl-d-001", "order": 2, "type": "sentence", "speaker": "Customer", "text": "Yes, I have a table booked for two under the name Kim.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-001-3", "lessonId": "sl-d-001", "order": 3, "type": "sentence", "speaker": "Waiter",   "text": "Wonderful. Right this way, please. Can I get you anything to drink while you look at the menu?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-001-4", "lessonId": "sl-d-001", "order": 4, "type": "sentence", "speaker": "Customer", "text": "Still water for now, thanks. Could you also tell me about today's specials?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-001-5", "lessonId": "sl-d-001", "order": 5, "type": "sentence", "speaker": "Waiter",   "text": "Of course! We have a grilled sea bass with lemon butter, and a wild mushroom risotto.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-001-6", "lessonId": "sl-d-001", "order": 6, "type": "sentence", "speaker": "Customer", "text": "That risotto sounds lovely. I'll go with that, and the Caesar salad to start, please.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-d-002",
+      "title": "A Job Interview",
+      "description": "Practise the Candidate role — answering competency questions with confidence and structure.",
+      "level": "advanced",
+      "topic": "Business",
+      "durationMinutes": 10,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-d-002-1", "lessonId": "sl-d-002", "order": 1, "type": "sentence", "speaker": "Interviewer", "text": "Thank you for coming in today. Could you start by telling us a little about your background?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-002-2", "lessonId": "sl-d-002", "order": 2, "type": "sentence", "speaker": "Candidate",   "text": "Of course. I have five years of experience in project management, mostly in the technology sector.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-002-3", "lessonId": "sl-d-002", "order": 3, "type": "sentence", "speaker": "Interviewer", "text": "Can you describe a situation where you had to manage a project under a very tight deadline?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-002-4", "lessonId": "sl-d-002", "order": 4, "type": "sentence", "speaker": "Candidate",   "text": "Certainly. Last year, we had to deliver a full product overhaul in six weeks due to a client emergency. I restructured the workflow and held daily stand-ups to keep everyone aligned.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-002-5", "lessonId": "sl-d-002", "order": 5, "type": "sentence", "speaker": "Interviewer", "text": "Impressive. What would you say is your greatest professional strength?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-002-6", "lessonId": "sl-d-002", "order": 6, "type": "sentence", "speaker": "Candidate",   "text": "I'd say it's my ability to stay calm under pressure and keep the team focused on outcomes rather than obstacles.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-d-003",
+      "title": "Checking Into a Hotel",
+      "description": "Practise the Guest role when checking in, asking about facilities, and confirming details.",
+      "level": "intermediate",
+      "topic": "Travel",
+      "durationMinutes": 6,
+      "totalSegments": 6,
+      "segments": [
+        { "id": "sl-d-003-1", "lessonId": "sl-d-003", "order": 1, "type": "sentence", "speaker": "Receptionist", "text": "Good afternoon and welcome to the Grand Hotel. How can I help you?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-003-2", "lessonId": "sl-d-003", "order": 2, "type": "sentence", "speaker": "Guest",        "text": "Hi, I have a reservation for three nights. The name is Park.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-003-3", "lessonId": "sl-d-003", "order": 3, "type": "sentence", "speaker": "Receptionist", "text": "Let me look that up. Ah yes, a deluxe double room with a city view. Could I see a form of ID, please?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-003-4", "lessonId": "sl-d-003", "order": 4, "type": "sentence", "speaker": "Guest",        "text": "Of course. Could I ask whether breakfast is included in the rate?", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-003-5", "lessonId": "sl-d-003", "order": 5, "type": "sentence", "speaker": "Receptionist", "text": "Yes, it is. The restaurant opens at seven a.m. on the second floor. Checkout is at noon.", "status": "not_started", "attempts": [] },
+        { "id": "sl-d-003-6", "lessonId": "sl-d-003", "order": 6, "type": "sentence", "speaker": "Guest",        "text": "Perfect. Is there a late checkout option if I need it?", "status": "not_started", "attempts": [] }
+      ]
+    }
+  ]
+}

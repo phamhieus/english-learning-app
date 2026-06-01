@@ -184,22 +184,27 @@ export default function ShadowingPracticePage() {
             </div>
           )}
 
-          {segments.map(segment => (
-            <ShadowingSegmentCard
-              key={segment.id}
-              ref={el => {
-                segmentCardRefs.current[segment.id] = el;
-              }}
-              segment={segment}
-              isLocked={
-                activeSegmentId !== null && activeSegmentId !== segment.id
-              }
-              isAnalyzing={analyzingSegmentId === segment.id}
-              onStartPracticing={startPracticing}
-              onSubmitAttempt={handleSubmitAttempt}
-              onRetry={retrySegment}
-            />
-          ))}
+          {segments.map(segment => {
+            // Hide segments that are locked (another one is being analyzed right now)
+            const isLocked =
+              analyzingSegmentId !== null && analyzingSegmentId !== segment.id;
+            if (isLocked) return null;
+
+            return (
+              <ShadowingSegmentCard
+                key={segment.id}
+                ref={el => {
+                  segmentCardRefs.current[segment.id] = el;
+                }}
+                segment={segment}
+                isLocked={false}
+                isAnalyzing={analyzingSegmentId === segment.id}
+                onStartPracticing={startPracticing}
+                onSubmitAttempt={handleSubmitAttempt}
+                onRetry={retrySegment}
+              />
+            );
+          })}
 
           {/* Bottom padding so last card isn't hidden by layout */}
           <div className="h-6" />

@@ -17,6 +17,7 @@ import WritingEditor from './screens/WritingEditor';
 import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
+import ShadowingList from './screens/ShadowingList';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
 import VirtualConversation from './screens/VirtualConversation';
 import PictureDescriptionList from './screens/PictureDescriptionList';
@@ -39,19 +40,20 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/speaking" element={<SpeakingList />} />
                   <Route path="/speaking/record" element={<SpeakingRecording />} />
-                  <Route path="/speaking/mock-dialogue" element={<MockDialogue />} />
+                  <Route path="/shadowing/mock-dialogue" element={<MockDialogue />} />
                   <Route path="/speaking/result" element={<SpeakingResult />} />
 
                   <Route path="/writing" element={<WritingList />} />
                   <Route path="/writing/editor" element={<WritingEditor />} />
                   <Route path="/writing/result" element={<WritingResult />} />
-                  <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
+                  <Route path="/shadowing/virtual-conversation" element={<VirtualConversation />} />
 
+                  <Route path="/shadowing" element={<ShadowingList />} />
+                  <Route path="/shadowing/practice" element={<ShadowingPracticePage />} />
                   <Route path="/picture-description" element={<PictureDescriptionList />} />
                   <Route path="/picture-description/practice" element={<PictureDescriptionPractice />} />
                   <Route path="/picture-description/result" element={<PictureDescriptionResult />} />
 
-                  <Route path="/shadowing" element={<ShadowingPracticePage />} />
 
                   {videoShadowingRoutes()}
 

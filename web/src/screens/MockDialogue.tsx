@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
 import { UnifiedChatSession } from '../services/ai';
-import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
+import { useSpeechRecognition } from '../services/useSpeechRecognition';
 
 const MockDialogue = () => {
   const navigate = useNavigate();
@@ -13,14 +13,14 @@ const MockDialogue = () => {
   const title = location.state?.title || "Ordering at a Restaurant";
   
   const [messages, setMessages] = useState<{id: string, sender: 'user'|'ai', text: string}[]>([]);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recognizedText, setRecognizedText] = useState("");
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [timer, setTimer] = useState(120); // 2 mins
-  
+
+  const speech = useSpeechRecognition();
+  const recognizedText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
+
   const chatSessionRef = React.useRef<UnifiedChatSession | null>(null);
-  const recognitionRef = React.useRef<SpeechRecognition | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const MockDialogue = () => {
       try {
         const chat = new UnifiedChatSession(settings, `You are an English coach playing a roleplay game. The scenario is: "${title}". You will start the conversation. Keep responses very short, natural, and conversational (1-2 sentences max).`);
         chatSessionRef.current = chat;
-        
+
         setIsTyping(true);
         const resultText = await chat.sendMessage("Start the conversation.");
         setMessages([{ id: Date.now().toString(), sender: 'ai', text: resultText }]);
@@ -43,45 +43,18 @@ const MockDialogue = () => {
     };
     initChat();
 
-    // Initialize SpeechRecognition
-    const recognition = createSpeechRecognition();
-    if (recognition) {
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      let finalTrans = '';
-      recognition.onresult = (event) => {
-        let interimTrans = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTrans += event.results[i][0].transcript + ' ';
-          } else {
-            interimTrans += event.results[i][0].transcript;
-          }
-        }
-        setRecognizedText(finalTrans + interimTrans);
-      };
-      
-      recognitionRef.current = recognition;
-    }
-
     const t = setInterval(() => setTimer(p => p > 0 ? p - 1 : 0), 1000);
     return () => clearInterval(t);
   }, [settings, title]);
 
   const toggleRecording = () => {
-    if (isRecording) {
-      recognitionRef.current?.stop();
-      setIsRecording(false);
-      if (recognizedText) {
-        sendMessage(recognizedText);
-        setRecognizedText("");
+    if (speech.isListening) {
+      const finalText = speech.stop();
+      if (finalText) {
+        sendMessage(finalText);
       }
     } else {
-      setRecognizedText("");
-      recognitionRef.current?.start();
-      setIsRecording(true);
+      speech.start();
     }
   };
 
@@ -179,19 +152,19 @@ const MockDialogue = () => {
             onClick={toggleRecording}
             className={cn(
               "w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-all",
-              isRecording 
+              speech.isListening 
                 ? "bg-indigo-600 dark:bg-indigo-500 text-white scale-110 shadow-lg shadow-indigo-500/30" 
                 : "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-800"
             )}
           >
-            <Mic className={cn("w-5 h-5", isRecording && "animate-pulse")} />
+            <Mic className={cn("w-5 h-5", speech.isListening && "animate-pulse")} />
           </button>
           <input 
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            disabled={isRecording}
-            placeholder={isRecording ? "Listening..." : "Type a message or click mic to speak..."}
+            disabled={speech.isListening}
+            placeholder={speech.isListening ? "Listening..." : "Type a message or click mic to speak..."}
             className="flex-1 h-12 bg-slate-100 dark:bg-slate-800 rounded-full px-6 outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50"
           />
           <button 

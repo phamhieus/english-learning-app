@@ -9,7 +9,7 @@ import type {
   ConversationScenario,
   ConversationLevel,
 } from "../types/virtualConversation.types";
-import { createSpeechRecognition } from "../../../services/speechRecognition";
+import { useSpeechRecognition } from "../../../services/useSpeechRecognition";
 import type { AppSettings } from "../../../components/settings-context";
 
 interface UseVirtualConversationOptions {
@@ -45,9 +45,12 @@ export function useVirtualConversation({
   const activeTurnIdRef = useRef<string | null>(null);
   const stoppedRef = useRef(false);
 
-  // Web Speech API for real-time transcription running parallel to MediaRecorder.
-  const speechRef = useRef<ReturnType<typeof createSpeechRecognition>>(null);
+  const speech = useSpeechRecognition();
   const transcriptRef = useRef("");
+
+  useEffect(() => {
+    transcriptRef.current = speech.transcript;
+  }, [speech.transcript]);
 
   // Snapshot refs — always current, no stale closure risk.
   const turnsRef = useRef<ConversationTurn[]>([]);
@@ -69,30 +72,13 @@ export function useVirtualConversation({
   };
 
   const stopSpeech = useCallback(() => {
-    try { speechRef.current?.stop(); } catch { /* ignore */ }
-    speechRef.current = null;
-  }, []);
+    speech.stop();
+  }, [speech]);
 
   const startSpeech = useCallback(() => {
     transcriptRef.current = "";
-    try {
-      const r = createSpeechRecognition();
-      if (!r) return;
-      r.continuous = true;
-      r.interimResults = true;
-      r.lang = "en-US";
-      r.onerror = null;
-      r.onresult = (event) => {
-        let full = "";
-        for (let i = 0; i < event.results.length; i++) {
-          full += event.results[i][0].transcript;
-        }
-        transcriptRef.current = full.trim();
-      };
-      r.start();
-      speechRef.current = r;
-    } catch { /* non-fatal — transcript will be empty */ }
-  }, []);
+    speech.start();
+  }, [speech]);
 
   const handleError = useCallback((msg: string) => {
     setErrorMessage(msg);

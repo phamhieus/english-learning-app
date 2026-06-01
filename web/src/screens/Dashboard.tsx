@@ -1,4 +1,4 @@
-import { ArrowRight, Play, BookOpen, MessageCircle, BarChart3, TrendingUp, Mic2, Edit3, Headphones } from 'lucide-react';
+import { ArrowRight, Play, BookOpen, MessageCircle, BarChart3, TrendingUp, Mic2, Edit3, Headphones, Image } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 
@@ -54,6 +54,7 @@ const Dashboard = () => {
           { title: 'Shadowing',     icon: Play,        color: 'bg-indigo-500',  path: '/speaking' },
           { title: 'Mock Dialogue', icon: MessageCircle, color: 'bg-purple-500', path: '/speaking/mock-dialogue' },
           { title: 'IELTS Speaking',icon: Mic2,         color: 'bg-cyan-500',   path: '/speaking' },
+          { title: 'Describe Pic',  icon: Image,        color: 'bg-teal-500',   path: '/picture-description' },
           { title: 'Writing Email', icon: Edit3,        color: 'bg-orange-500', path: '/writing' },
           { title: 'Listening',     icon: Headphones,   color: 'bg-blue-500',   path: '/listening' },
           { title: 'Reading',       icon: BookOpen,     color: 'bg-emerald-500',path: '/reading' },

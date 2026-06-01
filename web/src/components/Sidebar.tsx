@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, History, Settings, MessageSquare, Headphones, Clapperboard } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, History, Settings, MessageSquare, Headphones, Clapperboard, Image } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
 
@@ -9,6 +9,7 @@ const navItems = [
   { name: 'Shadowing',    icon: Headphones,      path: '/shadowing' },
   { name: 'Video Shadowing', icon: Clapperboard, path: '/video-shadowing' },
   { name: 'Conversation', icon: MessageSquare,   path: '/speaking/virtual-conversation' },
+  { name: 'Describe Pic', icon: Image,           path: '/picture-description' },
   { name: 'Writing',      icon: Edit3,           path: '/writing' },
   { name: 'History',      icon: History,         path: '/history' },
   { name: 'Settings',     icon: Settings,        path: '/settings' },

@@ -19,6 +19,9 @@ import HistoryView from './screens/HistoryView';
 import SettingsView from './screens/SettingsView';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
 import VirtualConversation from './screens/VirtualConversation';
+import PictureDescriptionList from './screens/PictureDescriptionList';
+import PictureDescriptionPractice from './screens/PictureDescriptionPractice';
+import PictureDescriptionResult from './screens/PictureDescriptionResult';
 import { videoShadowingRoutes } from './features/video-shadowing/routes';
 
 function App() {
@@ -43,6 +46,10 @@ function App() {
                   <Route path="/writing/editor" element={<WritingEditor />} />
                   <Route path="/writing/result" element={<WritingResult />} />
                   <Route path="/speaking/virtual-conversation" element={<VirtualConversation />} />
+
+                  <Route path="/picture-description" element={<PictureDescriptionList />} />
+                  <Route path="/picture-description/practice" element={<PictureDescriptionPractice />} />
+                  <Route path="/picture-description/result" element={<PictureDescriptionResult />} />
 
                   <Route path="/shadowing" element={<ShadowingPracticePage />} />
 

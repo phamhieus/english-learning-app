@@ -242,6 +242,100 @@ export const generateSpeakingTranscript = async (settings: AppSettings, title: s
   return callAI(settings, systemInstruction, instruction, false);
 };
 
+export interface PictureDescriptionFeedback {
+  score: number;
+  contentScore: number;
+  vocabularyScore: number;
+  grammarScore: number;
+  fluencyScore: number;
+  feedback: string;
+  keyElementsMissed: string[];
+  improvementTips: string[];
+  sampleDescription: string;
+}
+
+export const evaluatePictureDescription = async (
+  settings: AppSettings,
+  imageTitle: string,
+  userDescription: string
+): Promise<PictureDescriptionFeedback> => {
+  const systemInstruction = `You are an expert TOEIC/IELTS English speaking coach specializing in picture description tasks.
+The user was shown a picture titled/depicting: "${imageTitle}".
+They described it verbally and their speech was transcribed via Speech-to-Text.
+
+Evaluate their description and return STRICT JSON matching this schema:
+{
+  "score": number (0-100 overall score),
+  "contentScore": number (0-100, how well they described key elements visible in such a picture),
+  "vocabularyScore": number (0-100, range and accuracy of vocabulary used),
+  "grammarScore": number (0-100, grammatical correctness),
+  "fluencyScore": number (0-100, natural flow and coherence of description),
+  "feedback": "string (2-3 sentences of overall feedback)",
+  "keyElementsMissed": ["string (key visual elements they should have mentioned but didn't)"],
+  "improvementTips": ["string (specific actionable tips to improve picture description skills)"],
+  "sampleDescription": "string (a model Band 7+ description of this picture, 3-5 sentences)"
+}
+
+Scoring guidelines:
+- 90+: Comprehensive description covering all key elements with varied vocabulary and perfect grammar
+- 75-89: Good description with most key elements, minor vocabulary/grammar issues
+- 60-74: Adequate but missing some important elements or notable grammar errors
+- 40-59: Basic description, limited vocabulary, several errors
+- <40: Very brief or off-topic description
+- If the transcribed text is empty or just 1-2 words: all scores below 20`;
+
+  const userContent = `Picture: ${imageTitle}\n\nUser's Description (Speech-to-Text):\n"${userDescription || '(no speech detected)'}"`;
+
+  try {
+    const responseText = await callAI(settings, systemInstruction, userContent);
+    return JSON.parse(responseText);
+  } catch (e) {
+    console.error('Failed to parse picture description evaluation:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
+export const generatePictureDescriptions = async (
+  settings: AppSettings,
+  category: string
+): Promise<{ id: number; title: string; imageUrl: string; level: string; duration: string; category: string }[]> => {
+  const systemInstruction = `You are a helpful assistant. Return ONLY a JSON object with a single key "data" containing an array of picture description practice items.`;
+  const instruction = `Generate 6 picture description practice items for the category "${category}" for an English learning app (TOEIC/IELTS style).
+Each item should have a realistic scene that could appear in a TOEIC photo description test.
+Return only raw JSON matching this schema:
+{
+  "data": [
+    {
+      "id": number (unique random 5-digit),
+      "title": "string (short description of what the picture shows)",
+      "imageUrl": "string (a valid Unsplash URL like https://images.unsplash.com/photo-XXXX?w=800&h=500&fit=crop)",
+      "level": "Easy|Medium|Hard",
+      "duration": "string (e.g. '2 min')",
+      "category": "${category}"
+    }
+  ]
+}
+No markdown wrappers.`;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const responseText = await callAI(settings, systemInstruction, instruction);
+      const parsed = JSON.parse(responseText);
+      if (Array.isArray(parsed)) return parsed;
+      return parsed.data || [];
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      if (msg.includes('429') && attempt < 2) {
+        await delay(2000 * (attempt + 1));
+        continue;
+      }
+      console.error('Failed to generate picture descriptions:', e);
+      throw new Error('Failed to generate picture description list.', { cause: e });
+    }
+  }
+  return [];
+};
+
 export class UnifiedChatSession {
   private settings: AppSettings;
   private systemInstruction: string;

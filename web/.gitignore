@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ffmpeg core copied from node_modules by scripts/copy-ffmpeg-core.mjs
+public/ffmpeg/

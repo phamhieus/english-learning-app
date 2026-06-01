@@ -40,9 +40,12 @@ interface VideoThumbProps {
   progress?: number;
   rounded?: string;
   big?: boolean;
+  /** When set, a real poster frame from the actual clip is shown. */
+  videoUrl?: string;
 }
 
-/** Gradient "video frame" placeholder with frosted play button + source badge. */
+/** Video thumbnail: a real poster frame when `videoUrl` is given, otherwise a
+ *  gradient placeholder. Always shows the frosted play button + source badge. */
 export function VideoThumb({
   grad = 'indigo',
   source = 'VOA',
@@ -50,14 +53,33 @@ export function VideoThumb({
   progress = 0,
   rounded = 'rounded-t-2xl',
   big = false,
+  videoUrl,
 }: VideoThumbProps) {
   return (
     <div className={cn('relative overflow-hidden aspect-video', rounded)} style={{ background: GRADS[grad] }}>
-      <div
-        className="absolute inset-0 opacity-25"
-        style={{ backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,0.18) 0 2px,transparent 2px 26px)' }}
-      />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 42%,rgba(255,255,255,0.22),transparent 60%)' }} />
+      {videoUrl ? (
+        <>
+          {/* `#t=` shows the frame at ~1s as a static poster (metadata only). */}
+          <video
+            src={`${videoUrl}#t=1`}
+            className="absolute inset-0 w-full h-full object-cover"
+            muted
+            playsInline
+            preload="metadata"
+            tabIndex={-1}
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+        </>
+      ) : (
+        <>
+          <div
+            className="absolute inset-0 opacity-25"
+            style={{ backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,0.18) 0 2px,transparent 2px 26px)' }}
+          />
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 42%,rgba(255,255,255,0.22),transparent 60%)' }} />
+        </>
+      )}
       <div className="absolute top-3 left-3 z-10">
         <SourceBadge source={source} />
       </div>

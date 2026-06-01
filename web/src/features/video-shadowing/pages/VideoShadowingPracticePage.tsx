@@ -2,15 +2,19 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, BadgeCheck, Film, Repeat, EyeOff, Eye, Square, Mic,
-  RotateCcw, ArrowRight, SkipBack, SkipForward, Play, Pause, Captions,
-  GitCompare, CheckCircle, Info, Loader2,
+  RotateCcw, ArrowRight, SkipBack, SkipForward, Play, Captions,
+  GitCompare, CheckCircle, Info, Loader2, Volume2,
 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { VideoThumb, Waveform, WAVE, ScorePill } from '../components/primitives';
 import { useVideoShadowingSession } from '../hooks/useVideoShadowingSession';
 import { useVideoSegmentPlayer, type PlaybackRate } from '../hooks/useVideoSegmentPlayer';
+import { useYouTubeSegmentPlayer } from '../hooks/useYouTubeSegmentPlayer';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
+import { useTextToSpeech } from '../hooks/useTextToSpeech';
+import { useLiveTranscript } from '../hooks/useLiveTranscript';
+import { parseYouTubeId } from '../utils/youtube';
 import { fileStorage } from '../services/storage/opfsFileStorage';
 import { getBuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
 import { transcriptionService } from '../services/transcription/transcriptionService';
@@ -26,7 +30,7 @@ export default function VideoShadowingPracticePage() {
   const { lesson, segments, attempts, loading, activeIndex, setActiveIndex, saveAttempt, completeSession } =
     useVideoShadowingSession(lessonId);
 
-  const [loop, setLoop] = useState(true);
+  const [loop, setLoop] = useState(false);
   const [rate, setRate] = useState<PlaybackRate>(1);
   const [showScript, setShowScript] = useState(true);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -37,14 +41,32 @@ export default function VideoShadowingPracticePage() {
   const active = segments[activeIndex] ?? null;
   const grad = getBuiltInVoaLesson(lessonId)?.grad ?? 'amber';
 
-  const { videoRef, isPlaying, currentTimeMs, durationMs, playSegment, pause } = useVideoSegmentPlayer({
+  const isYouTube = lesson?.sourceType === 'YouTube';
+  const ytId = isYouTube ? lesson?.providerItemId ?? parseYouTubeId(lesson?.sourceUrl ?? '') : null;
+
+  const htmlPlayer = useVideoSegmentPlayer({
+    segments,
+    activeSegmentId: active?.id ?? null,
+    loopEnabled: loop,
+    playbackRate: rate,
+  });
+  const ytPlayer = useYouTubeSegmentPlayer({
+    videoId: ytId,
     segments,
     activeSegmentId: active?.id ?? null,
     loopEnabled: loop,
     playbackRate: rate,
   });
 
+  const { videoRef } = htmlPlayer;
+  const { containerRef: ytContainerRef } = ytPlayer;
+  const { isPlaying, currentTimeMs, durationMs, playSegment, playAll, seekToSegment, pause } = isYouTube
+    ? ytPlayer
+    : htmlPlayer;
+
   const recorder = useAudioRecorder();
+  const tts = useTextToSpeech();
+  const live = useLiveTranscript();
 
   // Resolve a playable URL for user uploads / direct links (VOA has none yet).
   useEffect(() => {
@@ -52,18 +74,25 @@ export default function VideoShadowingPracticePage() {
     let revoke = false;
     (async () => {
       if (!lesson) return;
+      if (lesson.sourceType === 'YouTube') {
+        setVideoUrl(null); // handled by the YouTube IFrame player
+        return;
+      }
       if (lesson.localVideoFileId) {
         url = (await fileStorage.getObjectUrl(lesson.localVideoFileId)) ?? null;
         revoke = true;
       } else if (lesson.sourceUrl) {
         url = lesson.sourceUrl;
+      } else {
+        // Curated VOA lessons carry their playable URL on the manifest entry.
+        url = getBuiltInVoaLesson(lessonId)?.videoUrl ?? null;
       }
       setVideoUrl(url);
     })();
     return () => {
       if (url && revoke) URL.revokeObjectURL(url);
     };
-  }, [lesson]);
+  }, [lesson, lessonId]);
 
   const doneCount = useMemo(() => new Set(attempts.map((a) => a.segmentId)).size, [attempts]);
 
@@ -114,22 +143,69 @@ export default function VideoShadowingPracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recorder.status]);
 
+  // While playing the whole video (loop off), highlight the segment under the
+  // playhead — syncs the script/timeline to the video position. Falls back to
+  // the first/most-recent segment so the lead-in and inter-segment gaps still
+  // show a script (otherwise the start of the video has nothing highlighted).
+  useEffect(() => {
+    if (!isPlaying || loop || segments.length === 0) return;
+    let idx = segments.findIndex((s) => currentTimeMs >= s.startMs && currentTimeMs < s.endMs);
+    if (idx === -1) {
+      if (currentTimeMs < segments[0].startMs) {
+        idx = 0; // before the first segment starts
+      } else {
+        for (let i = segments.length - 1; i >= 0; i--) {
+          if (currentTimeMs >= segments[i].startMs) {
+            idx = i;
+            break;
+          }
+        }
+      }
+    }
+    if (idx >= 0 && idx !== activeIndex) setActiveIndex(idx);
+  }, [currentTimeMs, isPlaying, loop, segments, activeIndex, setActiveIndex]);
+
   if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Đang tải bài luyện…</div>;
   if (!lesson || !active) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Không tìm thấy bài luyện.</div>;
 
   const goto = (i: number) => {
     pause();
+    tts.cancel();
+    live.stop();
+    live.reset();
     recorder.reset();
-    setActiveIndex(Math.max(0, Math.min(segments.length - 1, i)));
+    const next = Math.max(0, Math.min(segments.length - 1, i));
+    setActiveIndex(next);
+    if (segments[next]) seekToSegment(segments[next].id);
   };
 
+  const listen = () => {
+    pause();
+    if (tts.speaking) tts.cancel();
+    else tts.speak(active.text, rate);
+  };
+
+  const startRecording = () => {
+    pause();
+    tts.cancel();
+    live.start();
+    recorder.startRecording();
+  };
+
+  const stopRecording = () => {
+    live.stop();
+    recorder.stopRecording();
+  };
+
+  const canPlay = isYouTube ? !!ytId : !!videoUrl;
   const togglePlay = () => {
-    if (!videoUrl) {
-      toast.info('Bản VOA chưa có file video nội bộ — hãy upload video để phát thử.');
+    if (!canPlay) {
+      toast.info(isYouTube ? 'Video YouTube chưa sẵn sàng, thử lại sau giây lát.' : 'Bản VOA chưa có file video nội bộ — hãy upload video để phát thử.');
       return;
     }
     if (isPlaying) pause();
-    else playSegment(active.id);
+    else if (loop) playSegment(active.id);
+    else playAll();
   };
 
   const playMyRecording = () => {
@@ -148,7 +224,7 @@ export default function VideoShadowingPracticePage() {
   const hasScore = !!activeAttempt && !!activeAttempt.recognizedText;
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col lg:h-full">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-4 shrink-0 gap-3 flex-wrap">
         <button onClick={() => navigate('/video-shadowing')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium">
@@ -163,13 +239,33 @@ export default function VideoShadowingPracticePage() {
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400"><Film className="w-4 h-4" /> Segment {activeIndex + 1} / {segments.length}</div>
       </div>
 
-      {/* Hero video — single, centered, fills remaining space. */}
-      <div className="flex-1 min-h-0 flex items-center justify-center mb-3">
-        <div className="relative h-full aspect-video max-w-full rounded-3xl overflow-hidden shadow-xl shadow-slate-200/60 dark:shadow-black/40 bg-black">
-          {videoUrl ? (
-            <video ref={videoRef} src={videoUrl} className="w-full h-full object-contain" playsInline />
+      {/* Hero video — single, centered. Width-based on mobile, fills height on desktop. */}
+      <div className="lg:flex-1 lg:min-h-0 flex items-center justify-center mb-3">
+        <div className="relative w-full lg:w-auto lg:h-full aspect-video lg:max-w-full rounded-3xl overflow-hidden shadow-xl shadow-slate-200/60 dark:shadow-black/40 bg-black">
+          {isYouTube ? (
+            // Official YouTube IFrame embed (the API replaces this div with an iframe).
+            <div className="absolute inset-0 w-full h-full">
+              <div ref={ytContainerRef} className="w-full h-full" />
+            </div>
           ) : (
-            <VideoThumb grad={grad} source={lesson.sourceType === 'BuiltInVoa' ? 'VOA' : 'Upload'} rounded="rounded-3xl" big />
+            <>
+              {/* Always mount the <video> so the player hook can attach its
+                  listeners; overlay the placeholder until a URL resolves. */}
+              <video
+                ref={videoRef}
+                src={videoUrl ?? undefined}
+                className={cn('w-full h-full object-contain', !videoUrl && 'invisible')}
+                playsInline
+                muted={false}
+                preload="metadata"
+                onError={() => videoUrl && toast.error('Không tải được video. Nguồn có thể không khả dụng.')}
+              />
+              {!videoUrl && (
+                <div className="absolute inset-0">
+                  <VideoThumb grad={grad} source={lesson.sourceType === 'BuiltInVoa' ? 'VOA' : 'Upload'} rounded="rounded-3xl" big />
+                </div>
+              )}
+            </>
           )}
 
           <div className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-lg bg-black/45 backdrop-blur-md text-white text-xs font-semibold flex items-center gap-1.5">
@@ -188,31 +284,38 @@ export default function VideoShadowingPracticePage() {
           </div>
 
           {showScript && (
-            <div className="absolute bottom-16 inset-x-0 flex justify-center px-6 z-10">
+            <div className={cn('absolute inset-x-0 flex justify-center px-6 z-10 pointer-events-none', isYouTube ? 'bottom-20' : 'bottom-16')}>
               <span className="px-4 py-2 rounded-xl bg-black/55 backdrop-blur-md text-white text-lg font-semibold text-center">{active.text}</span>
             </div>
           )}
 
-          {/* Scrubber with per-segment ticks (real, from the player hook). */}
-          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent z-10">
-            <div className="relative h-1.5 rounded-full bg-white/30">
-              <div className="absolute inset-y-0 left-0 rounded-full bg-white" style={{ width: `${progressPct}%` }} />
-              <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow" style={{ left: `${progressPct}%` }} />
-              {ticks.map((p, i) => <span key={i} className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/50" style={{ left: `${p}%` }} />)}
+          {/* Custom scrubber (HTML5 video only — YouTube has its own controls). */}
+          {!isYouTube && (
+            <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none">
+              <div className="relative h-1.5 rounded-full bg-white/30">
+                <div className="absolute inset-y-0 left-0 rounded-full bg-white" style={{ width: `${progressPct}%` }} />
+                <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow" style={{ left: `${progressPct}%` }} />
+                {ticks.map((p, i) => <span key={i} className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-white/50" style={{ left: `${p}%` }} />)}
+              </div>
+              <div className="flex items-center justify-between mt-2 text-white text-xs font-mono"><span>{formatClock(currentTimeMs)}</span><span>{formatClock(durationMs || lesson.durationMs)}</span></div>
             </div>
-            <div className="flex items-center justify-between mt-2 text-white text-xs font-mono"><span>{formatClock(currentTimeMs)}</span><span>{formatClock(durationMs || lesson.durationMs)}</span></div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Playback controls row */}
-      <div className="shrink-0 flex items-center justify-center gap-3 mb-4 flex-wrap">
+      <div className="shrink-0 flex items-center justify-center gap-3 mb-4 flex-wrap py-2 px-3">
         <button onClick={() => goto(activeIndex - 1)} disabled={activeIndex === 0} className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shadow-sm disabled:opacity-40"><SkipBack className="w-5 h-5" /></button>
-        <button onClick={togglePlay} className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
-          {isPlaying ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7" style={{ fill: 'currentColor', marginLeft: 2 }} />}
+        <button onClick={togglePlay} className={cn('w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg transition', isPlaying ? 'bg-red-500 shadow-red-500/30' : 'bg-indigo-600 shadow-indigo-500/30')}>
+          {isPlaying ? <Square className="w-6 h-6" style={{ fill: 'currentColor' }} /> : <Play className="w-7 h-7" style={{ fill: 'currentColor', marginLeft: 2 }} />}
         </button>
         <button onClick={() => goto(activeIndex + 1)} disabled={activeIndex >= segments.length - 1} className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shadow-sm disabled:opacity-40"><SkipForward className="w-5 h-5" /></button>
         <button onClick={() => playSegment(active.id)} className="ml-1 h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2"><Captions className="w-4 h-4" /> Play Original</button>
+        {tts.supported && (
+          <button onClick={listen} className={cn('h-11 px-4 rounded-full border text-sm font-medium flex items-center gap-2 transition', tts.speaking ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300')}>
+            <Volume2 className="w-4 h-4" /> {tts.speaking ? 'Stop' : 'Listen'}
+          </button>
+        )}
         <button onClick={() => setShowScript((v) => !v)} className="h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2">
           {showScript ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />} {showScript ? 'Hide script' : 'Show script'}
         </button>
@@ -223,31 +326,43 @@ export default function VideoShadowingPracticePage() {
         {/* Record + script */}
         <div className="glass-card rounded-2xl p-5 flex flex-col">
           <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1.5">Repeat after the speaker</p>
-          <p className="text-xl font-bold leading-tight">{active.text}</p>
+          <p className="text-xl font-bold leading-tight py-2">{active.text}</p>
           {active.translation && <p className="text-sm text-slate-500 italic mb-4">{active.translation}</p>}
 
           <div className="mt-auto rounded-2xl bg-indigo-50/60 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 p-4 flex items-center gap-4">
             {recorder.status === 'recording' ? (
-              <>
-                <div className="flex flex-col items-center gap-1 shrink-0">
-                  <span className="relative inline-flex"><span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-60" /><span className="relative w-2.5 h-2.5 rounded-full bg-red-500" /></span>
-                  <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wide">{formatClock(recorder.durationMs)}</span>
+              <div className="w-full flex flex-col gap-3">
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center gap-1 shrink-0">
+                    <span className="relative inline-flex"><span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-60" /><span className="relative w-2.5 h-2.5 rounded-full bg-red-500" /></span>
+                    <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wide">{formatClock(recorder.durationMs)}</span>
+                  </div>
+                  <div className="flex-1 h-10 flex items-center"><Waveform heights={WAVE} color="bg-indigo-500/80" /></div>
+                  <button onClick={stopRecording} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 text-white text-sm font-bold shadow-md shadow-red-500/25 shrink-0"><Square className="w-4 h-4" style={{ fill: 'currentColor' }} /> Stop</button>
                 </div>
-                <div className="flex-1 h-10 flex items-center"><Waveform heights={WAVE} color="bg-indigo-500/80" /></div>
-                <button onClick={() => recorder.stopRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 text-white text-sm font-bold shadow-md shadow-red-500/25 shrink-0"><Square className="w-4 h-4" style={{ fill: 'currentColor' }} /> Stop</button>
-              </>
+                {live.supported && (
+                  <div className="rounded-xl bg-white/60 dark:bg-slate-900/40 border border-indigo-100 dark:border-indigo-500/20 px-3 py-2 min-h-[2.5rem]">
+                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wide mb-0.5">Live transcript</p>
+                    <p className="text-sm leading-snug">
+                      <span className="text-slate-700 dark:text-slate-200">{live.transcript}</span>{' '}
+                      <span className="text-slate-400 italic">{live.interim}</span>
+                      {!live.transcript && !live.interim && <span className="text-slate-400">Đang nghe…</span>}
+                    </p>
+                  </div>
+                )}
+              </div>
             ) : recorder.blobUrl ? (
               <>
                 <audio ref={userAudioRef} src={recorder.blobUrl} className="hidden" />
                 <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-wide shrink-0">Your take</span>
                 <audio src={recorder.blobUrl} controls className="flex-1 h-9 min-w-0" />
-                <button onClick={() => recorder.startRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Re-record</button>
+                <button onClick={startRecording} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Re-record</button>
               </>
             ) : (
               <>
                 <Mic className="w-5 h-5 text-indigo-500 shrink-0" />
                 <p className="flex-1 text-sm text-slate-500 dark:text-slate-400">Bấm để ghi âm phần đọc của bạn</p>
-                <button onClick={() => recorder.startRecording()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Record</button>
+                <button onClick={startRecording} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Record</button>
               </>
             )}
           </div>

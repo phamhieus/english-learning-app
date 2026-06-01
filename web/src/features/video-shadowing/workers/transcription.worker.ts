@@ -34,19 +34,37 @@ type InMsg = InitMsg | TranscribeMsg;
 let transcriber: AsrPipeline | null = null;
 let loadedKey = '';
 
+const progressCb = (p: unknown) => {
+  const info = p as { status?: string; progress?: number; file?: string };
+  if (info.status === 'progress') {
+    self.postMessage({ type: 'progress', phase: 'loading_model', progress: Math.round(info.progress ?? 0), file: info.file });
+  }
+};
+
+async function buildPipeline(model: string, device: Device): Promise<AsrPipeline> {
+  return (await pipeline('automatic-speech-recognition', model, {
+    device,
+    progress_callback: progressCb,
+    // Quiet ONNX Runtime's benign "node not assigned to preferred EP" warnings
+    // (3 = Error). Shape ops on CPU under WebGPU are expected, not a problem.
+    session_options: { logSeverityLevel: 3 },
+  })) as unknown as AsrPipeline;
+}
+
 async function ensurePipeline(model: string, device: Device) {
   const key = `${model}@${device}`;
   if (transcriber && loadedKey === key) return;
-  transcriber = (await pipeline('automatic-speech-recognition', model, {
-    device,
-    progress_callback: (p: unknown) => {
-      const info = p as { status?: string; progress?: number; file?: string };
-      if (info.status === 'progress') {
-        self.postMessage({ type: 'progress', phase: 'loading_model', progress: Math.round(info.progress ?? 0), file: info.file });
-      }
-    },
-  })) as unknown as AsrPipeline;
-  loadedKey = key;
+  try {
+    transcriber = await buildPipeline(model, device);
+    loadedKey = key;
+  } catch (err) {
+    // Preferred (e.g. base.en on WebGPU) failed → fall back to the fastest,
+    // most reliable path so transcription still works.
+    self.postMessage({ type: 'progress', phase: 'loading_model', progress: 0, fallback: true });
+    console.warn('[whisper] pipeline load failed, falling back to tiny.en/wasm', err);
+    transcriber = await buildPipeline('Xenova/whisper-tiny.en', 'wasm');
+    loadedKey = 'Xenova/whisper-tiny.en@wasm';
+  }
 }
 
 self.onmessage = async (e: MessageEvent<InMsg>) => {

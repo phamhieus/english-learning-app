@@ -1,7 +1,7 @@
 // Core lesson data model for the Video Shadowing module.
 // Everything is local-only (IndexedDB metadata + OPFS/IndexedDB binary files).
 
-export type VideoSourceType = 'BuiltInVoa' | 'UploadedFile' | 'DirectUrl';
+export type VideoSourceType = 'BuiltInVoa' | 'UploadedFile' | 'DirectUrl' | 'YouTube';
 
 export type LessonStatus = 'Draft' | 'Pending' | 'Processing' | 'Ready' | 'Failed';
 

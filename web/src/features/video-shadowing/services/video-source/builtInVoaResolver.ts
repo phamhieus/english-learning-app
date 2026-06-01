@@ -45,6 +45,17 @@ function gradFor(value: string | undefined): GradKey {
   return value && value in GRADS ? (value as GradKey) : 'indigo';
 }
 
+// Placeholder, CORS-enabled sample clips so the player works end-to-end until
+// real curated VOA direct URLs are added to the manifest (`videoUrl`). Replace
+// per-entry by filling `videoUrl` in built-in-video-lessons.json.
+// Clips chosen to include an audio track (Big Buck Bunny / Sintel / flower).
+const SAMPLE_VIDEOS = [
+  'https://www.w3schools.com/html/mov_bbb.mp4',
+  'https://mdn.github.io/shared-assets/videos/flower.mp4',
+  'https://test-videos.co.uk/vids/sintel/mp4/h264/360/Sintel_360_10s_1MB.mp4',
+  'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_2MB.mp4',
+];
+
 function toSegments(lessonId: string, segs: ManifestSegment[]): VideoTranscriptSegment[] {
   const now = '1970-01-01T00:00:00.000Z';
   return segs.map((s, i) => ({
@@ -69,7 +80,7 @@ export function getBuiltInVoaLessons(): BuiltInVoaLesson[] {
   const manifest = rawManifest as ManifestLesson[];
   cache = manifest
     .filter((m) => m.safetyStatus === 'Curated')
-    .map((m) => {
+    .map((m, index) => {
       const now = '1970-01-01T00:00:00.000Z';
       const lesson: BuiltInVoaLesson = {
         id: m.id,
@@ -93,7 +104,7 @@ export function getBuiltInVoaLessons(): BuiltInVoaLesson[] {
         updatedAt: now,
         category: m.category ?? 'VOA Learning English',
         grad: gradFor(m.grad),
-        videoUrl: m.videoUrl ?? '',
+        videoUrl: m.videoUrl || SAMPLE_VIDEOS[index % SAMPLE_VIDEOS.length],
         segments: toSegments(m.id, m.segments),
       };
       return lesson;

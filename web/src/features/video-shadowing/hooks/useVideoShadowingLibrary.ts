@@ -1,13 +1,14 @@
-// Loads library content: curated VOA lessons (from the static manifest) and the
-// user's own imported lessons (from IndexedDB).
+// Filter-driven library data. Each filter change triggers an async API call
+// (fetchVoaLessons / fetchMyLessons) — the UI shows the returned videos.
 
 import { useCallback, useEffect, useState } from 'react';
-import { getRandomVoaLessons } from '../services/video-source/builtInVoaResolver';
-import { lessonRepo, deleteLessonCompletely } from '../services/storage/videoShadowingRepository';
+import { fetchVoaLessons, fetchMyLessons, type LibraryFilters } from '../services/video-source/videoLibraryApi';
+import { deleteLessonCompletely } from '../services/storage/videoShadowingRepository';
+import type { BuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
 import type { VideoShadowingLesson } from '../models/lesson';
 
 interface UseVideoShadowingLibrary {
-  voaLessons: VideoShadowingLesson[];
+  voaLessons: BuiltInVoaLesson[];
   myLessons: VideoShadowingLesson[];
   loading: boolean;
   error: string | null;
@@ -15,31 +16,40 @@ interface UseVideoShadowingLibrary {
   removeLesson: (id: string) => Promise<void>;
 }
 
-export function useVideoShadowingLibrary(): UseVideoShadowingLibrary {
-  // Random 10 picked once per mount → fresh selection each visit to the list.
-  const [voaLessons] = useState<VideoShadowingLesson[]>(() => getRandomVoaLessons(10));
+export function useVideoShadowingLibrary(filters: LibraryFilters): UseVideoShadowingLibrary {
+  const [voaLessons, setVoaLessons] = useState<BuiltInVoaLesson[]>([]);
   const [myLessons, setMyLessons] = useState<VideoShadowingLesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
-  const reload = useCallback(() => {
+  const { level, category, search } = filters;
+
+  useEffect(() => {
+    let cancelled = false;
+    // Data-loading effect: fetch matching videos from the (local) library API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    lessonRepo
-      .getAll()
-      .then((all) =>
-        setMyLessons(
-          all
-            .filter((l) => l.sourceType !== 'BuiltInVoa')
-            .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
-        ),
-      )
-      .catch(() => setError('Không tải được danh sách video của bạn.'))
-      .finally(() => setLoading(false));
-  }, []);
+    setError(null);
+    const query: LibraryFilters = { level, category, search };
+    Promise.all([fetchVoaLessons(query), fetchMyLessons(query)])
+      .then(([voa, mine]) => {
+        if (cancelled) return;
+        setVoaLessons(voa);
+        setMyLessons(mine);
+      })
+      .catch(() => {
+        if (!cancelled) setError('Không tải được danh sách video.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [level, category, search, reloadKey]);
 
-  // Initial + manual reload from IndexedDB (external-system sync).
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(reload, [reload]);
+  const reload = useCallback(() => setReloadKey((k) => k + 1), []);
 
   const removeLesson = useCallback(
     async (id: string) => {

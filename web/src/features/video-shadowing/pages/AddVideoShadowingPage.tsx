@@ -63,8 +63,9 @@ export default function AddVideoShadowingPage() {
           navigate(`/video-shadowing/processing/${lesson.id}`);
         }
       } else {
-        // Paste direct video URL.
+        // Paste direct video URL or a YouTube link.
         const parsed = validateMediaUrl(url);
+        const isYouTube = parsed.kind === 'youtube';
         const lessonId = `lesson-${Date.now()}`;
         const now = new Date().toISOString();
         let hasSegments = false;
@@ -76,21 +77,30 @@ export default function AddVideoShadowingPage() {
         }
         await lessonRepo.save({
           id: lessonId,
-          title: title.trim() || 'Video link',
-          sourceType: 'DirectUrl',
+          title: title.trim() || (isYouTube ? 'YouTube video' : 'Video link'),
+          sourceType: isYouTube ? 'YouTube' : 'DirectUrl',
+          provider: isYouTube ? 'YouTube' : undefined,
+          providerItemId: isYouTube ? parsed.videoId : undefined,
           sourceUrl: parsed.url,
           durationMs: 0,
           level,
           topic,
           segmentMode: mode,
           transcriptSource: hasSegments ? 'UploadedSubtitle' : undefined,
-          status: hasSegments ? 'Ready' : 'Pending',
+          status: hasSegments ? 'Ready' : 'Draft',
           processingProgress: hasSegments ? 100 : 0,
           safetyStatus: 'UserProvided',
           createdAt: now,
           updatedAt: now,
         });
-        navigate(hasSegments ? `/video-shadowing/lessons/${lessonId}/review` : `/video-shadowing/processing/${lessonId}`);
+        // YouTube can't auto-extract audio → go straight to Review (subtitle or
+        // manual segments). Other direct URLs without a subtitle go to processing.
+        if (isYouTube) {
+          if (!hasSegments) toast.info('YouTube không tách được audio — hãy thêm phụ đề hoặc tự thêm câu ở bước Review.');
+          navigate(`/video-shadowing/lessons/${lessonId}/review`);
+        } else {
+          navigate(hasSegments ? `/video-shadowing/lessons/${lessonId}/review` : `/video-shadowing/processing/${lessonId}`);
+        }
       }
     } catch (err) {
       toast.error(toFriendlyError(err).message);
@@ -175,12 +185,12 @@ export default function AddVideoShadowingPage() {
               <input
                 value={url}
                 onChange={(e) => validateUrlField(e.target.value)}
-                placeholder="https://example.com/clip.mp4"
+                placeholder="https://youtube.com/watch?v=…  hoặc  https://example.com/clip.mp4"
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
               />
               {urlError && <p className="text-xs text-red-500 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {urlError}</p>}
               <p className="text-xs text-slate-400 leading-relaxed">
-                Chỉ hỗ trợ link https trực tiếp tới file .mp4/.webm/.mov/.mp3 và cho phép CORS. Không hỗ trợ YouTube/TikTok/Facebook.
+                Hỗ trợ <b>link YouTube</b> (phát qua trình nhúng chính thức — cần phụ đề .srt/.vtt để có script vì không tách được audio), hoặc link https trực tiếp tới .mp4/.webm/.mov/.mp3 (cho phép CORS). Không hỗ trợ TikTok/Facebook.
                 Only use videos that you have permission to access and practice with.
               </p>
             </div>

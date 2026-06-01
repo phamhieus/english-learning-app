@@ -6,14 +6,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ffmpegService } from '../services/media-processing/ffmpegService';
 import { transcriptionService } from '../services/transcription/transcriptionService';
+import { downloadDirectMedia } from '../services/video-source/directUrlResolver';
 import { segmentTranscript } from '../utils/transcriptSegmenter';
 import { lessonRepo, segmentRepo } from '../services/storage/videoShadowingRepository';
-import { fileStorage } from '../services/storage/opfsFileStorage';
+import { fileStorage, filePaths } from '../services/storage/opfsFileStorage';
 import { toFriendlyError, VideoShadowingError } from '../utils/errorCodes';
 import type { ProcessingStep } from '../models/processingJob';
 import type { VideoShadowingLesson } from '../models/lesson';
 
 const STEP_DEFS: { key: string; label: string }[] = [
+  { key: 'download', label: 'Loading video' },
   { key: 'extract', label: 'Extracting audio locally' },
   { key: 'model', label: 'Loading speech recognition model' },
   { key: 'transcribe', label: 'Generating script locally' },
@@ -43,15 +45,30 @@ export function useProcessingJob(lessonId: string) {
 
     try {
       const lesson = (await lessonRepo.get(lessonId)) as VideoShadowingLesson | undefined;
-      if (!lesson?.localVideoFileId) throw new VideoShadowingError('VIDEO_READ_FAILED');
+      if (!lesson) throw new VideoShadowingError('VIDEO_READ_FAILED');
 
-      const videoBlob = await fileStorage.get(lesson.localVideoFileId);
+      // 0. Resolve the video Blob — already local (upload) or download it now
+      //    (direct URL). YouTube can't be processed and never reaches here.
+      let videoBlob: Blob | undefined;
+      if (lesson.localVideoFileId) {
+        setStepState('download', 'active');
+        videoBlob = await fileStorage.get(lesson.localVideoFileId);
+        setStepState('download', 'done');
+      } else if (lesson.sourceType === 'DirectUrl' && lesson.sourceUrl) {
+        setStepState('download', 'active');
+        const { blob } = await downloadDirectMedia(lesson.sourceUrl, (r) => setProgress(Math.round(r * 15)), ac.signal);
+        const fileId = filePaths.video(lessonId);
+        await fileStorage.put(fileId, blob);
+        await lessonRepo.save({ ...lesson, localVideoFileId: fileId });
+        videoBlob = blob;
+        setStepState('download', 'done');
+      }
       if (!videoBlob) throw new VideoShadowingError('VIDEO_READ_FAILED');
 
       // 1. Extract + normalize audio (mono / 16 kHz).
       setStepState('extract', 'active');
-      await ffmpegService.load((r) => setProgress(Math.round(r * 20)));
-      const audio = await ffmpegService.extractAudio(videoBlob, { sampleRate: 16000, channels: 1 }, (r) => setProgress(20 + Math.round(r * 20)), ac.signal);
+      await ffmpegService.load((r) => setProgress(15 + Math.round(r * 10)));
+      const audio = await ffmpegService.extractAudio(videoBlob, { sampleRate: 16000, channels: 1 }, (r) => setProgress(25 + Math.round(r * 15)), ac.signal);
       setStepState('extract', 'done');
 
       // 2 + 3. Load model + transcribe.

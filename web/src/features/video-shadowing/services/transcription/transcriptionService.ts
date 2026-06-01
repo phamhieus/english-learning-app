@@ -51,29 +51,50 @@ class WorkerTranscriptionService implements LocalTranscriptionService {
     return this.worker;
   }
 
+  /** Pick the strongest model the device can run fast: base.en on WebGPU,
+   *  else the fast tiny.en on WASM. Explicit options always win. */
+  private async detectConfig(
+    options?: TranscriptionInitializeOptions,
+  ): Promise<{ model: WhisperModelId; device: 'webgpu' | 'wasm' }> {
+    let webgpu = false;
+    try {
+      const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
+      if (gpu) webgpu = (await gpu.requestAdapter()) != null;
+    } catch {
+      webgpu = false;
+    }
+    const device: 'webgpu' | 'wasm' = options?.backend ? backendToDevice(options.backend) : webgpu ? 'webgpu' : 'wasm';
+    const model: WhisperModelId =
+      options?.model ?? (device === 'webgpu' ? 'Xenova/whisper-base.en' : 'Xenova/whisper-tiny.en');
+    return { model, device };
+  }
+
   initialize(options?: TranscriptionInitializeOptions): Promise<void> {
     if (this.readyPromise) return this.readyPromise;
-    this.model = options?.model ?? DEFAULT_MODEL;
-    this.device = backendToDevice(options?.backend);
-    const worker = this.spawn();
+    this.readyPromise = (async () => {
+      const cfg = await this.detectConfig(options);
+      this.model = cfg.model;
+      this.device = cfg.device;
+      const worker = this.spawn();
 
-    this.readyPromise = new Promise<void>((resolve, reject) => {
-      const onMsg = (e: MessageEvent<WorkerMsg>) => {
-        const m = e.data;
-        if (m.type === 'ready') {
-          worker.removeEventListener('message', onMsg);
-          resolve();
-        } else if (m.type === 'progress' && m.phase === 'loading_model') {
-          this.progressForInit?.({ phase: 'loading_model', progress: m.progress });
-        } else if (m.type === 'error') {
-          worker.removeEventListener('message', onMsg);
-          this.readyPromise = null;
-          reject(new VideoShadowingError('WHISPER_MODEL_LOAD_FAILED', m.message));
-        }
-      };
-      worker.addEventListener('message', onMsg);
-      worker.postMessage({ type: 'init', model: this.model, device: this.device });
-    });
+      await new Promise<void>((resolve, reject) => {
+        const onMsg = (e: MessageEvent<WorkerMsg>) => {
+          const m = e.data;
+          if (m.type === 'ready') {
+            worker.removeEventListener('message', onMsg);
+            resolve();
+          } else if (m.type === 'progress' && m.phase === 'loading_model') {
+            this.progressForInit?.({ phase: 'loading_model', progress: m.progress });
+          } else if (m.type === 'error') {
+            worker.removeEventListener('message', onMsg);
+            this.readyPromise = null;
+            reject(new VideoShadowingError('WHISPER_MODEL_LOAD_FAILED', m.message));
+          }
+        };
+        worker.addEventListener('message', onMsg);
+        worker.postMessage({ type: 'init', model: this.model, device: this.device });
+      });
+    })();
     return this.readyPromise;
   }
 

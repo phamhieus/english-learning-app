@@ -106,6 +106,9 @@ export function segmentTranscript(
     cleaned.push({ ...p, text, endMs: Math.max(p.endMs, p.startMs + 1) });
   }
 
+  // Cover the lead-in: the first line should start at the very beginning.
+  if (cleaned.length > 0) cleaned[0].startMs = 0;
+
   const now = new Date().toISOString();
   return cleaned.map((p, i) => ({
     id: `${lessonId}-seg-${i}`,

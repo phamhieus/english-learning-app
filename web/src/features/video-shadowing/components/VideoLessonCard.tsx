@@ -15,6 +15,8 @@ export interface LessonCardData {
   segmentCount: number;
   /** 0–100 completion progress. */
   progress: number;
+  /** Real clip URL — renders a poster-frame thumbnail when present. */
+  videoUrl?: string;
 }
 
 function ctaFor(progress: number) {
@@ -45,7 +47,7 @@ export function VideoLessonCard({
   return (
     <div className="glass-card rounded-2xl overflow-hidden flex flex-col group">
       <button onClick={open} className="text-left" aria-label={`Open ${lesson.title}`}>
-        <VideoThumb grad={grad} source={isVoa ? 'VOA' : 'Upload'} duration={formatClock(lesson.durationMs)} progress={progress} />
+        <VideoThumb grad={grad} source={isVoa ? 'VOA' : 'Upload'} duration={formatClock(lesson.durationMs)} progress={progress} videoUrl={data.videoUrl} />
       </button>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">

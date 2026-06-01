@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
 import { VideoLessonCard, type LessonCardData } from '../components/VideoLessonCard';
-import { getBuiltInVoaLessons } from '../services/video-source/builtInVoaResolver';
+import { getVoaCategories, type BuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
 import { gradForId } from '../components/videoThumbStyles';
 import type { VideoShadowingLesson } from '../models/lesson';
 
@@ -15,45 +15,45 @@ const LEVELS = ['All levels', 'A1', 'A2', 'B1', 'B2'];
 export default function VideoShadowingLibraryPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { voaLessons, myLessons, removeLesson } = useVideoShadowingLibrary();
 
   const [tab, setTab] = useState<Tab>('voa');
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [level, setLevel] = useState('All levels');
   const [category, setCategory] = useState('All');
 
-  const voaMeta = useMemo(() => new Map(getBuiltInVoaLessons().map((l) => [l.id, l])), []);
-  // Category chips reflect only the videos shown this visit (random subset).
-  const categories = useMemo(() => {
-    const set = new Set<string>(['All']);
-    voaLessons.forEach((l) => {
-      const c = voaMeta.get(l.id)?.category;
-      if (c) set.add(c);
-    });
-    return [...set];
-  }, [voaLessons, voaMeta]);
+  // Debounce the search box before it hits the API.
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 250);
+    return () => clearTimeout(t);
+  }, [search]);
 
-  const sourceLessons = tab === 'voa' ? voaLessons : myLessons;
+  // Each filter change → API call returns the matching videos.
+  const { voaLessons, myLessons, loading, removeLesson } = useVideoShadowingLibrary({
+    level,
+    category,
+    search: debouncedSearch,
+  });
 
-  const filtered = useMemo(() => {
-    return sourceLessons.filter((l) => {
-      if (level !== 'All levels' && l.level !== level) return false;
-      if (tab === 'voa' && category !== 'All' && voaMeta.get(l.id)?.category !== category) return false;
-      if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
-      return true;
-    });
-  }, [sourceLessons, level, category, search, tab, voaMeta]);
+  const categories = useMemo(() => getVoaCategories(), []);
 
-  const toCardData = (lesson: VideoShadowingLesson): LessonCardData => {
-    const voa = voaMeta.get(lesson.id);
-    return {
-      lesson,
-      grad: voa?.grad ?? gradForId(lesson.id),
-      category: voa?.category ?? (lesson.sourceType === 'DirectUrl' ? 'Video link' : 'My upload'),
-      segmentCount: voa?.segments.length ?? 0,
-      progress: lesson.status === 'Ready' && lesson.processingProgress >= 100 ? 0 : 0,
-    };
-  };
+  const voaCardData = (l: BuiltInVoaLesson): LessonCardData => ({
+    lesson: l,
+    grad: l.grad,
+    category: l.category,
+    segmentCount: l.segments.length,
+    progress: 0,
+    videoUrl: l.videoUrl,
+  });
+
+  const myCardData = (l: VideoShadowingLesson): LessonCardData => ({
+    lesson: l,
+    grad: gradForId(l.id),
+    category: l.sourceType === 'DirectUrl' ? 'Video link' : 'My upload',
+    segmentCount: 0,
+    progress: 0,
+    videoUrl: l.sourceUrl,
+  });
 
   const handleDelete = async (id: string) => {
     await removeLesson(id);
@@ -73,24 +73,24 @@ export default function VideoShadowingLibraryPage() {
           </h1>
           <p className="text-slate-500 dark:text-slate-400">Nghe — nhại theo — chấm điểm. Luyện phát âm theo video thật.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search videos…"
-              className="w-56 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
+              className="w-full sm:w-56 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
             />
           </div>
-          <button className="h-10 px-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" /> Level
+          <button className="h-10 px-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center gap-2 shrink-0">
+            <SlidersHorizontal className="w-4 h-4" /> <span className="hidden sm:inline">Level</span>
           </button>
           <button
             onClick={() => navigate('/video-shadowing/add')}
-            className="h-10 px-4 bg-indigo-600 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition"
+            className="h-10 px-4 bg-indigo-600 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition shrink-0"
           >
-            <Plus className="w-4 h-4" /> Add Video
+            <Plus className="w-4 h-4" /> Add
           </button>
         </div>
       </div>
@@ -148,20 +148,39 @@ export default function VideoShadowingLibraryPage() {
         </div>
       )}
 
-      {/* Grid / empty state */}
-      {filtered.length === 0 ? (
-        tab === 'mine' ? (
+      {/* Grid / loading / empty state */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="glass-card rounded-2xl overflow-hidden animate-pulse">
+              <div className="aspect-video bg-slate-100 dark:bg-slate-800" />
+              <div className="p-5 space-y-3">
+                <div className="h-3 w-20 rounded bg-slate-100 dark:bg-slate-800" />
+                <div className="h-4 w-3/4 rounded bg-slate-100 dark:bg-slate-800" />
+                <div className="h-9 w-full rounded-xl bg-slate-100 dark:bg-slate-800" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : tab === 'mine' ? (
+        myLessons.length === 0 ? (
           <MyVideosEmptyState onAdd={() => navigate('/video-shadowing/add')} />
         ) : (
-          <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
-            <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
-            Không tìm thấy video phù hợp bộ lọc.
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+            {myLessons.map((l) => (
+              <VideoLessonCard key={l.id} data={myCardData(l)} onDelete={handleDelete} />
+            ))}
           </div>
         )
+      ) : voaLessons.length === 0 ? (
+        <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
+          <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
+          Không tìm thấy video phù hợp bộ lọc.
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-          {filtered.map((l) => (
-            <VideoLessonCard key={l.id} data={toCardData(l)} onDelete={tab === 'mine' ? handleDelete : undefined} />
+          {voaLessons.map((l) => (
+            <VideoLessonCard key={l.id} data={voaCardData(l)} />
           ))}
         </div>
       )}

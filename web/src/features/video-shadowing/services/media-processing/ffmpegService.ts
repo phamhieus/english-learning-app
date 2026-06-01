@@ -4,7 +4,7 @@
 // already runs ffmpeg in its own worker, keeping the main thread free.
 
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { fetchFile } from '@ffmpeg/util';
 import { VideoShadowingError } from '../../utils/errorCodes';
 
 export interface AudioExtractionOptions {
@@ -26,9 +26,12 @@ export interface FfmpegService {
   dispose(): Promise<void>;
 }
 
-// Single-thread core (no SharedArrayBuffer). Pinned to match @ffmpeg/ffmpeg 0.12.
-const CORE_VERSION = '0.12.10';
-const CORE_BASE = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+// Same-origin ESM core copied into public/ffmpeg by scripts/copy-ffmpeg-core.mjs.
+// @ffmpeg/ffmpeg 0.12 runs a *module* worker that loads the core via dynamic
+// import(), so it must be the ESM build passed as a plain URL (not a blob).
+const LOCAL_BASE = new URL(`${import.meta.env.BASE_URL}ffmpeg/`, window.location.href).href;
+// CDN fallback (single-thread ESM core, no SharedArrayBuffer) matching @ffmpeg 0.12.
+const CDN_BASE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm/';
 
 class RealFfmpegService implements FfmpegService {
   private ffmpeg: FFmpeg | null = null;
@@ -39,21 +42,31 @@ class RealFfmpegService implements FfmpegService {
     return this.loaded;
   }
 
+  private async loadFrom(base: string): Promise<void> {
+    const ffmpeg = new FFmpeg();
+    // Pass the ESM core + wasm as plain same-origin URLs — the module worker
+    // dynamic-imports the core and reads wasmURL from it.
+    await ffmpeg.load({ coreURL: `${base}ffmpeg-core.js`, wasmURL: `${base}ffmpeg-core.wasm` });
+    this.ffmpeg = ffmpeg;
+    this.loaded = true;
+  }
+
   load(onProgress?: (ratio: number) => void): Promise<void> {
     if (this.loaded) return Promise.resolve();
     if (this.loadPromise) return this.loadPromise;
 
     this.loadPromise = (async () => {
+      onProgress?.(0.3);
       try {
-        const ffmpeg = new FFmpeg();
-        const [coreURL, wasmURL] = await Promise.all([
-          toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, 'text/javascript'),
-          toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm'),
-        ]);
-        onProgress?.(0.5);
-        await ffmpeg.load({ coreURL, wasmURL });
-        this.ffmpeg = ffmpeg;
-        this.loaded = true;
+        await this.loadFrom(LOCAL_BASE); // same-origin, offline-capable
+        onProgress?.(1);
+        return;
+      } catch (localErr) {
+        console.warn('[ffmpeg] local core load failed, trying CDN', localErr);
+      }
+      try {
+        onProgress?.(0.6);
+        await this.loadFrom(CDN_BASE);
         onProgress?.(1);
       } catch (err) {
         this.loadPromise = null;

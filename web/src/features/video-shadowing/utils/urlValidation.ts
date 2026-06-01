@@ -2,25 +2,28 @@
 // at a directly-playable media file. We never scrape, proxy, or bypass CORS.
 
 import { VideoShadowingError } from './errorCodes';
+import { parseYouTubeId, youTubeWatchUrl } from './youtube';
 
 const VIDEO_EXTS = ['mp4', 'webm', 'mov'];
 const AUDIO_EXTS = ['mp3', 'wav', 'm4a'];
 
+// Streaming sites without a compliant in-scope embed path. (YouTube is handled
+// separately via its official IFrame embed.)
 const BLOCKED_HOST_PATTERNS = [
-  /(^|\.)youtube\.com$/i,
-  /(^|\.)youtu\.be$/i,
   /(^|\.)tiktok\.com$/i,
   /(^|\.)facebook\.com$/i,
   /(^|\.)fb\.watch$/i,
   /(^|\.)instagram\.com$/i,
 ];
 
-export type MediaKind = 'video' | 'audio';
+export type MediaKind = 'video' | 'audio' | 'youtube';
 
 export interface ParsedMediaUrl {
   url: string;
   kind: MediaKind;
   ext: string;
+  /** Set when kind === 'youtube'. */
+  videoId?: string;
 }
 
 function extFromPath(pathname: string): string {
@@ -45,6 +48,13 @@ export function validateMediaUrl(raw: string): ParsedMediaUrl {
   if (parsed.protocol !== 'https:') {
     throw new VideoShadowingError('VIDEO_URL_UNSUPPORTED');
   }
+
+  // YouTube → play via the official embed (no download/extraction).
+  const ytId = parseYouTubeId(parsed.toString());
+  if (ytId) {
+    return { url: youTubeWatchUrl(ytId), kind: 'youtube', ext: '', videoId: ytId };
+  }
+
   if (BLOCKED_HOST_PATTERNS.some((re) => re.test(parsed.hostname))) {
     // Streaming sites — not direct media, and downloading is out of scope.
     throw new VideoShadowingError('VIDEO_URL_UNSUPPORTED');

@@ -1,4 +1,4 @@
-import { ArrowRight, Flame, Gauge, LineChart, Mic2, Edit3, Repeat2, MessageCircle } from 'lucide-react';
+import { ArrowRight, Play, BookOpen, MessageCircle, BarChart3, TrendingUp, Mic2, Edit3, Headphones, Image } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useUserStats } from '../services/useUserStats';

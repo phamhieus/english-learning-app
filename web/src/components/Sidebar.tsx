@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, Activity, Settings, Repeat2, Flame, Trophy } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, Activity, Settings, Repeat2, Flame, Target } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useUserStats } from '../services/useUserStats';
@@ -25,6 +25,20 @@ const matchScore = (pathname: string, itemPath: string) => {
 export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
   const location = useLocation();
   const stats = useUserStats();
+
+  // Per-exam goal progress. Targets are sensible defaults; "now" comes from the
+  // user's estimated score and falls back to a dash until there's enough data.
+  const goals = (
+    [
+      { exam: 'IELTS', target: 7.0, est: stats.ieltsEst },
+      { exam: 'TOEIC', target: 800, est: stats.toeicEst },
+    ] as const
+  ).map((g) => ({
+    exam: g.exam,
+    target: g.target,
+    now: g.est !== null ? g.est : 0,
+    pct: g.est !== null ? Math.min(100, Math.round((g.est / g.target) * 100)) : 0,
+  }));
 
   const bestScore = Math.max(...navItems.map((i) => matchScore(location.pathname, i.path)));
   const isActive = (path: string) =>
@@ -136,34 +150,36 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
         })}
       </nav>
 
-      {/* ── Stats card ───────────────────────────── */}
-      <div className="mt-4 mx-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 p-4 text-white relative overflow-hidden">
-        <div className="absolute -right-4 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl" />
-        <p className="text-[11px] font-bold text-indigo-100 uppercase tracking-widest relative">My progress</p>
-        <div className="flex items-center gap-3 mt-2 relative">
-          <div className="flex items-center gap-1.5">
-            <Flame className="w-4 h-4 text-orange-200" />
-            <span className="text-base font-bold leading-tight">
-              {stats.streak > 0 ? `${stats.streak}d streak` : 'No streak yet'}
-            </span>
-          </div>
-          {stats.totalSessions > 0 && (
-            <div className="flex items-center gap-1.5">
-              <Trophy className="w-4 h-4 text-yellow-200" />
-              <span className="text-base font-bold leading-tight">{stats.totalSessions} sessions</span>
-            </div>
-          )}
+      {/* ── My goal card ─────────────────────────── */}
+      <div className="mt-4 mx-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-4 text-white">
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-bold text-indigo-100 uppercase tracking-widest">My goal</p>
+          <Target className="w-3.5 h-3.5 text-indigo-200" />
         </div>
-        {stats.toeicEst !== null || stats.ieltsEst !== null ? (
-          <p className="text-[11px] text-indigo-100 mt-1.5 relative">
-            {[
-              stats.toeicEst !== null ? `TOEIC ~${stats.toeicEst}` : null,
-              stats.ieltsEst !== null ? `IELTS ~${stats.ieltsEst}` : null,
-            ].filter(Boolean).join(' · ')}
-          </p>
-        ) : (
-          <p className="text-[11px] text-indigo-100 mt-1.5 relative">Complete tasks to track your score</p>
-        )}
+
+        <div className="mt-3 space-y-3">
+          {goals.map((g) => (
+            <div key={g.exam}>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <span className="text-[13px] font-bold">{g.exam}</span>
+                <span className="text-[12px] text-indigo-100 font-medium tabular-nums">
+                  {g.now} <span className="text-indigo-200/70">/ {g.target}</span>
+                </span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/20 overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-[width] duration-500"
+                  style={{ width: `${g.pct}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-3.5 pt-3 border-t border-white/15 flex items-center gap-1.5 text-[11px] font-semibold text-indigo-50">
+          <Flame className="w-3.5 h-3.5 text-amber-300" />
+          {`${stats.streak}-day streak`}
+        </div>
       </div>
 
       <style>{`

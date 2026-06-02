@@ -9,9 +9,9 @@ const Dashboard = () => {
   const stats = useUserStats();
   const { primaryExam } = useSettings();
 
-  const streakLabel = stats.streak > 0 ? `${stats.streak} Day${stats.streak !== 1 ? 's' : ''}` : '—';
-  const toeicLabel  = stats.toeicEst !== null ? String(stats.toeicEst) : '—';
-  const ieltsLabel  = stats.ieltsEst !== null ? String(stats.ieltsEst) : '—';
+  const streakLabel = `${stats.streak} Day${stats.streak !== 1 ? 's' : ''}`;
+  const toeicLabel  = stats.toeicEst !== null ? String(stats.toeicEst) : '0';
+  const ieltsLabel  = stats.ieltsEst !== null ? String(stats.ieltsEst) : '0';
   const isToeic = primaryExam === 'TOEIC';
 
   return (

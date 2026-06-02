@@ -15,6 +15,7 @@ import {
   Timer,
   Mic2,
   LoaderCircle,
+  ChevronDown,
 } from 'lucide-react';
 import { useSettings } from '../components/useSettings';
 import { useToast } from '../components/useToast';
@@ -38,6 +39,7 @@ const SettingsView = () => {
   } = useSettings();
 
   const [isVoiceInitializing, setIsVoiceInitializing] = useState(false);
+  const [isAudioOpen, setIsAudioOpen] = useState(false);
   const [supportedAccents, setSupportedAccents] = useState<UserAudioSettings['language'][]>(['en-US', 'en-GB']);
   const isVoiceReaderSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   const isVoiceReaderOn = userAudioSettings.isVoiceReaderEnabled;
@@ -268,15 +270,32 @@ const SettingsView = () => {
           </div>
         </section>
 
-        {/* Audio & Voice Reader */}
-        <section className="glass-card rounded-3xl p-8">
-          <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
-            <Volume2 className="w-5 h-5 text-indigo-500" /> Audio & Voice Reader
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-            Control how EngCoach reads content aloud across the app.
-          </p>
+        {/* Audio & Voice Reader (collapsible) */}
+        <section className="glass-card rounded-3xl p-5 sm:p-8">
+          <button
+            type="button"
+            onClick={() => setIsAudioOpen((open) => !open)}
+            aria-expanded={isAudioOpen}
+            className="w-full flex items-start justify-between gap-3 text-left"
+          >
+            <span className="min-w-0">
+              <span className="text-xl font-bold flex items-center gap-2">
+                <Volume2 className="w-5 h-5 text-indigo-500 shrink-0" /> Audio &amp; Voice Reader
+              </span>
+              <span className="block text-sm text-slate-500 dark:text-slate-400 mt-1">
+                Control how EngCoach reads content aloud across the app.
+              </span>
+            </span>
+            <ChevronDown
+              className={cn(
+                'w-5 h-5 text-slate-400 shrink-0 mt-1 transition-transform duration-300',
+                isAudioOpen && 'rotate-180'
+              )}
+            />
+          </button>
 
+          {isAudioOpen && (
+          <div className="mt-6 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center justify-between gap-4 p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
               <div
@@ -375,7 +394,7 @@ const SettingsView = () => {
                 type="button"
                 onClick={previewVoice}
                 disabled={!canConfigureVoiceReader || isVoiceInitializing}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 disabled:cursor-not-allowed"
+                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 disabled:cursor-not-allowed"
               >
                 {isVoiceInitializing ? (
                   <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -395,6 +414,8 @@ const SettingsView = () => {
             <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs font-semibold border border-slate-200 dark:border-slate-700">
               <VolumeX className="w-3.5 h-3.5" /> Voice Reader is disabled in Settings.
             </div>
+          )}
+          </div>
           )}
         </section>
 
@@ -473,8 +494,8 @@ function AudioField({
   children: ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-      <div className="flex items-center gap-3 min-w-0">
+    <div className="flex flex-col items-start gap-3 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
         <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center shrink-0">
           {icon}
         </div>
@@ -483,7 +504,7 @@ function AudioField({
           <p className="text-xs text-slate-400">{sub}</p>
         </div>
       </div>
-      {children}
+      <div className="w-full sm:w-auto sm:shrink-0">{children}</div>
     </div>
   );
 }
@@ -500,7 +521,7 @@ function SegmentedControl<T extends string | number>({
   onPick: (value: T) => void;
 }) {
   return (
-    <div className={cn('flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1', disabled && 'opacity-70')}>
+    <div className={cn('flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 w-full sm:w-auto', disabled && 'opacity-70')}>
       {options.map((option) => {
         const active = value === option.value;
         return (
@@ -510,7 +531,7 @@ function SegmentedControl<T extends string | number>({
             disabled={disabled}
             onClick={() => onPick(option.value)}
             className={cn(
-              'px-3 py-1.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap disabled:cursor-not-allowed',
+              'flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap disabled:cursor-not-allowed',
               active
                 ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'

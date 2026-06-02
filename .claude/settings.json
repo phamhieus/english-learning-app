@@ -28,7 +28,10 @@
       "Bash(rm -f public/ffmpeg/*)",
       "Bash(node scripts/copy-ffmpeg-core.mjs)",
       "Read(//c/Users/phamh/AppData/Local/Temp/engcoach_extracted/**)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(cd \"C:\\\\Users\\\\phamh\\\\AppData\\\\Local\\\\Temp\\\\engcoach_design\\\\english-app\" && find . -type f | head -100)",
+      "Read(//c/Users/phamh/AppData/Local/Temp/engcoach_design/english-app/**)",
+      "Bash(node -e \"const s=new Intl.DateTimeFormat\\('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}\\).format\\(new Date\\(\\)\\); console.log\\('formatted:', JSON.stringify\\(s\\)\\); const d=new Date\\(s\\); console.log\\('parsed:', d.toString\\(\\), '| year:', d.getFullYear\\(\\), '| valid:', !isNaN\\(d\\)\\);\")"
     ],
     "additionalDirectories": [
       "\\tmp\\design_extract\\english-app\\project",

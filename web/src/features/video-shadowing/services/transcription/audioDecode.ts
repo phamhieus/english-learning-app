@@ -16,7 +16,7 @@ function getAudioContextCtor(): AudioCtor | null {
 export async function decodeToMono16k(data: ArrayBuffer): Promise<Float32Array> {
   const Ctor = getAudioContextCtor();
   if (!Ctor || typeof OfflineAudioContext === 'undefined') {
-    throw new VideoShadowingError('TRANSCRIPTION_FAILED', undefined, 'Trình duyệt không hỗ trợ giải mã âm thanh.');
+    throw new VideoShadowingError('TRANSCRIPTION_FAILED', undefined, 'The browser does not support audio decoding.');
   }
 
   const ctx = new Ctor();
@@ -25,7 +25,7 @@ export async function decodeToMono16k(data: ArrayBuffer): Promise<Float32Array> 
     // decodeAudioData detaches the buffer, so hand it a copy.
     decoded = await ctx.decodeAudioData(data.slice(0));
   } catch (err) {
-    throw new VideoShadowingError('TRANSCRIPTION_FAILED', err, 'Không giải mã được âm thanh.');
+    throw new VideoShadowingError('TRANSCRIPTION_FAILED', err, 'Failed to decode audio.');
   } finally {
     await ctx.close().catch(() => {});
   }

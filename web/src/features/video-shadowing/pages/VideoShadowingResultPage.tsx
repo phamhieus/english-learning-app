@@ -48,7 +48,7 @@ export default function VideoShadowingResultPage() {
     };
   }, [lessonId]);
 
-  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Đang tải kết quả…</div>;
+  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Loading results...</div>;
 
   const scored = attempts.filter((a) => a.totalScore != null);
   const hasScores = scored.length > 0;
@@ -76,7 +76,7 @@ export default function VideoShadowingResultPage() {
         ) : (
           <div className="flex flex-col items-center justify-center w-[150px] h-[150px] rounded-full border-4 border-dashed border-slate-200 dark:border-slate-700 text-center">
             <span className="text-3xl font-bold text-slate-300 dark:text-slate-600">—</span>
-            <span className="text-[11px] text-slate-400 px-3 mt-1">Chấm điểm bật cùng AI cục bộ</span>
+            <span className="text-[11px] text-slate-400 px-3 mt-1">Local AI grading enabled</span>
           </div>
         )}
         <div className="flex-1 grid grid-cols-3 gap-6 min-w-[300px]">
@@ -93,7 +93,7 @@ export default function VideoShadowingResultPage() {
         <div className="w-full md:w-72 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 rounded-2xl p-4 flex gap-3">
           <Sparkles className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
           <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">
-            {hasScores ? 'Tốt lắm! Tiếp tục giữ nhịp đều và đọc trọn vẹn từ cuối câu.' : 'Bạn đã ghi âm xong các câu. Chấm điểm tự động sẽ có khi bật mô hình AI cục bộ.'}
+            {hasScores ? 'Great job! Keep matching the rhythm and pronounce words fully down to the end of each sentence.' : 'You have completed recording the segments. Automatic scoring will be available once the local AI models are loaded.'}
           </p>
         </div>
       </div>
@@ -158,7 +158,7 @@ function SegmentResultRow({ index, segment, attempt }: { index: number; segment:
           {audioUrl ? (
             <audio src={audioUrl} controls className="h-9 w-full max-w-sm" />
           ) : (
-            <span className="text-xs text-slate-400 flex items-center gap-1.5"><Info className="w-3.5 h-3.5" /> Chưa ghi âm câu này</span>
+            <span className="text-xs text-slate-400 flex items-center gap-1.5"><Info className="w-3.5 h-3.5" /> Not recorded yet</span>
           )}
           {attempt?.missingWords?.length ? (
             <div className="flex flex-wrap gap-1.5 mt-2">

@@ -1,4 +1,4 @@
-// Stable, machine-readable error codes + friendly (Vietnamese) user messages.
+// Stable, machine-readable error codes + friendly user messages.
 // Services throw VideoShadowingError; the UI shows the message and never a stack.
 
 export type VideoShadowingErrorCode =
@@ -28,31 +28,31 @@ export type VideoShadowingErrorCode =
   | 'UNKNOWN';
 
 const FRIENDLY_MESSAGES: Record<VideoShadowingErrorCode, string> = {
-  VIDEO_FORMAT_UNSUPPORTED: 'Định dạng video này không được hỗ trợ. Hãy dùng MP4, WebM hoặc MOV.',
-  VIDEO_FILE_TOO_LARGE: 'Video quá lớn. Vui lòng chọn file nhỏ hơn.',
-  VIDEO_DURATION_TOO_LONG: 'Video quá dài. Hãy dùng video ngắn hơn để xử lý nhanh và ổn định.',
-  VIDEO_READ_FAILED: 'Không đọc được video. Hãy thử lại hoặc chọn file khác.',
-  VIDEO_URL_INVALID: 'Đường dẫn không hợp lệ.',
-  VIDEO_URL_UNSUPPORTED: 'Đường dẫn video này không được hỗ trợ hoặc không thể truy cập.',
+  VIDEO_FORMAT_UNSUPPORTED: 'This video format is not supported. Please use MP4, WebM, or MOV.',
+  VIDEO_FILE_TOO_LARGE: 'The video file is too large. Please select a smaller file.',
+  VIDEO_DURATION_TOO_LONG: 'The video is too long. Please use a shorter video for faster and more stable processing.',
+  VIDEO_READ_FAILED: 'Could not read the video file. Please try again or select another file.',
+  VIDEO_URL_INVALID: 'Invalid URL.',
+  VIDEO_URL_UNSUPPORTED: 'This video URL is not supported or cannot be accessed.',
   VIDEO_URL_CORS_BLOCKED:
-    'Không thể nhập video trực tiếp vì nguồn không cho phép trình duyệt truy cập. Vui lòng tải video về một cách hợp pháp rồi upload file.',
-  VIDEO_URL_FETCH_FAILED: 'Không tải được video từ đường dẫn này.',
-  SUBTITLE_FORMAT_UNSUPPORTED: 'Chỉ hỗ trợ phụ đề .srt hoặc .vtt.',
-  SUBTITLE_PARSE_FAILED: 'Không đọc được file phụ đề. File có thể bị lỗi định dạng.',
-  FFMPEG_LOAD_FAILED: 'Không tải được bộ xử lý video. Hãy kiểm tra kết nối mạng và thử lại.',
-  FFMPEG_PROCESS_FAILED: 'Xử lý audio thất bại. Vui lòng thử lại.',
-  WHISPER_MODEL_LOAD_FAILED: 'Không tải được mô hình nhận dạng giọng nói. Hãy thử lại.',
-  TRANSCRIPTION_FAILED: 'Tạo script thất bại. Vui lòng thử lại.',
-  TRANSCRIPTION_CANCELLED: 'Đã hủy tạo script.',
-  MIC_PERMISSION_DENIED: 'Bạn cần cấp quyền micro để ghi âm. Hãy bật quyền trong cài đặt trình duyệt.',
-  MIC_NOT_FOUND: 'Không tìm thấy micro. Hãy kết nối micro rồi thử lại.',
-  MEDIA_RECORDER_UNSUPPORTED: 'Trình duyệt không hỗ trợ ghi âm. Hãy dùng Chrome hoặc Edge mới.',
-  RECORDING_FAILED: 'Ghi âm bị gián đoạn. Vui lòng thử lại.',
-  STORAGE_QUOTA_EXCEEDED: 'Bộ nhớ trình duyệt không đủ. Hãy xóa bớt bài hoặc giải phóng dung lượng.',
-  OPFS_UNSUPPORTED: 'Trình duyệt không hỗ trợ lưu file nâng cao — sẽ dùng phương án dự phòng với dung lượng hạn chế hơn.',
-  INDEXED_DB_FAILED: 'Không truy cập được bộ nhớ cục bộ của trình duyệt.',
-  BROWSER_UNSUPPORTED: 'Trình duyệt chưa đủ khả năng cho tính năng này. Hãy dùng Chrome hoặc Edge phiên bản mới.',
-  UNKNOWN: 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.',
+    'Could not import the video directly because the source blocks browser access. Please download the video legally and upload the file.',
+  VIDEO_URL_FETCH_FAILED: 'Failed to download the video from this URL.',
+  SUBTITLE_FORMAT_UNSUPPORTED: 'Only .srt or .vtt subtitle formats are supported.',
+  SUBTITLE_PARSE_FAILED: 'Could not read the subtitle file. The file format might be corrupt.',
+  FFMPEG_LOAD_FAILED: 'Failed to load the video processor. Please check your network connection and try again.',
+  FFMPEG_PROCESS_FAILED: 'Audio processing failed. Please try again.',
+  WHISPER_MODEL_LOAD_FAILED: 'Failed to load the speech recognition model. Please try again.',
+  TRANSCRIPTION_FAILED: 'Transcription failed. Please try again.',
+  TRANSCRIPTION_CANCELLED: 'Transcription cancelled.',
+  MIC_PERMISSION_DENIED: 'Microphone permission is required to record. Please enable it in your browser settings.',
+  MIC_NOT_FOUND: 'Microphone not found. Please connect a microphone and try again.',
+  MEDIA_RECORDER_UNSUPPORTED: 'The browser does not support audio recording. Please use a modern version of Chrome or Edge.',
+  RECORDING_FAILED: 'Recording was interrupted. Please try again.',
+  STORAGE_QUOTA_EXCEEDED: 'Insufficient browser storage. Please delete some lessons or free up space.',
+  OPFS_UNSUPPORTED: 'The browser does not support advanced file storage — falling back to a storage option with limited capacity.',
+  INDEXED_DB_FAILED: 'Could not access the browser local storage.',
+  BROWSER_UNSUPPORTED: 'Your browser does not meet the capabilities for this feature. Please use a modern version of Chrome or Edge.',
+  UNKNOWN: 'An unexpected error occurred. Please try again.',
 };
 
 export class VideoShadowingError extends Error {

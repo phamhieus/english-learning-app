@@ -36,7 +36,7 @@ export default function VideoShadowingPracticePage() {
   const [showScript, setShowScript] = useState(true);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [scoring, setScoring] = useState(false);
-  const [scoringMsg, setScoringMsg] = useState('Đang chấm…');
+  const [scoringMsg, setScoringMsg] = useState('Scoring...');
   const userAudioRef = useRef<HTMLAudioElement | null>(null);
   const [dismissedSegmentIds, setDismissedSegmentIds] = useState<Set<string>>(new Set());
 
@@ -127,7 +127,7 @@ export default function VideoShadowingPracticePage() {
           { sampleRate: 16000, returnTimestamps: false },
           (p) => {
             if (cancelled) return;
-            setScoringMsg(p.phase === 'loading_model' ? `Đang tải mô hình… ${p.progress}%` : 'Đang chấm…');
+            setScoringMsg(p.phase === 'loading_model' ? `Loading model... ${p.progress}%` : 'Scoring...');
           },
         );
         recognizedText = result.text;
@@ -142,7 +142,7 @@ export default function VideoShadowingPracticePage() {
           return next;
         });
       } catch {
-        if (!cancelled) toast.error('Không lưu được bản ghi.');
+        if (!cancelled) toast.error('Failed to save the recording.');
       }
       if (!cancelled) setScoring(false);
     })();
@@ -175,8 +175,8 @@ export default function VideoShadowingPracticePage() {
     if (idx >= 0 && idx !== activeIndex) setActiveIndex(idx);
   }, [currentTimeMs, isPlaying, loop, segments, activeIndex, setActiveIndex]);
 
-  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Đang tải bài luyện…</div>;
-  if (!lesson || !active) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Không tìm thấy bài luyện.</div>;
+  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Loading practice session...</div>;
+  if (!lesson || !active) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Practice session not found.</div>;
 
   const goto = (i: number) => {
     pause();
@@ -228,7 +228,7 @@ export default function VideoShadowingPracticePage() {
   const canPlay = isYouTube ? !!ytId : !!videoUrl;
   const togglePlay = () => {
     if (!canPlay) {
-      toast.info(isYouTube ? 'Video YouTube chưa sẵn sàng, thử lại sau giây lát.' : 'Bản VOA chưa có file video nội bộ — hãy upload video để phát thử.');
+      toast.info(isYouTube ? 'YouTube video is not ready, please try again in a moment.' : 'VOA lesson does not have a local video file yet — please upload a video to test playback.');
       return;
     }
     if (isPlaying) pause();
@@ -238,7 +238,7 @@ export default function VideoShadowingPracticePage() {
 
   const playMyRecording = () => {
     if (recorder.blobUrl) userAudioRef.current?.play();
-    else toast.info('Chưa có bản ghi để so sánh.');
+    else toast.info('No recording available to compare.');
   };
 
   const finish = async () => {
@@ -286,7 +286,7 @@ export default function VideoShadowingPracticePage() {
                 playsInline
                 muted={false}
                 preload="metadata"
-                onError={() => videoUrl && toast.error('Không tải được video. Nguồn có thể không khả dụng.')}
+                onError={() => videoUrl && toast.error('Failed to load video. The source might be unavailable.')}
               />
               {!videoUrl && (
                 <div className="absolute inset-0">
@@ -397,7 +397,7 @@ export default function VideoShadowingPracticePage() {
                     <p className="text-sm leading-snug">
                       <span className="text-slate-700 dark:text-slate-200">{live.transcript}</span>{' '}
                       <span className="text-slate-400 italic">{live.interim}</span>
-                      {!live.transcript && !live.interim && <span className="text-slate-400">Đang nghe…</span>}
+                      {!live.transcript && !live.interim && <span className="text-slate-400">Listening...</span>}
                     </p>
                   </div>
                 )}
@@ -412,7 +412,7 @@ export default function VideoShadowingPracticePage() {
             ) : (
               <>
                 <Mic className="w-5 h-5 text-indigo-500 shrink-0" />
-                <p className="flex-1 text-sm text-slate-500 dark:text-slate-400">Bấm để ghi âm phần đọc của bạn</p>
+                <p className="flex-1 text-sm text-slate-500 dark:text-slate-400">Click to record your reading</p>
                 <button onClick={startRecording} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md shadow-indigo-500/25 shrink-0"><Mic className="w-4 h-4" /> Record</button>
               </>
             )}
@@ -439,8 +439,8 @@ export default function VideoShadowingPracticePage() {
               <Info className="w-5 h-5 text-indigo-400" />
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[18rem]">
                 {recorder.blobUrl
-                  ? 'Bản ghi đã lưu. Không nhận dạng được giọng nói — bạn vẫn có thể nghe lại và thử lại.'
-                  : 'Ghi âm câu này để nhận phản hồi nhanh về phát âm, độ trôi chảy và nhịp.'}
+                  ? 'Recording saved. No speech recognized — you can still listen and try again.'
+                  : 'Record this segment to get instant feedback on pronunciation, fluency, and rhythm.'}
               </p>
             </div>
           )}

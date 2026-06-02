@@ -39,7 +39,7 @@ export function useVideoShadowingLibrary(filters: LibraryFilters): UseVideoShado
         setMyLessons(mine);
       })
       .catch(() => {
-        if (!cancelled) setError('Không tải được danh sách video.');
+        if (!cancelled) setError('Failed to load video list.');
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

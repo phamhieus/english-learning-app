@@ -58,7 +58,7 @@ export default function AddVideoShadowingPage() {
         if (!videoFile) return;
         const { lesson, hasSegments } = await importVideo({ videoFile, subtitleFile, title, level, topic, segmentMode: mode });
         if (hasSegments) {
-          toast.success('Đã tạo segment từ phụ đề.');
+          toast.success('Segments created from subtitles.');
           navigate(`/video-shadowing/lessons/${lesson.id}/review`);
         } else {
           navigate(`/video-shadowing/processing/${lesson.id}`);
@@ -97,7 +97,7 @@ export default function AddVideoShadowingPage() {
         // YouTube can't auto-extract audio → go straight to Review (subtitle or
         // manual segments). Other direct URLs without a subtitle go to processing.
         if (isYouTube) {
-          if (!hasSegments) toast.info('YouTube không tách được audio — hãy thêm phụ đề hoặc tự thêm câu ở bước Review.');
+          if (!hasSegments) toast.info('Audio cannot be extracted from YouTube links — please add subtitles or manually add segments in the Review step.');
           navigate(`/video-shadowing/lessons/${lessonId}/review`);
         } else {
           navigate(hasSegments ? `/video-shadowing/lessons/${lessonId}/review` : `/video-shadowing/processing/${lessonId}`);
@@ -174,8 +174,8 @@ export default function AddVideoShadowingPage() {
                   <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center text-indigo-500 mb-4">
                     <UploadCloud className="w-8 h-8" />
                   </div>
-                  <p className="font-bold text-lg mb-1">Kéo & thả video vào đây</p>
-                  <p className="text-sm text-slate-500 mb-4">hoặc bấm để chọn từ máy · MP4, WebM, MOV · tối đa 300MB</p>
+                  <p className="font-bold text-lg mb-1">Drag & drop video here</p>
+                  <p className="text-sm text-slate-500 mb-4">or click to select from your device · MP4, WebM, MOV · up to 300MB</p>
                   <span className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold">Choose file</span>
                 </>
               )}
@@ -186,12 +186,12 @@ export default function AddVideoShadowingPage() {
               <input
                 value={url}
                 onChange={(e) => validateUrlField(e.target.value)}
-                placeholder="https://youtube.com/watch?v=…  hoặc  https://example.com/clip.mp4"
+                placeholder="https://youtube.com/watch?v=...  or  https://example.com/clip.mp4"
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
               />
               {urlError && <p className="text-xs text-red-500 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {urlError}</p>}
               <p className="text-xs text-slate-400 leading-relaxed">
-                Hỗ trợ <b>link YouTube</b> (phát qua trình nhúng chính thức — cần phụ đề .srt/.vtt để có script vì không tách được audio), hoặc link https trực tiếp tới .mp4/.webm/.mov/.mp3 (cho phép CORS). Không hỗ trợ TikTok/Facebook.
+                Supports <b>YouTube links</b> (plays via official embed — requires .srt/.vtt subtitles for scripts as audio cannot be extracted), or direct https link to .mp4/.webm/.mov/.mp3 (CORS enabled). TikTok/Facebook not supported.
                 Only use videos that you have permission to access and practice with.
               </p>
             </div>
@@ -203,7 +203,7 @@ export default function AddVideoShadowingPage() {
             <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 shrink-0"><Captions className="w-5 h-5" /></div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-sm">Upload subtitle <span className="text-slate-400 font-normal">(optional)</span></p>
-              <p className="text-xs text-slate-500 truncate">{subtitleFile ? subtitleFile.name : '.srt hoặc .vtt — giúp tạo script chính xác hơn, không cần tạo bằng AI'}</p>
+              <p className="text-xs text-slate-500 truncate">{subtitleFile ? subtitleFile.name : '.srt or .vtt — helps generate more accurate scripts without AI generation'}</p>
             </div>
             {subtitleFile ? (
               <button onClick={() => setSubtitleFile(null)} className="px-3 py-2 text-sm font-medium text-red-500 bg-red-50 dark:bg-red-500/10 rounded-lg">Remove</button>
@@ -214,7 +214,7 @@ export default function AddVideoShadowingPage() {
 
           {durationWarning && (
             <div className="flex items-start gap-2 text-xs text-orange-600 bg-orange-50 dark:bg-orange-500/10 border border-orange-100 dark:border-orange-500/20 rounded-xl p-3">
-              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> Video khá dài — quá trình xử lý có thể chậm. Khuyến nghị dùng video dưới 15 phút.
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" /> Video is quite long — processing may be slow. Recommended to use videos under 15 minutes.
             </div>
           )}
           {error && <p className="text-xs text-red-500">{error}</p>}
@@ -252,9 +252,9 @@ export default function AddVideoShadowingPage() {
             onClick={handleGenerate}
             className="mt-2 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 disabled:cursor-not-allowed hover:brightness-110 transition"
           >
-            <Sparkles className="w-5 h-5" /> {busy || importing ? 'Đang xử lý…' : 'Generate Shadow Lesson'}
+            <Sparkles className="w-5 h-5" /> {busy || importing ? 'Processing...' : 'Generate Shadow Lesson'}
           </button>
-          <p className="text-[11px] text-slate-400 text-center">Có phụ đề → tới Review ngay. Không phụ đề → tạo script bằng AI cục bộ trên máy bạn.</p>
+          <p className="text-[11px] text-slate-400 text-center">Has subtitles → Go to Review immediately. No subtitles → Generate script locally using AI on your machine.</p>
         </div>
       </div>
     </div>

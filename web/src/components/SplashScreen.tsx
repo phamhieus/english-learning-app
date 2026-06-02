@@ -217,7 +217,7 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
 
         {/* Loading indicator */}
         <div className="lg-loader">
-          <span className="lg-label">Đang tải</span>
+          <span className="lg-label">Loading</span>
         </div>
       </div>
     </>

@@ -114,15 +114,15 @@ function buildFeedback(args: {
   durRatio: number;
 }): string {
   const parts: string[] = [];
-  if (args.rating === 'good') parts.push('Rất tốt! Phát âm rõ ràng và đầy đủ.');
-  else if (args.rating === 'ok') parts.push('Khá ổn — gần đạt rồi.');
-  else parts.push('Cần luyện thêm câu này.');
+  if (args.rating === 'good') parts.push('Great job! Clear and complete pronunciation.');
+  else if (args.rating === 'ok') parts.push('Pretty good — almost there.');
+  else parts.push('Need to practice this sentence more.');
 
   if (args.missing.length) {
-    parts.push(`Bạn bỏ sót: ${args.missing.slice(0, 3).join(', ')}.`);
+    parts.push(`You missed: ${args.missing.slice(0, 3).join(', ')}.`);
   }
-  if (args.durRatio > 1.3) parts.push('Bạn đọc hơi chậm — thử bám nhịp người nói.');
-  else if (args.durRatio < 0.7) parts.push('Bạn đọc hơi nhanh — chậm lại một chút nhé.');
+  if (args.durRatio > 1.3) parts.push("You spoke a bit slowly — try to match the speaker's pace.");
+  else if (args.durRatio < 0.7) parts.push('You spoke a bit quickly — slow down a little.');
 
   return parts.join(' ');
 }

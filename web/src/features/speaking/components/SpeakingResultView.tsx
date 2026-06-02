@@ -68,10 +68,10 @@ export function SpeakingResultView({
       {/* Title */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 tracking-tight">
-          Kết Quả Luyện Nói
+          Speaking Practice Results
         </h1>
         <p className="text-sm text-slate-450 dark:text-slate-400">
-          Đánh giá phát âm & nhịp điệu chi tiết từ hệ thống nhận diện
+          Detailed pronunciation & rhythm evaluation from the recognition system
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export function SpeakingResultView({
           <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-5">
             <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-emerald-500" />
-              So Sánh Phát Âm Từng Từ
+              Word-by-Word Pronunciation Comparison
             </h3>
             
             <TranscriptCompare
@@ -109,7 +109,7 @@ export function SpeakingResultView({
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
               <h3 className="font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-amber-500" />
-                Lỗi Phát Âm Chi Tiết ({issuesList.length})
+                Detailed Pronunciation Errors ({issuesList.length})
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -133,7 +133,7 @@ export function SpeakingResultView({
                           : "bg-slate-200 text-slate-700 dark:bg-slate-850 dark:text-slate-400"
                       }`}
                     >
-                      {issue.severity === "high" ? "Nghiêm trọng" : issue.severity === "medium" ? "Trung bình" : "Nhẹ"}
+                      {issue.severity === "high" ? "Critical" : issue.severity === "medium" ? "Medium" : "Mild"}
                     </span>
                     <div className="space-y-1">
                       {issue.word && (
@@ -157,7 +157,7 @@ export function SpeakingResultView({
           <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-indigo-500" />
-              Đánh Giá Của Giáo Viên AI
+              AI Teacher Feedback
             </h3>
             
             <div className="space-y-3.5">
@@ -174,7 +174,7 @@ export function SpeakingResultView({
             {improvementList.length > 0 && (
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
                 <h4 className="text-xs font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider">
-                  Gợi Ý Cải Thiện
+                  Improvement Suggestions
                 </h4>
                 <ul className="text-xs md:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
                   {improvementList.map((tip, idx) => (
@@ -196,13 +196,13 @@ export function SpeakingResultView({
           onClick={handleRetry}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-850 hover:shadow transition-all duration-205"
         >
-          <RotateCcw className="w-5 h-5" /> Luyện tập lại
+          <RotateCcw className="w-5 h-5" /> Practice again
         </button>
         <button
           onClick={handleNext}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-700 hover:scale-105 active:scale-98 transition-all duration-205"
         >
-          Bài tiếp theo <ArrowRight className="w-5 h-5" />
+          Next lesson <ArrowRight className="w-5 h-5" />
         </button>
       </div>
     </div>

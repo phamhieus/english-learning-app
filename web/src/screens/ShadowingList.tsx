@@ -640,7 +640,7 @@ const ShadowingListPage = () => {
     if (!cards?.length) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     gsap.from(cards, {
-      y: 32, autoAlpha: 0, scale: 0.97,
+      y: 32, autoAlpha: 1, scale: 0.97,
       stagger: { amount: 0.4, from: 'start' },
       duration: 0.45, ease: 'back.out(1.4)',
     });

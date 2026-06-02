@@ -24,7 +24,7 @@ export async function captureTabAudio(): Promise<MediaStream> {
     getDisplayMedia?: (c: DisplayMediaStreamOptions) => Promise<MediaStream>;
   };
   if (!md?.getDisplayMedia) {
-    throw new VideoShadowingError('BROWSER_UNSUPPORTED', undefined, 'Trình duyệt không hỗ trợ chia sẻ tab. Hãy dùng Chrome/Edge mới.');
+    throw new VideoShadowingError('BROWSER_UNSUPPORTED', undefined, 'The browser does not support tab sharing. Please use a modern version of Chrome/Edge.');
   }
 
   let stream: MediaStream;
@@ -32,7 +32,7 @@ export async function captureTabAudio(): Promise<MediaStream> {
     // Video is required by the picker; we only keep the audio.
     stream = await md.getDisplayMedia({ video: true, audio: true });
   } catch (err) {
-    throw new VideoShadowingError('RECORDING_FAILED', err, 'Đã hủy chia sẻ tab. Hãy thử lại và chọn tab đang phát video.');
+    throw new VideoShadowingError('RECORDING_FAILED', err, 'Tab sharing cancelled. Please try again and select the tab playing the video.');
   }
 
   if (stream.getAudioTracks().length === 0) {
@@ -40,7 +40,7 @@ export async function captureTabAudio(): Promise<MediaStream> {
     throw new VideoShadowingError(
       'RECORDING_FAILED',
       undefined,
-      'Không bắt được âm thanh. Khi chia sẻ, hãy chọn đúng tab và tích "Chia sẻ âm thanh của tab".',
+      'Could not capture audio. When sharing, select the correct tab and check "Share tab audio".',
     );
   }
   return stream;

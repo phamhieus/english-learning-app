@@ -2,7 +2,7 @@
   {
     "id": "voa-lets-learn-ordering-coffee",
     "title": "Ordering Coffee",
-    "description": "Học cách gọi đồ uống tự nhiên trong quán cà phê — câu hỏi lịch sự, cách đặt món và phản hồi của nhân viên.",
+    "description": "Learn how to order drinks naturally in a coffee shop — polite questions, how to place an order, and staff responses.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-ordering-coffee",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 192000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",
@@ -18,7 +18,7 @@
   {
     "id": "voa-lets-learn-asking-directions",
     "title": "Asking for Directions",
-    "description": "Cách hỏi đường lịch sự và hiểu chỉ dẫn cơ bản khi đi bộ trong thành phố.",
+    "description": "How to ask for directions politely and understand basic instructions while walking in the city.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-asking-directions",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 165000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "blue",
@@ -32,7 +32,7 @@
   {
     "id": "voa-how-to-pronounce-schedule",
     "title": "How to Pronounce \"Schedule\"",
-    "description": "So sánh hai cách phát âm phổ biến của từ \"schedule\" và cách dùng tự nhiên.",
+    "description": "Compare two common pronunciations of the word \"schedule\" and their natural usage.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-schedule",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 68000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "violet",
@@ -45,7 +45,7 @@
   {
     "id": "voa-minute-break-the-ice",
     "title": "Break the Ice",
-    "description": "Học thành ngữ \"break the ice\" và cách dùng trong giao tiếp hằng ngày.",
+    "description": "Learn the idiom \"break the ice\" and how to use it in daily communication.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-break-the-ice",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 60000, "level": "B1", "topic": "Vocabulary", "accent": "US", "grad": "cyan",
@@ -58,7 +58,7 @@
   {
     "id": "voa-grammar-simple-past",
     "title": "Simple Past",
-    "description": "Ôn nhanh cách dùng thì quá khứ đơn với động từ thường và bất quy tắc.",
+    "description": "Quick review of the simple past tense with regular and irregular verbs.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-simple-past",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 150000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "emerald",
@@ -71,7 +71,7 @@
   {
     "id": "voa-lets-learn-meeting-a-friend",
     "title": "Meeting a Friend",
-    "description": "Mẫu câu chào hỏi và bắt chuyện khi gặp bạn bè trong tình huống thường ngày.",
+    "description": "Greeting and conversation patterns when meeting friends in daily situations.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-meeting-a-friend",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 220000, "level": "A1", "topic": "Daily Conversation", "accent": "US", "grad": "indigo",
@@ -84,7 +84,7 @@
   {
     "id": "voa-how-to-pronounce-comfortable",
     "title": "How to Pronounce \"Comfortable\"",
-    "description": "Cách đọc gọn từ \"comfortable\" như người bản xứ.",
+    "description": "How to pronounce the word \"comfortable\" quickly like a native speaker.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-comfortable",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 64000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "rose",
@@ -97,7 +97,7 @@
   {
     "id": "voa-minute-piece-of-cake",
     "title": "A Piece of Cake",
-    "description": "Thành ngữ \"a piece of cake\" nghĩa là điều gì đó rất dễ dàng.",
+    "description": "The idiom \"a piece of cake\" means something is extremely easy.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-piece-of-cake",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 60000, "level": "A2", "topic": "Vocabulary", "accent": "US", "grad": "amber",
@@ -110,7 +110,7 @@
   {
     "id": "voa-grammar-present-continuous",
     "title": "Present Continuous",
-    "description": "Cách dùng thì hiện tại tiếp diễn để nói về hành động đang xảy ra.",
+    "description": "How to use the present continuous tense to talk about actions happening right now.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-present-continuous",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 158000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
@@ -123,7 +123,7 @@
   {
     "id": "voa-lets-learn-at-the-office",
     "title": "At the Office",
-    "description": "Mẫu câu lịch sự khi trao đổi công việc ở văn phòng.",
+    "description": "Polite phrases for discussing work at the office.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-office",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 205000, "level": "B1", "topic": "Office English", "accent": "US", "grad": "blue",
@@ -136,7 +136,7 @@
   {
     "id": "voa-ask-a-teacher-make-vs-do",
     "title": "Make vs. Do",
-    "description": "Phân biệt hai động từ dễ nhầm \"make\" và \"do\".",
+    "description": "Distinguish between two easily confused verbs, \"make\" and \"do\".",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "ask-a-teacher-make-vs-do",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 175000, "level": "B1", "topic": "Grammar", "accent": "US", "grad": "violet",
@@ -149,7 +149,7 @@
   {
     "id": "voa-words-stories-hit-the-road",
     "title": "Hit the Road",
-    "description": "Thành ngữ \"hit the road\" nghĩa là bắt đầu lên đường, rời đi.",
+    "description": "The idiom \"hit the road\" means to start a journey or leave.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "words-and-their-stories-hit-the-road",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 240000, "level": "B2", "topic": "Vocabulary", "accent": "US", "grad": "emerald",
@@ -162,7 +162,7 @@
   {
     "id": "voa-lets-learn-at-the-airport",
     "title": "At the Airport",
-    "description": "Câu hỏi và mẫu câu thường gặp khi làm thủ tục ở sân bay.",
+    "description": "Common questions and phrases when checking in at the airport.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-airport",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 198000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "cyan",
@@ -175,7 +175,7 @@
   {
     "id": "voa-how-to-pronounce-wednesday",
     "title": "How to Pronounce \"Wednesday\"",
-    "description": "Vì sao \"Wednesday\" lại đọc là wenz-day.",
+    "description": "Why \"Wednesday\" is pronounced as wenz-day.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-wednesday",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 62000, "level": "A2", "topic": "Pronunciation", "accent": "US", "grad": "rose",
@@ -188,7 +188,7 @@
   {
     "id": "voa-everyday-grammar-comparatives",
     "title": "Comparatives",
-    "description": "Cách so sánh hơn với tính từ ngắn và dài.",
+    "description": "How to make comparisons using short and long adjectives.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-comparatives",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 162000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
@@ -201,7 +201,7 @@
   {
     "id": "voa-lets-learn-at-the-restaurant",
     "title": "At the Restaurant",
-    "description": "Mẫu câu gọi món và thanh toán khi đi ăn nhà hàng.",
+    "description": "Phrases for ordering and paying at a restaurant.",
     "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-restaurant",
     "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
     "durationMs": 210000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",

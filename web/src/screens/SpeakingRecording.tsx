@@ -132,7 +132,7 @@ const SpeakingRecording = () => {
               if (e.currentTarget.src.includes('loremflickr')) {
                 e.currentTarget.src = `https://picsum.photos/seed/${practice.id}/800/450`;
               } else {
-                showError("Lỗi tải ảnh, vui lòng kiểm tra lại link ảnh!");
+                showError("Error loading image, please check the image link!");
               }
             }}
           />

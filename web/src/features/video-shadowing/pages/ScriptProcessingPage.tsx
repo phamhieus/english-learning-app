@@ -34,9 +34,9 @@ export default function ScriptProcessingPage() {
           </div>
         </div>
 
-        <h2 className="text-xl font-bold mb-1">{status === 'failed' ? 'Không tạo được script' : 'Đang tạo bài shadowing…'}</h2>
+        <h2 className="text-xl font-bold mb-1">{status === 'failed' ? 'Failed to generate script' : 'Generating shadow lesson...'}</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
-          {status === 'failed' ? error : 'Mọi xử lý chạy trên máy bạn. Lần đầu có thể cần tải mô hình AI.'}
+          {status === 'failed' ? error : 'All processing runs locally on your device. First-time run may require downloading AI models.'}
         </p>
 
         {status !== 'failed' && (
@@ -84,7 +84,7 @@ export default function ScriptProcessingPage() {
                 <RotateCcw className="w-4 h-4" /> Retry
               </button>
               <button onClick={() => navigate(`/video-shadowing/lessons/${lessonId}/review`)} className="px-5 py-2.5 rounded-xl font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center gap-2">
-                <Captions className="w-4 h-4" /> Thêm phụ đề / Review
+                <Captions className="w-4 h-4" /> Add subtitles / Review
               </button>
             </>
           )}

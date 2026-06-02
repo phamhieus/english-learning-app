@@ -57,7 +57,7 @@ export default function VideoShadowingLibraryPage() {
 
   const handleDelete = async (id: string) => {
     await removeLesson(id);
-    toast.success('Đã xóa bài và dọn dẹp file cục bộ.');
+    toast.success('Lesson deleted and local files cleaned up.');
   };
 
   return (
@@ -71,7 +71,7 @@ export default function VideoShadowingLibraryPage() {
               Beta
             </span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400">Nghe — nhại theo — chấm điểm. Luyện phát âm theo video thật.</p>
+          <p className="text-slate-500 dark:text-slate-400">Listen — shadow — get scored. Practice pronunciation with real-world videos.</p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
@@ -175,7 +175,7 @@ export default function VideoShadowingLibraryPage() {
       ) : voaLessons.length === 0 ? (
         <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
           <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
-          Không tìm thấy video phù hợp bộ lọc.
+          No videos found matching the current filters.
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
@@ -201,12 +201,12 @@ function MyVideosEmptyState({ onAdd }: { onAdd: () => void }) {
       </div>
       <h2 className="text-2xl font-bold mb-2">No videos yet</h2>
       <p className="text-slate-500 dark:text-slate-400 max-w-md mb-7 leading-relaxed">
-        Upload your own English video to create a shadowing lesson — Lingua sẽ tự tách script và chia câu để bạn luyện.
+        Upload your own English video to create a shadowing lesson — Lingua will automatically transcribe and segment the audio for you to practice.
       </p>
       <button onClick={onAdd} className="h-12 px-6 bg-indigo-600 text-white rounded-2xl font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
         <Upload className="w-5 h-5" /> Upload Video
       </button>
-      <p className="text-xs text-slate-400 mt-4">MP4, MOV, WebM · tối đa 300MB · phụ đề .srt/.vtt là tùy chọn</p>
+      <p className="text-xs text-slate-400 mt-4">MP4, MOV, WebM · up to 300MB · .srt/.vtt subtitles are optional</p>
     </div>
   );
 }

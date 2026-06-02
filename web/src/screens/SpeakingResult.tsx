@@ -9,7 +9,7 @@ const SpeakingResult = () => {
   if (!result) {
     return (
       <div className="p-8 text-center text-slate-500">
-        Không tìm thấy kết quả luyện tập. Vui lòng thử lại.
+        Practice result not found. Please try again.
       </div>
     );
   }

@@ -91,7 +91,7 @@ export function SpeakingScoreCards({
         <div className="flex justify-center bg-slate-50/50 dark:bg-slate-950/20 p-3 rounded-2xl border border-slate-100/50 dark:border-slate-900/50">
           <ScoreRing
             score={pronunciationScore}
-            label="Phát âm"
+            label="Pronunciation"
             colorClass="stroke-emerald-500 dark:stroke-emerald-400"
             size={84}
             strokeWidth={6}
@@ -100,7 +100,7 @@ export function SpeakingScoreCards({
         <div className="flex justify-center bg-slate-50/50 dark:bg-slate-950/20 p-3 rounded-2xl border border-slate-100/50 dark:border-slate-900/50">
           <ScoreRing
             score={fluencyScore}
-            label="Trôi chảy"
+            label="Fluency"
             colorClass="stroke-orange-500 dark:stroke-orange-400"
             size={84}
             strokeWidth={6}
@@ -109,7 +109,7 @@ export function SpeakingScoreCards({
         <div className="flex justify-center bg-slate-50/50 dark:bg-slate-950/20 p-3 rounded-2xl border border-slate-100/50 dark:border-slate-900/50">
           <ScoreRing
             score={rhythmScore}
-            label="Nhịp điệu"
+            label="Rhythm"
             colorClass="stroke-fuchsia-500 dark:stroke-fuchsia-400"
             size={84}
             strokeWidth={6}
@@ -118,7 +118,7 @@ export function SpeakingScoreCards({
         <div className="flex justify-center bg-slate-50/50 dark:bg-slate-950/20 p-3 rounded-2xl border border-slate-100/50 dark:border-slate-900/50">
           <ScoreRing
             score={intonationScore}
-            label="Ngữ điệu"
+            label="Intonation"
             colorClass="stroke-teal-500 dark:stroke-teal-400"
             size={84}
             strokeWidth={6}
@@ -127,7 +127,7 @@ export function SpeakingScoreCards({
         <div className="flex justify-center bg-slate-50/50 dark:bg-slate-950/20 p-3 rounded-2xl border border-slate-100/50 dark:border-slate-900/50 col-span-2 sm:col-span-1">
           <ScoreRing
             score={stressScore}
-            label="Nhấn âm"
+            label="Stress"
             colorClass="stroke-indigo-500 dark:stroke-indigo-400"
             size={84}
             strokeWidth={6}

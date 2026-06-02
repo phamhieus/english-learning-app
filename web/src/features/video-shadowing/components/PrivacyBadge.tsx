@@ -14,7 +14,7 @@ export function PrivacyBadge({ className, detail = true }: { className?: string;
     >
       <ShieldCheck className="w-4 h-4 shrink-0" />
       <span>Private — Processed on your device</span>
-      {detail && <span className="hidden sm:inline font-normal opacity-80">· video của bạn không gửi lên cloud</span>}
+      {detail && <span className="hidden sm:inline font-normal opacity-80">· your video is not sent to the cloud</span>}
     </div>
   );
 }

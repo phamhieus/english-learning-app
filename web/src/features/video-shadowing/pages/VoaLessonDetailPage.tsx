@@ -12,7 +12,7 @@ export default function VoaLessonDetailPage() {
   if (!lesson) {
     return (
       <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
-        Không tìm thấy bài học này.
+        Lesson not found.
         <div className="mt-4">
           <button onClick={() => navigate('/video-shadowing')} className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold">Back to library</button>
         </div>
@@ -35,7 +35,7 @@ export default function VoaLessonDetailPage() {
             <VideoThumb grad={lesson.grad} source="VOA" duration={formatClock(lesson.durationMs)} rounded="rounded-3xl" big videoUrl={lesson.videoUrl} />
           </div>
           <div className="mt-3 flex items-center gap-2 text-xs text-slate-400 font-medium">
-            <Info className="w-3.5 h-3.5" /> {lesson.sourceCredit} · dùng cho mục đích học tập
+            <Info className="w-3.5 h-3.5" /> {lesson.sourceCredit} · for educational purposes only
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function VoaLessonDetailPage() {
       <div className="glass-card rounded-2xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2"><List className="w-5 h-5 text-indigo-500" /> Segment preview</h2>
-          <span className="text-xs text-slate-400 font-medium">{lesson.segments.length} câu · xem trước {previewSegs.length} câu đầu</span>
+          <span className="text-xs text-slate-400 font-medium">{lesson.segments.length} segments · previewing the first {previewSegs.length} segments</span>
         </div>
         <div className="divide-y divide-slate-100 dark:divide-slate-700/60">
           {previewSegs.map((s, i) => (
@@ -89,7 +89,7 @@ export default function VoaLessonDetailPage() {
           ))}
           {remaining > 0 && (
             <div className="flex items-center justify-center gap-2 py-3 text-sm text-slate-400 font-medium">
-              <Lock className="w-3.5 h-3.5" /> {remaining} câu còn lại mở khi bắt đầu luyện
+              <Lock className="w-3.5 h-3.5" /> {remaining} remaining segments will unlock when you start practicing
             </div>
           )}
         </div>

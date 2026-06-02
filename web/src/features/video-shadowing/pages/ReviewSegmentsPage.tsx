@@ -51,10 +51,10 @@ export default function ReviewSegmentsPage() {
     await segmentRepo.replaceForLesson(lessonId, segments);
     if (lesson) await lessonRepo.save({ ...lesson, status: 'Ready', processingProgress: 100 });
     if (start) navigate(`/video-shadowing/lessons/${lessonId}/practice`);
-    else toast.success('Đã lưu nháp.');
+    else toast.success('Draft saved.');
   };
 
-  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Đang tải…</div>;
+  if (loading) return <div className="glass-card rounded-3xl py-16 text-center text-slate-400">Loading...</div>;
 
   return (
     <div>
@@ -68,11 +68,11 @@ export default function ReviewSegmentsPage() {
             {videoUrl ? (
               <video src={videoUrl} controls className="w-full h-full bg-black" />
             ) : (
-              <p className="text-sm text-slate-400 px-6 text-center">Không có bản xem trước video cho nguồn này.</p>
+              <p className="text-sm text-slate-400 px-6 text-center">No video preview available for this source.</p>
             )}
           </div>
           {lesson?.sourceType === 'DirectUrl' && (
-            <p className="text-xs text-slate-400 mt-2">Nếu video không phát được, nguồn có thể không cho phép CORS.</p>
+            <p className="text-xs text-slate-400 mt-2">If the video does not play, the source might not allow CORS.</p>
           )}
         </div>
 
@@ -81,14 +81,14 @@ export default function ReviewSegmentsPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-bold flex items-center gap-2"><ListChecks className="w-5 h-5 text-indigo-500" /> Review segments</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Chỉnh text, tách hoặc gộp câu trước khi luyện.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Edit text, split or merge segments before practicing.</p>
             </div>
             <span className="text-sm font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full">{segments.length} segments</span>
           </div>
 
           {segments.length === 0 && (
             <div className="glass-card rounded-2xl p-8 text-center text-slate-500 dark:text-slate-400 mb-4">
-              Chưa có segment. Thêm thủ công hoặc quay lại tải phụ đề.
+              No segments yet. Add segments manually or go back to upload subtitles.
               <div className="mt-4">
                 <button onClick={() => apply(addSegmentAfter(segments, '', lessonId))} className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold inline-flex items-center gap-2">
                   <Plus className="w-4 h-4" /> Add segment

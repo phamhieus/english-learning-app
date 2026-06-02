@@ -147,20 +147,20 @@ export function computeSegmentWarnings(
 
   ordered.forEach((s, i) => {
     if (!s.text.trim()) {
-      warnings.push({ segmentId: s.id, code: 'empty', message: 'Câu rỗng — hãy nhập nội dung hoặc xóa.' });
+      warnings.push({ segmentId: s.id, code: 'empty', message: 'Empty segment — please enter text or delete it.' });
     }
     if (s.endMs <= s.startMs) {
-      warnings.push({ segmentId: s.id, code: 'too_short', message: 'Thời gian kết thúc phải sau thời gian bắt đầu.' });
+      warnings.push({ segmentId: s.id, code: 'too_short', message: 'End time must be after start time.' });
     }
     if (s.endMs - s.startMs > rule.maxMs) {
-      warnings.push({ segmentId: s.id, code: 'too_long', message: 'Câu quá dài — nên tách nhỏ để dễ luyện.' });
+      warnings.push({ segmentId: s.id, code: 'too_long', message: 'Segment too long — consider splitting it for easier practice.' });
     }
     const next = ordered[i + 1];
     if (next) {
       if (next.startMs < s.endMs) {
-        warnings.push({ segmentId: s.id, code: 'overlap', message: 'Câu này chồng thời gian với câu kế tiếp.' });
+        warnings.push({ segmentId: s.id, code: 'overlap', message: 'This segment overlaps with the next segment.' });
       } else if (next.startMs - s.endMs > 4000) {
-        warnings.push({ segmentId: s.id, code: 'large_gap', message: 'Khoảng trống lớn trước câu kế tiếp.' });
+        warnings.push({ segmentId: s.id, code: 'large_gap', message: 'Large gap before the next segment.' });
       }
     }
   });

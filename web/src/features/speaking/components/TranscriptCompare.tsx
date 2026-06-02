@@ -36,7 +36,7 @@ export function TranscriptCompare({
                 <span
                   key={index}
                   className="text-emerald-600 dark:text-emerald-400 hover:scale-105 transition-transform cursor-help"
-                  title="Phát âm chính xác"
+                  title="Correct pronunciation"
                 >
                   {item.text}
                 </span>
@@ -47,7 +47,7 @@ export function TranscriptCompare({
                 <span
                   key={index}
                   className="text-rose-500 line-through decoration-2 decoration-rose-500/50 dark:text-rose-450 hover:scale-105 transition-transform cursor-help font-normal"
-                  title="Từ bị bỏ sót khi nói"
+                  title="Word omitted when spoken"
                 >
                   {item.text}
                 </span>
@@ -58,7 +58,7 @@ export function TranscriptCompare({
                 <span
                   key={index}
                   className="inline-flex flex-col items-center bg-amber-50 dark:bg-amber-950/20 border border-amber-200/30 px-2 py-0.5 rounded-lg text-amber-700 dark:text-amber-400 text-center cursor-help hover:scale-105 transition-transform"
-                  title={`Phát âm sai. Mong muốn: "${item.text}", Nhận diện: "${item.matchedWith}"`}
+                  title={`Incorrect pronunciation. Expected: "${item.text}", Recognized: "${item.matchedWith}"`}
                 >
                   <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider scale-90 mb-0.5">
                     {item.matchedWith || "?"}
@@ -74,7 +74,7 @@ export function TranscriptCompare({
                 <span
                   key={index}
                   className="bg-purple-50 dark:bg-purple-950/20 border border-purple-200/30 px-1.5 py-0.5 rounded text-purple-600 dark:text-purple-400 italic text-sm font-normal self-center hover:scale-105 transition-transform cursor-help"
-                  title={`Từ thừa: bạn nói từ này nhưng không có trong câu gốc.`}
+                  title={`Extra word: spoken but not present in original sentence.`}
                 >
                   +{item.text}
                 </span>
@@ -90,19 +90,19 @@ export function TranscriptCompare({
       <div className="flex flex-wrap gap-4 px-2">
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-          <span>Phát âm đúng</span>
+          <span>Correct Pronunciation</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-          <span>Bỏ sót từ</span>
+          <span>Omitted Word</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <span>Sai phát âm (Nhận diện / Gốc)</span>
+          <span>Mispronounced (Recognized / Original)</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-          <span>Từ nói thừa</span>
+          <span>Extra Word</span>
         </div>
       </div>
     </div>

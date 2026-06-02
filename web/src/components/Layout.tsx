@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
-import { Key, Home, Mic2, Clapperboard, Edit3, Menu } from 'lucide-react';
+import { Key, Home, Mic2, Repeat2, Edit3, Menu } from 'lucide-react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from './classNames';
 import { useSettings } from './useSettings';
@@ -9,7 +9,7 @@ import { useSettings } from './useSettings';
 const MOBILE_TABS = [
   { name: 'Home', icon: Home, path: '/' },
   { name: 'Speaking', icon: Mic2, path: '/speaking' },
-  { name: 'Video', icon: Clapperboard, path: '/video-shadowing' },
+  { name: 'Shadowing', icon: Repeat2, path: '/shadowing' },
   { name: 'Writing', icon: Edit3, path: '/writing' },
 ] as const;
 
@@ -24,8 +24,11 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     (aiProvider === 'openai' && openAiKey) ||
     (aiProvider === 'deepseek' && deepseekKey);
 
-  // Video Shadowing runs fully on-device (no cloud AI) — don't gate it on a key.
-  const keyExempt = location.pathname === '/settings' || location.pathname.startsWith('/video-shadowing');
+  // Shadowing lets users choose local video shadowing before they need a cloud AI key.
+  const keyExempt =
+    location.pathname === '/settings' ||
+    location.pathname.startsWith('/shadowing') ||
+    location.pathname.startsWith('/video-shadowing');
 
   if (!hasKey && !keyExempt) {
     return (

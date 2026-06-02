@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Image, Play, Clock, BarChart, RefreshCw } from 'lucide-react';
+import { Image, Clock, Sparkles, RefreshCw, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import gsap from 'gsap';
@@ -77,15 +77,20 @@ const PictureDescriptionList = () => {
     <div ref={containerRef} className="animate-in fade-in duration-300">
       <div className="gs-pd-header flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Picture Description</h1>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+              TOEIC
+            </span>
+            <span className="text-xs font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">Speaking · Q3</span>
+          </div>
+          <h1 className="text-3xl font-bold mb-2">Describe a Picture</h1>
           <p className="text-slate-500 dark:text-slate-400">
-            Describe what you see in the picture — TOEIC Part 1 style practice.
+            Look at the photo, prepare for 45 seconds, then describe it for 30 seconds.
           </p>
         </div>
         <button
           onClick={handleGenerateAI}
-          disabled={loading}
-          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all"
         >
           <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
           {loading ? 'Generating...' : 'Generate with AI'}
@@ -95,13 +100,13 @@ const PictureDescriptionList = () => {
       {/* Filters */}
       <div className="gs-pd-filters space-y-4 mb-8">
         <div className="flex flex-wrap gap-2">
-          <FilterChip label="All" active={activeCategory === 'All'} onClick={() => setActiveCategory('All')} />
+          <FilterChip label="All scenes" active={activeCategory === 'All'} onClick={() => setActiveCategory('All')} />
           {PICTURE_CATEGORIES.map((c) => (
             <FilterChip key={c} label={c} active={activeCategory === c} onClick={() => setActiveCategory(c)} />
           ))}
         </div>
         <div className="flex flex-wrap gap-2">
-          <FilterChip label="All Levels" active={activeLevel === 'All'} onClick={() => setActiveLevel('All')} />
+          <FilterChip label="Any difficulty" active={activeLevel === 'All'} onClick={() => setActiveLevel('All')} />
           {PICTURE_LEVELS.map((l) => (
             <FilterChip key={l} label={l} active={activeLevel === l} onClick={() => setActiveLevel(l)} />
           ))}
@@ -120,10 +125,19 @@ const PictureDescriptionList = () => {
           {displayPractices.map((practice) => (
             <div
               key={practice.id}
-              className="gs-pd-card glass-card dark:bg-gray-800 rounded-2xl shadow group hover:shadow-xl transition-all border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col overflow-hidden"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate('/speaking/picture/practice', { state: { practice } })}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  navigate('/speaking/picture/practice', { state: { practice } });
+                }
+              }}
+              className="gs-pd-card glass-card rounded-2xl shadow group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col overflow-hidden cursor-pointer"
             >
               {/* Image */}
-              <div className="relative h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div className="relative aspect-[16/10] bg-slate-100 dark:bg-slate-800 overflow-hidden">
                 {imgErrors.has(practice.id) ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <Image className="w-12 h-12 text-slate-300 dark:text-slate-600" />
@@ -148,7 +162,7 @@ const PictureDescriptionList = () => {
                 >
                   {practice.level}
                 </span>
-                <span className="absolute top-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-md font-medium backdrop-blur-sm">
+                <span className="absolute top-3 right-3 bg-white/85 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 text-xs px-2 py-1 rounded-md font-medium backdrop-blur-sm">
                   {practice.category}
                 </span>
               </div>
@@ -162,15 +176,18 @@ const PictureDescriptionList = () => {
                     <Clock className="w-4 h-4" /> {practice.duration}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <BarChart className="w-4 h-4" /> {practice.level}
+                    <Sparkles className="w-4 h-4" /> TOEIC vocab
                   </span>
                 </div>
 
                 <button
-                  onClick={() => navigate('/picture-description/practice', { state: { practice } })}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate('/speaking/picture/practice', { state: { practice } });
+                  }}
                   className="w-full flex items-center justify-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 py-3 rounded-xl font-semibold transition-colors"
                 >
-                  <Play className="w-4 h-4 fill-current" /> Start Practice
+                  <Mic className="w-4 h-4" /> Describe
                 </button>
               </div>
             </div>

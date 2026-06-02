@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   Wand2, Type, Pilcrow, MessagesSquare, Clapperboard,
-  Play, Check, Film, Activity, Upload, Link, Sparkles, Plus, FileText,
+  Play, Check, Activity, Upload, Link, Sparkles, Plus, FileText,
+  Quote, Clock, AlignLeft, CheckCircle2, Circle, Search,
+  BadgeCheck, Folder,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
@@ -9,6 +11,11 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { getLessonsByMode, getLessonProgress, type ShadowingMode } from '../services/shadowingData';
 import type { ShadowingLesson } from '../features/shadowing/types/shadowing.types';
+import { VideoLessonCard, type LessonCardData } from '../features/video-shadowing/components/VideoLessonCard';
+import { useVideoShadowingLibrary } from '../features/video-shadowing/hooks/useVideoShadowingLibrary';
+import { getVoaCategories, type BuiltInVoaLesson } from '../features/video-shadowing/services/video-source/builtInVoaResolver';
+import { gradForId } from '../features/video-shadowing/components/videoThumbStyles';
+import type { VideoShadowingLesson } from '../features/video-shadowing/models/lesson';
 
 interface ShadowModeConfig {
   key: string;
@@ -73,12 +80,57 @@ const ThumbStrip = ({ grad, dur, prog = 0 }: { grad: string; dur: string; prog?:
   </div>
 );
 
-const LessonCard = ({ lesson, idx, mode }: { lesson: ShadowingLesson; idx: number; mode: string }) => {
+const progressStatus = (prog: number) => {
+  if (prog >= 100) return { label: 'Completed', className: 'text-green-600 dark:text-green-400', Icon: CheckCircle2 };
+  if (prog > 0) return { label: `${prog}% done`, className: 'text-indigo-500 dark:text-indigo-400', Icon: Activity };
+  return { label: 'Not started', className: 'text-slate-400 dark:text-slate-500', Icon: Circle };
+};
+
+const LessonPreview = ({ lesson, mode }: { lesson: ShadowingLesson; mode: string }) => {
+  if (mode === 'paragraph') {
+    const preview = lesson.segments.map(s => s.text).filter(Boolean).slice(0, 2).join(' ');
+    return (
+      <div className="px-5 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/30">
+        <div className="w-9 h-9 rounded-xl bg-violet-500 text-white flex items-center justify-center shadow-sm mb-3">
+          <Pilcrow className="w-4 h-4" />
+        </div>
+        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-3">
+          <span className="text-indigo-300 font-bold text-xl leading-none mr-0.5 align-[-3px]">"</span>
+          {preview}
+          <span>"</span>
+        </p>
+      </div>
+    );
+  }
+
+  if (mode === 'dialogue') {
+    const lines = lesson.segments.filter(s => Boolean(s.text)).slice(0, 2).map(s => s.text);
+    return (
+      <div className="px-5 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/30">
+        <div className="w-9 h-9 rounded-xl bg-cyan-600 text-white flex items-center justify-center shadow-sm mb-3">
+          <MessagesSquare className="w-4 h-4" />
+        </div>
+        <div className="flex min-h-[64px] flex-col justify-center gap-1.5">
+          <span className="self-start max-w-[88%] rounded-2xl rounded-bl-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-[13px] leading-snug text-slate-600 dark:text-slate-300">
+            {lines[0] ?? 'Listen to your partner.'}
+          </span>
+          <span className="self-end max-w-[88%] rounded-2xl rounded-br-md bg-indigo-500 px-3 py-1.5 text-[13px] leading-snug text-white">
+            {lines[1] ?? 'Then shadow your role.'}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+const LessonCard = ({ lesson, idx: _idx, mode }: { lesson: ShadowingLesson; idx: number; mode: string }) => {
   const navigate = useNavigate();
   const prog = getLessonProgress(lesson.id);
   const cefr = levelCefr(lesson.level);
-  const grad = GRADIENTS[idx % GRADIENTS.length];
   const dur = lesson.durationMinutes ? `${lesson.durationMinutes} min` : `${lesson.totalSegments} seg`;
+  const status = progressStatus(prog);
 
   const ctaLabel = prog >= 100 ? 'Review' : prog > 0 ? 'Continue' : 'Start';
   const ctaCls = prog >= 100
@@ -86,16 +138,21 @@ const LessonCard = ({ lesson, idx, mode }: { lesson: ShadowingLesson; idx: numbe
     : prog > 0
       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
       : 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400';
-
-  // Find player roles for dialogue
-  const speakers = lesson.segments
-    .map(s => s.speaker)
-    .filter((v): v is string => Boolean(v));
-  const uniqueSpeakers = [...new Set(speakers)];
+  const openLesson = () => navigate('/shadowing/practice', { state: { lesson } });
 
   return (
-    <div className="gs-sh-card glass-card rounded-2xl overflow-hidden flex flex-col">
-      <ThumbStrip grad={grad} dur={dur} prog={prog} />
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={openLesson}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openLesson();
+        }
+      }}
+      className="gs-sh-card glass-card rounded-2xl overflow-hidden flex flex-col cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+    >
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
           <span className={cn('px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider', cefrClass(cefr))}>{cefr}</span>
@@ -106,21 +163,22 @@ const LessonCard = ({ lesson, idx, mode }: { lesson: ShadowingLesson; idx: numbe
 
         <h3 className="text-lg font-bold leading-snug mb-3">{lesson.title}</h3>
 
-        {mode === 'dialogue' && uniqueSpeakers.length >= 2 ? (
-          <div className="flex items-center gap-2 mb-4 mt-auto">
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">You play:</span>
-            <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold">{uniqueSpeakers[1]}</span>
-            <span className="text-xs text-slate-400 dark:text-slate-500">· {lesson.totalSegments} turns</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 mt-auto">
-            <span className="flex items-center gap-1.5"><Film className="w-4 h-4" /> {lesson.totalSegments} segments</span>
-            {prog > 0 && <span className="flex items-center gap-1.5 font-semibold text-indigo-500"><Activity className="w-4 h-4" /> {prog}%</span>}
-          </div>
-        )}
+        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 mt-auto">
+          <span className="flex items-center gap-1.5">
+            {mode === 'sentence' ? <Quote className="w-4 h-4" /> : mode === 'dialogue' ? <MessagesSquare className="w-4 h-4" /> : <AlignLeft className="w-4 h-4" />}
+            {lesson.totalSegments} {mode === 'sentence' ? 'sentences' : mode === 'dialogue' ? 'turns' : 'segments'}
+          </span>
+          <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> {dur}</span>
+          <span className={cn('flex items-center gap-1.5 font-semibold text-xs', status.className)}>
+            <status.Icon className="w-3.5 h-3.5" /> {status.label}
+          </span>
+        </div>
 
         <button
-          onClick={() => navigate('/shadowing/practice', { state: { lesson } })}
+          onClick={(event) => {
+            event.stopPropagation();
+            openLesson();
+          }}
           className={cn('w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold transition-colors', ctaCls)}
         >
           <Play className="w-4 h-4" /> {ctaLabel} Shadowing
@@ -177,22 +235,196 @@ const FreeMode = () => (
   </div>
 );
 
-const VideoMode = () => (
-  <div className="glass-card rounded-2xl p-10 text-center flex flex-col items-center justify-center border-dashed border-2 border-slate-200 dark:border-slate-700">
-    <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 text-orange-500 rounded-2xl flex items-center justify-center mb-4">
-      <Clapperboard className="w-8 h-8" />
+type VideoTab = 'voa' | 'mine';
+
+const VideoMode = () => {
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<VideoTab>('voa');
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('All');
+
+  const { voaLessons, myLessons, loading } = useVideoShadowingLibrary({
+    level: 'All levels',
+    category,
+    search,
+  });
+
+  const categories = useMemo(() => getVoaCategories(), []);
+
+  const voaCardData = (lesson: BuiltInVoaLesson): LessonCardData => ({
+    lesson,
+    grad: lesson.grad,
+    category: lesson.category,
+    segmentCount: lesson.segments.length,
+    progress: 0,
+    videoUrl: lesson.videoUrl,
+  });
+
+  const myCardData = (lesson: VideoShadowingLesson): LessonCardData => ({
+    lesson,
+    grad: gradForId(lesson.id),
+    category: lesson.sourceType === 'DirectUrl' ? 'Video link' : 'My upload',
+    segmentCount: 0,
+    progress: 0,
+    videoUrl: lesson.sourceUrl,
+  });
+
+  const visibleCount = tab === 'voa' ? voaLessons.length : myLessons.length;
+  const listKey = `${tab}-${category}-${search.trim().toLowerCase()}`;
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-xl font-bold">Video Shadowing</h3>
+            <span className="text-[11px] font-bold tracking-widest text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 px-2 py-0.5 rounded-md uppercase">
+              VOA + Upload
+            </span>
+          </div>
+          <p className="text-slate-500 dark:text-slate-400">
+            Choose a VOA clip or one of your own videos, then shadow sentence by sentence.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/video-shadowing/add')}
+          className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:scale-105 transition-transform"
+        >
+          <Plus className="w-4 h-4" /> Add Video
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit">
+          {([
+            ['voa', 'VOA Library', BadgeCheck, voaLessons.length],
+            ['mine', 'My Videos', Folder, myLessons.length],
+          ] as const).map(([key, label, Icon, count]) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ease-out active:scale-[0.97]',
+                tab === key
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm scale-[1.02]'
+                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-700/50'
+              )}
+            >
+              <Icon className="w-4 h-4" /> {label}
+              {count > 0 && (
+                <span className="text-[10px] bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-200 px-1.5 py-0.5 rounded-full">
+                  {count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full sm:w-64">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search videos..."
+            className="w-full h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
+          />
+        </div>
+      </div>
+
+      {tab === 'voa' && (
+        <div className="flex flex-wrap gap-2">
+          {categories.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={cn(
+                'px-3.5 py-2 rounded-full text-[13px] font-medium transition-all duration-300 ease-out active:scale-95',
+                category === c
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-[1.03]'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:-translate-y-0.5'
+              )}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {loading ? (
+        <div key={listKey} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="glass-card rounded-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-500"
+              style={{ animationDelay: `${i * 70}ms` }}
+            >
+              <div className="aspect-video bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              <div className="p-5 space-y-3">
+                <div className="h-3 w-20 rounded bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                <div className="h-4 w-3/4 rounded bg-slate-100 dark:bg-slate-800 animate-pulse" />
+                <div className="h-9 w-full rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : visibleCount === 0 ? (
+        <div key={listKey} className="glass-card rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center py-14 px-8 animate-in fade-in zoom-in-95 duration-300">
+          <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 text-orange-500 rounded-2xl flex items-center justify-center mb-4">
+            {tab === 'mine' ? <Upload className="w-8 h-8" /> : <Clapperboard className="w-8 h-8" />}
+          </div>
+          <h3 className="text-xl font-bold mb-2">{tab === 'mine' ? 'No videos yet' : 'No videos found'}</h3>
+          <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md">
+            {tab === 'mine'
+              ? 'Upload your own English video to create a shadowing lesson.'
+              : 'Try another search or category.'}
+          </p>
+          {tab === 'mine' && (
+            <button
+              onClick={() => navigate('/video-shadowing/add')}
+              className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/25"
+            >
+              <Upload className="w-4 h-4" /> Upload Video
+            </button>
+          )}
+        </div>
+      ) : (
+        <div key={listKey} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
+          {tab === 'voa'
+            ? voaLessons.map((lesson, i) => (
+                <div
+                  key={lesson.id}
+                  className="animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-500"
+                  style={{ animationDelay: `${Math.min(i, 8) * 55}ms` }}
+                >
+                  <VideoLessonCard data={voaCardData(lesson)} />
+                </div>
+              ))
+            : myLessons.map((lesson, i) => (
+                <div
+                  key={lesson.id}
+                  className="animate-in fade-in slide-in-from-bottom-3 zoom-in-95 duration-500"
+                  style={{ animationDelay: `${Math.min(i, 8) * 55}ms` }}
+                >
+                  <VideoLessonCard data={myCardData(lesson)} />
+                </div>
+              ))}
+        </div>
+      )}
+
+      <div className="flex justify-center">
+        <button
+          onClick={() => navigate('/video-shadowing')}
+          className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+        >
+          Open full video library
+        </button>
+      </div>
     </div>
-    <h3 className="text-xl font-bold mb-2">Video Shadowing</h3>
-    <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md">
-      Shadow VOA English videos or upload your own. The AI splits the audio into segments and scores your pronunciation.
-    </p>
-    <button className="flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-orange-500/25 hover:scale-105 transition-transform">
-      <Plus className="w-4 h-4" /> Add a Video
-    </button>
-  </div>
-);
+  );
+};
 
 const ShadowingListPage = () => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState('sentence');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -231,7 +463,10 @@ const ShadowingListPage = () => {
           <p className="text-slate-500 dark:text-slate-400">Choose how you want to shadow — from a single sentence to a full video.</p>
         </div>
         {mode === 'video' && (
-          <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:scale-105 transition-transform">
+          <button
+            onClick={() => navigate('/video-shadowing/add')}
+            className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:scale-105 transition-transform"
+          >
             <Plus className="w-4 h-4" /> Add Video
           </button>
         )}
@@ -249,20 +484,20 @@ const ShadowingListPage = () => {
               key={m.key}
               onClick={() => setMode(m.key)}
               className={cn(
-                'text-left rounded-2xl p-4 border transition-all relative overflow-hidden',
+                'group text-left rounded-2xl p-4 border transition-all duration-300 ease-out relative overflow-hidden active:scale-[0.98]',
                 on
-                  ? 'bg-white dark:bg-slate-800 border-indigo-300 dark:border-indigo-700 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-500/30'
-                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 shadow-sm'
+                  ? 'bg-white dark:bg-slate-800 border-indigo-300 dark:border-indigo-700 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-500/30 -translate-y-0.5 scale-[1.015]'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:-translate-y-0.5 hover:shadow-md shadow-sm'
               )}
             >
-              <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-md mb-3', m.iconBg)}>
+              <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-md mb-3 transition-transform duration-300 ease-out', on ? 'scale-110' : 'group-hover:scale-105', m.iconBg)}>
                 {m.icon}
               </div>
               <p className={cn('font-bold text-[15px] mb-0.5', on ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-800 dark:text-slate-200')}>{m.label}</p>
               <p className="text-xs text-slate-400 dark:text-slate-500 leading-snug mb-2">{m.desc}</p>
               <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">{count}</span>
               {on && (
-                <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center">
+                <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-indigo-500 text-white flex items-center justify-center animate-in zoom-in duration-200">
                   <Check className="w-3 h-3" />
                 </div>
               )}

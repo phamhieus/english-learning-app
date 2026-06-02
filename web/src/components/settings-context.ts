@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 
 export type AIProvider = 'gemini' | 'openai' | 'deepseek';
+export type PrimaryExam = 'TOEIC' | 'IELTS';
 
 export interface AppSettings {
   aiProvider: AIProvider;
+  primaryExam: PrimaryExam;
   geminiKey: string;
   openAiKey: string;
   deepseekKey: string;
@@ -12,6 +14,7 @@ export interface AppSettings {
 
 export interface SettingsContextType extends AppSettings {
   setAiProvider: (provider: AIProvider) => void;
+  setPrimaryExam: (exam: PrimaryExam) => void;
   setGeminiKey: (key: string) => void;
   setOpenAiKey: (key: string) => void;
   setDeepseekKey: (key: string) => void;

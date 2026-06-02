@@ -1,15 +1,18 @@
-import { ArrowRight, Play, BookOpen, MessageCircle, BarChart3, TrendingUp, Mic2, Edit3, Headphones, Image } from 'lucide-react';
+import { ArrowRight, MessageCircle, Mic2, Edit3, Repeat2, Flame, Gauge, LineChart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useUserStats } from '../services/useUserStats';
+import { useSettings } from '../components/useSettings';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const stats = useUserStats();
+  const { primaryExam } = useSettings();
 
   const streakLabel = stats.streak > 0 ? `${stats.streak} Day${stats.streak !== 1 ? 's' : ''}` : '—';
   const toeicLabel  = stats.toeicEst !== null ? String(stats.toeicEst) : '—';
   const ieltsLabel  = stats.ieltsEst !== null ? String(stats.ieltsEst) : '—';
+  const isToeic = primaryExam === 'TOEIC';
 
   return (
     <div className="animate-in fade-in duration-300">
@@ -63,12 +66,22 @@ const Dashboard = () => {
       <h2 className="text-2xl font-bold mb-6">Quick Access</h2>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {[
-          { title: 'TOEIC Speaking', sub: '11 question types',       icon: Mic2,          color: 'bg-blue-500',    path: '/speaking' },
-          { title: 'IELTS Speaking', sub: 'Parts 1 · 2 · 3',         icon: Mic2,          color: 'bg-cyan-500',    path: '/speaking' },
-          { title: 'Shadowing',      sub: 'Listen & repeat',          icon: Repeat2,       color: 'bg-purple-500',  path: '/shadowing', highlight: true },
-          { title: 'TOEIC Writing',  sub: 'Picture · Email · Essay',  icon: Edit3,         color: 'bg-indigo-500',  path: '/writing' },
-          { title: 'IELTS Writing',  sub: 'Task 1 · Task 2',          icon: Edit3,         color: 'bg-orange-500',  path: '/writing' },
-          { title: 'Mock Interview', sub: 'Full speaking test',        icon: MessageCircle, color: 'bg-emerald-500', path: '/shadowing/mock-dialogue' },
+          {
+            title: `${primaryExam} Speaking`,
+            sub: isToeic ? '11 question types' : 'Parts 1 · 2 · 3',
+            icon: Mic2,
+            color: isToeic ? 'bg-blue-500' : 'bg-cyan-500',
+            path: '/speaking',
+          },
+          {
+            title: `${primaryExam} Writing`,
+            sub: isToeic ? 'Picture · Email · Essay' : 'Task 1 · Task 2',
+            icon: Edit3,
+            color: isToeic ? 'bg-indigo-500' : 'bg-orange-500',
+            path: '/writing',
+          },
+          { title: 'Shadowing',      sub: 'Listen · repeat · video',    icon: Repeat2,       color: 'bg-purple-500',  path: '/shadowing', highlight: true },
+          { title: 'Mock Interview', sub: 'Full speaking test',         icon: MessageCircle, color: 'bg-emerald-500', path: '/shadowing/mock-dialogue' },
         ].map((it, i) => (
           <button
             key={i}

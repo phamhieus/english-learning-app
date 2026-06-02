@@ -50,6 +50,9 @@ function App() {
 
                   <Route path="/shadowing" element={<ShadowingList />} />
                   <Route path="/shadowing/practice" element={<ShadowingPracticePage />} />
+                  <Route path="/speaking/picture" element={<PictureDescriptionList />} />
+                  <Route path="/speaking/picture/practice" element={<PictureDescriptionPractice />} />
+                  <Route path="/speaking/picture/result" element={<PictureDescriptionResult />} />
                   <Route path="/picture-description" element={<PictureDescriptionList />} />
                   <Route path="/picture-description/practice" element={<PictureDescriptionPractice />} />
                   <Route path="/picture-description/result" element={<PictureDescriptionResult />} />

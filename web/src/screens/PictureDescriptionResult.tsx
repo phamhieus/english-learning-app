@@ -229,13 +229,13 @@ const PictureDescriptionResult = () => {
       {/* Bottom CTA */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4 shrink-0">
         <button
-          onClick={() => navigate('/picture-description/practice', { state: { practice } })}
+          onClick={() => navigate('/speaking/picture/practice', { state: { practice } })}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-850 hover:shadow transition-all"
         >
           <RotateCcw className="w-5 h-5" /> Try Again
         </button>
         <button
-          onClick={() => navigate('/picture-description')}
+          onClick={() => navigate('/speaking/picture')}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-700 hover:scale-105 active:scale-98 transition-all"
         >
           Next Picture <ArrowRight className="w-5 h-5" />

@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, History, Settings, MessageSquare, Headphones, Clapperboard, Image } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, History, Settings, Repeat2, Flame, Trophy } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useUserStats } from '../services/useUserStats';
@@ -7,10 +7,6 @@ import { useUserStats } from '../services/useUserStats';
 const navItems = [
   { name: 'Dashboard',    icon: LayoutDashboard, path: '/' },
   { name: 'Speaking',     icon: Mic2,            path: '/speaking' },
-  { name: 'Shadowing',    icon: Headphones,      path: '/shadowing' },
-  { name: 'Video Shadowing', icon: Clapperboard, path: '/video-shadowing' },
-  { name: 'Conversation', icon: MessageSquare,   path: '/speaking/virtual-conversation' },
-  { name: 'Describe Pic', icon: Image,           path: '/picture-description' },
   { name: 'Writing',      icon: Edit3,           path: '/writing' },
   { name: 'Shadowing',    icon: Repeat2,         path: '/shadowing' },
   { name: 'History',      icon: History,         path: '/history' },
@@ -94,7 +90,7 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
           style={{
             top: indicatorStyle.top,
             height: indicatorStyle.height,
-            opacity: indicatorStyle.opacity,
+            opacity: 1,
           }}
         />
 

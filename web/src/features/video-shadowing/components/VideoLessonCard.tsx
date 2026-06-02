@@ -45,8 +45,26 @@ export function VideoLessonCard({
   };
 
   return (
-    <div className="glass-card rounded-2xl overflow-hidden flex flex-col group">
-      <button onClick={open} className="text-left" aria-label={`Open ${lesson.title}`}>
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={open}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      }}
+      className="glass-card rounded-2xl overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+    >
+      <button
+        onClick={(event) => {
+          event.stopPropagation();
+          open();
+        }}
+        className="text-left"
+        aria-label={`Open ${lesson.title}`}
+      >
         <VideoThumb grad={grad} source={isVoa ? 'VOA' : 'Upload'} duration={formatClock(lesson.durationMs)} progress={progress} videoUrl={data.videoUrl} />
       </button>
       <div className="p-5 flex flex-col flex-1">
@@ -57,7 +75,10 @@ export function VideoLessonCard({
           <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{lesson.topic}</span>
           {onDelete && (
             <button
-              onClick={() => onDelete(lesson.id)}
+              onClick={(event) => {
+                event.stopPropagation();
+                onDelete(lesson.id);
+              }}
               className="ml-auto w-7 h-7 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 flex items-center justify-center transition"
               title="Delete lesson"
             >
@@ -65,7 +86,13 @@ export function VideoLessonCard({
             </button>
           )}
         </div>
-        <button onClick={open} className="text-left">
+        <button
+          onClick={(event) => {
+            event.stopPropagation();
+            open();
+          }}
+          className="text-left"
+        >
           <h3 className="text-lg font-bold leading-snug mb-1">{lesson.title}</h3>
         </button>
         <p className="text-xs text-slate-400 font-medium mb-4">{data.category}</p>
@@ -80,7 +107,10 @@ export function VideoLessonCard({
           )}
         </div>
         <button
-          onClick={open}
+          onClick={(event) => {
+            event.stopPropagation();
+            open();
+          }}
           className={cn('w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold transition active:scale-[0.98]', cta.cls)}
         >
           <cta.Icon className="w-4 h-4" /> {cta.label}

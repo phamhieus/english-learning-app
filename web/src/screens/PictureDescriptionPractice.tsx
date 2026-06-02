@@ -78,7 +78,7 @@ const PictureDescriptionPractice = () => {
         focus: 'Picture Description',
       });
       showSuccess('Evaluation completed!');
-      navigate('/picture-description/result', { state: { result, recognizedText, practice } });
+      navigate('/speaking/picture/result', { state: { result, recognizedText, practice } });
     } catch (e) {
       console.error(e);
       showError('Failed to evaluate description.');

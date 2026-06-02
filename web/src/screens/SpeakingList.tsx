@@ -1,7 +1,8 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { Play, Clock, Volume2, Image, MessagesSquare, Table2, Lightbulb, Megaphone, UserRound, RectangleEllipsis, MessageCircle, Timer } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import { useSettings } from '../components/useSettings';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { getExamTopics } from '../services/localData';
@@ -38,25 +39,6 @@ const SPEAKING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
   },
 };
 
-const ExamSwitch = ({ exam, onExam }: { exam: Exam; onExam: (e: Exam) => void }) => (
-  <div className="inline-flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-    {(['TOEIC', 'IELTS'] as Exam[]).map((e) => (
-      <button
-        key={e}
-        onClick={() => onExam(e)}
-        className={cn(
-          'px-6 py-2 rounded-lg text-sm font-bold tracking-wide transition-all',
-          exam === e
-            ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
-            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-        )}
-      >
-        {e}
-      </button>
-    ))}
-  </div>
-);
-
 const ExamPill = ({ exam }: { exam: Exam }) => (
   <span className={cn(
     'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider',
@@ -68,7 +50,8 @@ const ExamPill = ({ exam }: { exam: Exam }) => (
 
 const SpeakingList = () => {
   const navigate = useNavigate();
-  const [activeExam, setActiveExam] = useState<Exam>('TOEIC');
+  const { primaryExam } = useSettings();
+  const activeExam = primaryExam;
   const [activeTaskKey, setActiveTaskKey] = useState('read');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -80,10 +63,9 @@ const SpeakingList = () => {
     [activeExam, activeTask.section]
   );
 
-  const handleExamChange = (exam: Exam) => {
-    setActiveExam(exam);
-    setActiveTaskKey(SPEAKING_TASKS[exam].tasks[0].key);
-  };
+  useEffect(() => {
+    setActiveTaskKey(SPEAKING_TASKS[activeExam].tasks[0].key);
+  }, [activeExam]);
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -118,9 +100,14 @@ const SpeakingList = () => {
 
       <div className="gs-sp-filters space-y-5 mb-7">
         <div className="flex items-center gap-3">
-          <ExamSwitch exam={activeExam} onExam={handleExamChange} />
-          <span className="text-sm text-slate-400 dark:text-slate-500 font-medium hidden md:block">
-            {activeExam === 'TOEIC' ? 'Speaking & Writing Test format' : 'Academic & General format'}
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <ExamPill exam={activeExam} />
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {activeExam === 'TOEIC' ? 'Speaking & Writing Test format' : 'Academic & General format'}
+            </span>
+          </span>
+          <span className="text-sm text-slate-400 dark:text-slate-500 font-medium hidden md:inline-flex items-center gap-1.5">
+            Change exam target in Settings
           </span>
         </div>
 
@@ -158,7 +145,25 @@ const SpeakingList = () => {
       {practices.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {practices.map((practice) => (
-            <div key={practice.id} className="gs-sp-card glass-card rounded-2xl shadow p-6 border border-transparent hover:shadow-xl transition-all flex flex-col">
+            <div
+              key={practice.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => {
+                const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
+                const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
+                navigate(route, { state });
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
+                  const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
+                  navigate(route, { state });
+                }
+              }}
+              className="gs-sp-card glass-card rounded-2xl shadow p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+            >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
                   <ExamPill exam={activeExam} />
@@ -185,7 +190,8 @@ const SpeakingList = () => {
               </div>
 
               <button
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation();
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
                   const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
                   navigate(route, { state });

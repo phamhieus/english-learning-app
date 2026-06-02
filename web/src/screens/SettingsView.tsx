@@ -1,15 +1,16 @@
-import { Save, AudioLines, BrainCircuit, Sun, Moon, Monitor } from 'lucide-react';
+import { Save, AudioLines, BrainCircuit, Sun, Moon, Monitor, Target } from 'lucide-react';
 import { useSettings } from '../components/useSettings';
 import { useToast } from '../components/useToast';
 import { useTheme } from '../components/useTheme';
 import { cn } from '../components/classNames';
-import type { AIProvider } from '../components/settings-context';
+import type { AIProvider, PrimaryExam } from '../components/settings-context';
 
 const SettingsView = () => {
   const toast = useToast();
   const { theme, setTheme } = useTheme();
   const {
     aiProvider, setAiProvider,
+    primaryExam, setPrimaryExam,
     geminiKey, setGeminiKey,
     openAiKey, setOpenAiKey,
     deepseekKey, setDeepseekKey,
@@ -24,6 +25,48 @@ const SettingsView = () => {
       </div>
 
       <div className="space-y-8">
+        {/* Learning target */}
+        <section className="glass-card rounded-3xl p-8">
+          <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+            <Target className="w-5 h-5 text-indigo-500" /> Learning Target
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+            Speaking and Writing use this exam format across the app.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {([
+              { value: 'IELTS' as const, title: 'IELTS', sub: 'Band 0-9 · Speaking parts 1-3 · Writing tasks 1-2', accent: 'cyan' },
+              { value: 'TOEIC' as const, title: 'TOEIC', sub: 'Speaking 11 questions · Writing 8 questions', accent: 'blue' },
+            ]).map((opt) => {
+              const active = primaryExam === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setPrimaryExam(opt.value as PrimaryExam)}
+                  className={cn(
+                    'text-left rounded-2xl border p-5 transition-all',
+                    active
+                      ? 'bg-white dark:bg-slate-800 border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-500/20 shadow-lg shadow-indigo-500/10'
+                      : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <span className={cn(
+                      'px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider',
+                      opt.accent === 'cyan'
+                        ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400'
+                        : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                    )}>
+                      {opt.title}
+                    </span>
+                    {active && <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">Active</span>}
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{opt.sub}</p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Theme */}
         <section className="glass-card rounded-3xl p-8">

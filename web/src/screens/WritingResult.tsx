@@ -4,11 +4,28 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import type { WritingFeedback } from '../services/ai';
 import { DiffViewer } from '../components/DiffViewer';
 import type { Practice } from '../services/storage';
+import { useSettings } from '../components/useSettings';
 
 const WritingResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { result, originalText } = (location.state as { result: WritingFeedback, originalText: string, practice: Practice }) || {};
+  const settings = useSettings();
+  const { result, originalText, exam } = (location.state as { result: WritingFeedback, originalText: string, practice: Practice, exam?: 'TOEIC' | 'IELTS' }) || {};
+  const activeExam = exam || settings.primaryExam;
+  const scaleLabel = activeExam === 'TOEIC' ? 'TOEIC Score' : 'Band Score';
+  const criteriaLabels = activeExam === 'TOEIC'
+    ? {
+        taskAchievement: 'Task Completion',
+        coherence: 'Organization',
+        lexicalResource: 'Vocabulary',
+        grammar: 'Grammar',
+      }
+    : {
+        taskAchievement: 'Task Achievement',
+        coherence: 'Coherence',
+        lexicalResource: 'Lexical Resource',
+        grammar: 'Grammar',
+      };
 
   if (!result) {
     return <div className="p-8 text-center text-slate-500">No result found. Please submit a practice first.</div>;
@@ -22,23 +39,23 @@ const WritingResult = () => {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         <div className="col-span-2 md:col-span-1 glass-card rounded-2xl p-6 flex flex-col items-center justify-center border-t-4 border-indigo-500 shadow-md">
           <span className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">{result.bandScore}</span>
-          <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider mt-2">Band Score</span>
+          <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider mt-2">{scaleLabel}</span>
         </div>
         
         <div className="glass-card rounded-2xl p-4 flex flex-col justify-center">
-          <span className="text-xs text-slate-400 font-bold uppercase mb-1">Task Achievement</span>
+          <span className="text-xs text-slate-400 font-bold uppercase mb-1">{criteriaLabels.taskAchievement}</span>
           <span className="text-2xl font-bold">{result.subScores?.taskAchievement || '-'}</span>
         </div>
         <div className="glass-card rounded-2xl p-4 flex flex-col justify-center">
-          <span className="text-xs text-slate-400 font-bold uppercase mb-1">Coherence</span>
+          <span className="text-xs text-slate-400 font-bold uppercase mb-1">{criteriaLabels.coherence}</span>
           <span className="text-2xl font-bold text-orange-500">{result.subScores?.coherence || '-'}</span>
         </div>
         <div className="glass-card rounded-2xl p-4 flex flex-col justify-center">
-          <span className="text-xs text-slate-400 font-bold uppercase mb-1">Lexical Resource</span>
+          <span className="text-xs text-slate-400 font-bold uppercase mb-1">{criteriaLabels.lexicalResource}</span>
           <span className="text-2xl font-bold text-green-500">{result.subScores?.lexicalResource || '-'}</span>
         </div>
         <div className="glass-card rounded-2xl p-4 flex flex-col justify-center">
-          <span className="text-xs text-slate-400 font-bold uppercase mb-1">Grammar</span>
+          <span className="text-xs text-slate-400 font-bold uppercase mb-1">{criteriaLabels.grammar}</span>
           <span className="text-2xl font-bold">{result.subScores?.grammar || '-'}</span>
         </div>
       </div>

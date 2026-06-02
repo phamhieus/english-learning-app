@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '../../../components/classNames';
 import type { WordResult, WordResultStatus } from '../types/shadowing.types';
 
@@ -40,30 +40,24 @@ const STATUS_STYLES: Record<
 
 interface WordChipProps {
   wordResult: WordResult;
-  index: number;
 }
 
 const WordChip: React.FC<WordChipProps> = ({ wordResult }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
   const style = STATUS_STYLES[wordResult.status];
-  const hasTooltip =
+  const hasDetail =
     wordResult.status !== 'correct' &&
     (wordResult.comment || wordResult.spokenWord);
 
   return (
-    <span className="relative inline-block">
+    <span className="inline-flex max-w-full align-top flex-col items-start gap-1">
       <span
-        onMouseEnter={() => hasTooltip && setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        onTouchStart={() => hasTooltip && setShowTooltip(v => !v)}
         className={cn(
-          'inline-block px-1.5 py-0.5 rounded text-sm font-medium border transition-all',
+          'inline-block max-w-full px-1.5 py-0.5 rounded text-sm font-medium border transition-all break-words',
           style.bg,
           style.text,
           style.border,
           wordResult.status === 'missing' && 'line-through opacity-60',
-          wordResult.status === 'extra' && 'italic',
-          hasTooltip && 'cursor-help'
+          wordResult.status === 'extra' && 'italic'
         )}
       >
         {wordResult.word}
@@ -72,18 +66,15 @@ const WordChip: React.FC<WordChipProps> = ({ wordResult }) => {
         )}
       </span>
 
-      {showTooltip && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 z-20 whitespace-nowrap">
-          <span className="block bg-slate-900 dark:bg-slate-700 text-white text-[11px] rounded-lg px-2.5 py-1.5 shadow-xl leading-tight max-w-[200px] whitespace-normal text-center">
-            <span className="font-semibold text-slate-300">{style.label}</span>
-            {wordResult.comment && (
-              <>
-                <br />
-                <span>{wordResult.comment}</span>
-              </>
-            )}
-          </span>
-          <span className="block w-2 h-2 bg-slate-900 dark:bg-slate-700 rotate-45 mx-auto -mt-1" />
+      {hasDetail && (
+        <span className="max-w-[160px] rounded-md bg-slate-900/90 dark:bg-slate-700 text-white text-[10px] leading-snug px-2 py-1 shadow-sm break-words">
+          <span className="font-semibold text-slate-300">{style.label}</span>
+          {wordResult.spokenWord && (
+            <span> heard: {wordResult.spokenWord}</span>
+          )}
+          {wordResult.comment && (
+            <span> {wordResult.comment}</span>
+          )}
         </span>
       )}
     </span>
@@ -102,9 +93,9 @@ export const WordHighlight: React.FC<WordHighlightProps> = ({
   if (words.length === 0) return null;
 
   return (
-    <div className={cn('flex flex-wrap gap-1.5 leading-relaxed', className)}>
+    <div className={cn('flex flex-wrap items-start gap-x-1.5 gap-y-2 leading-relaxed', className)}>
       {words.map((w, i) => (
-        <WordChip key={`${w.word}-${i}`} wordResult={w} index={i} />
+        <WordChip key={`${w.word}-${i}`} wordResult={w} />
       ))}
     </div>
   );

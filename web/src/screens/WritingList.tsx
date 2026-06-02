@@ -22,6 +22,7 @@ const WRITING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
   TOEIC: {
     blurb: '8 questions · 3 task types. Scored on grammar, vocabulary, organisation & whether you answer the task.',
     tasks: [
+      { key: 'pic',   label: 'Describe a Picture',   q: 'Practice', icon: <Image className="w-4 h-4" />,    section: 'Describe a Picture' },
       { key: 'sent',  label: 'Write a Sentence',      q: 'Q1–5',  icon: <Image className="w-4 h-4" />,    section: 'Write a Sentence Based on a Picture' },
       { key: 'email', label: 'Respond to a Request',   q: 'Q6–7',  icon: <Mail className="w-4 h-4" />,     section: 'Respond to a Written Request' },
       { key: 'essay', label: 'Opinion Essay',           q: 'Q8',    icon: <FileText className="w-4 h-4" />, section: 'Write an Opinion Essay' },
@@ -56,10 +57,17 @@ const WritingList = () => {
   const conf = WRITING_TASKS[activeExam];
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
-  const practices: Practice[] = useMemo(
-    () => getExamTopics(activeExam, 'Writing', activeTask.section),
-    [activeExam, activeTask.section]
-  );
+  const practices: Practice[] = useMemo(() => {
+    const writingTopics = getExamTopics(activeExam, 'Writing', activeTask.section);
+    if (activeExam === 'TOEIC' && activeTask.key === 'pic' && writingTopics.length === 0) {
+      return getExamTopics('TOEIC', 'Speaking', 'Describe a Picture').map((practice) => ({
+        ...practice,
+        type: 'Picture Description · Writing',
+        duration: '8 mins',
+      }));
+    }
+    return writingTopics;
+  }, [activeExam, activeTask.key, activeTask.section]);
 
   useEffect(() => {
     setActiveTaskKey(WRITING_TASKS[activeExam].tasks[0].key);

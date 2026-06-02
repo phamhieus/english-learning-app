@@ -188,52 +188,163 @@ const LessonCard = ({ lesson, idx: _idx, mode }: { lesson: ShadowingLesson; idx:
   );
 };
 
-const FreeMode = () => (
-  <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-6">
-    <div className="glass-card rounded-3xl p-7 flex flex-col">
-      <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
-        <Wand2 className="w-5 h-5 text-fuchsia-500" /> Create from any text
-      </h2>
-      <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-        Paste a paragraph, script, or song lyric. Lingua reads it aloud, splits it into segments, and scores your shadowing.
-      </p>
-      <div className="flex-1 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 p-5 text-slate-400 dark:text-slate-500 text-[15px] leading-relaxed min-h-[180px]">
-        Type or paste your English text here…
-        <span className="inline-block w-0.5 h-5 bg-indigo-400 ml-0.5 align-middle animate-pulse" />
-      </div>
-      <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium">
-            <Upload className="w-4 h-4" /> Upload .txt
-          </button>
-          <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium">
-            <Link className="w-4 h-4" /> From URL
-          </button>
-        </div>
-        <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white font-bold shadow-lg shadow-indigo-500/25">
-          <Sparkles className="w-4 h-4" /> Generate
-        </button>
-      </div>
-    </div>
+const topicPrompts: Record<string, string> = {
+  'Job interview': 'Tell me about your strengths, your recent work experience, and why you are interested in this position.',
+  Travel: 'I enjoy traveling because it helps me meet new people, learn about local culture, and become more confident.',
+  Movies: 'The movie I watched recently had a simple story, strong characters, and a message that stayed with me.',
+  Technology: 'Technology makes daily life more convenient, but people should also learn how to use it responsibly.',
+  Food: 'My favorite meal is simple but delicious, and it reminds me of family dinners at home.',
+  'Daily routine': 'Every morning I review my plan, prepare a healthy breakfast, and practice English before starting work.',
+  Environment: 'Everyone can protect the environment by saving energy, reducing plastic waste, and choosing public transport.',
+  Sports: 'Playing sports keeps me active, teaches teamwork, and helps me manage stress after a busy day.',
+};
 
-    <div className="flex flex-col gap-4">
-      <div className="glass-card rounded-2xl p-5">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Or pick a topic</p>
-        <div className="flex flex-wrap gap-2">
-          {['Job interview', 'Travel', 'Movies', 'Technology', 'Food', 'Daily routine', 'Environment', 'Sports'].map((t) => (
-            <span key={t} className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition">
-              {t}
-            </span>
-          ))}
+const splitFreeSegments = (text: string) => {
+  const sentenceParts = text
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map(part => part.trim())
+    .filter(Boolean);
+
+  if (sentenceParts.length > 1) return sentenceParts;
+
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const chunks: string[] = [];
+  for (let i = 0; i < words.length; i += 12) {
+    chunks.push(words.slice(i, i + 12).join(' '));
+  }
+  return chunks.filter(Boolean);
+};
+
+const FreeMode = () => {
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [text, setText] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState('Daily routine');
+
+  const startFreeLesson = (sourceText = text, topic = selectedTopic) => {
+    const body = sourceText.trim() || topicPrompts[topic] || topicPrompts['Daily routine'];
+    const segmentTexts = splitFreeSegments(body);
+    const lessonId = `free-${Date.now()}`;
+    const lesson: ShadowingLesson = {
+      id: lessonId,
+      title: topic ? `${topic} practice` : 'Free topic practice',
+      description: 'Custom shadowing lesson generated from your text.',
+      level: 'intermediate',
+      topic: topic || 'Free Topic',
+      totalSegments: segmentTexts.length,
+      durationMinutes: Math.max(1, Math.ceil(segmentTexts.length * 0.4)),
+      segments: segmentTexts.map((segmentText, index) => ({
+        id: `${lessonId}-${index}`,
+        lessonId,
+        type: segmentTexts.length === 1 ? 'sentence' : 'paragraph',
+        order: index + 1,
+        text: segmentText,
+        status: 'not_started',
+        attempts: [],
+      })),
+    };
+    navigate('/shadowing/practice', { state: { lesson } });
+  };
+
+  const chooseTopic = (topic: string) => {
+    setSelectedTopic(topic);
+    setText(topicPrompts[topic] ?? '');
+  };
+
+  const handleTxtUpload = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setText(String(reader.result ?? ''));
+    reader.readAsText(file);
+  };
+
+  const handleUrl = () => {
+    const url = window.prompt('Paste a URL or article title');
+    if (!url) return;
+    setSelectedTopic('From URL');
+    setText(`I found an English article at ${url}. Summarize the main idea, explain why it is useful, and share one opinion about it.`);
+  };
+
+  return (
+    <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-6">
+      <div className="glass-card rounded-3xl p-7 flex flex-col">
+        <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+          <Wand2 className="w-5 h-5 text-fuchsia-500" /> Create from any text
+        </h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+          Paste a paragraph, script, or song lyric. Lingua reads it aloud, splits it into segments, and scores your shadowing.
+        </p>
+        <textarea
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          placeholder="Type or paste your English text here..."
+          className="flex-1 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 p-5 text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-[15px] leading-relaxed min-h-[180px] resize-y outline-none focus:border-indigo-300 dark:focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition"
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".txt,text/plain"
+          className="hidden"
+          onChange={(event) => handleTxtUpload(event.target.files?.[0])}
+        />
+        <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium hover:border-indigo-200 dark:hover:border-indigo-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >
+              <Upload className="w-4 h-4" /> Upload .txt
+            </button>
+            <button
+              onClick={handleUrl}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium hover:border-indigo-200 dark:hover:border-indigo-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >
+              <Link className="w-4 h-4" /> From URL
+            </button>
+          </div>
+          <button
+            onClick={() => startFreeLesson()}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white font-bold shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95 transition-transform"
+          >
+            <Sparkles className="w-4 h-4" /> Generate
+          </button>
         </div>
       </div>
-      <div className="glass-card rounded-2xl p-5 flex-1">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Recent free sets</p>
-        <p className="text-sm text-slate-400 dark:text-slate-500 italic">No recent sets yet. Paste some text and generate your first set!</p>
+
+      <div className="flex flex-col gap-4">
+        <div className="glass-card rounded-2xl p-5">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Or pick a topic</p>
+          <div className="flex flex-wrap gap-2">
+            {Object.keys(topicPrompts).map((t) => (
+              <button
+                key={t}
+                onClick={() => chooseTopic(t)}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-sm font-medium cursor-pointer transition-all duration-200 active:scale-95',
+                  selectedTopic === t
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 dark:hover:text-indigo-400'
+                )}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="glass-card rounded-2xl p-5 flex-1">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Quick start</p>
+          <button
+            onClick={() => startFreeLesson(topicPrompts[selectedTopic], selectedTopic)}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-600 dark:text-fuchsia-300 py-3 font-semibold hover:bg-fuchsia-600 hover:text-white transition-colors"
+          >
+            <Play className="w-4 h-4" /> Practice {selectedTopic}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 type VideoTab = 'voa' | 'mine';
 

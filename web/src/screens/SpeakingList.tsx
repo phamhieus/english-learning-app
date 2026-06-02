@@ -117,7 +117,13 @@ const SpeakingList = () => {
             return (
               <button
                 key={t.key}
-                onClick={() => setActiveTaskKey(t.key)}
+                onClick={() => {
+                  if (t.key === 'pic') {
+                    navigate('/speaking/picture');
+                    return;
+                  }
+                  setActiveTaskKey(t.key);
+                }}
                 className={cn(
                   'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border',
                   on

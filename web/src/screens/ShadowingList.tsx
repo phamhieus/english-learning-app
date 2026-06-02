@@ -62,7 +62,7 @@ const cefrClass = (lvl: string) => {
 
 const ThumbStrip = ({ grad, dur, prog = 0 }: { grad: string; dur: string; prog?: number }) => (
   <div className="relative overflow-hidden aspect-video rounded-t-2xl" style={{ background: grad }}>
-    <div className="absolute inset-0 opacity-25" style={{ backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,0.18) 0 2px,transparent 2px 26px)' }} />
+    <div className="absolute inset-0" style={{ backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,0.18) 0 2px,transparent 2px 26px)' }} />
     <span className="absolute bottom-3 right-3 z-10 px-2 py-0.5 rounded-md bg-black/55 text-white text-[11px] font-semibold font-mono backdrop-blur-sm">{dur}</span>
     <div className="absolute inset-0 flex items-center justify-center">
       <div className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-md border border-white/50 flex items-center justify-center shadow-lg">

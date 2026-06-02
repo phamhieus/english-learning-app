@@ -41,62 +41,97 @@ function cleanWord(w: string): string {
   return w.toLowerCase().replace(/[.,!?;:'"()\-]/g, '').trim();
 }
 
+function wordSimilarity(a: string, b: string): number {
+  if (!a && !b) return 1;
+  if (!a || !b) return 0;
+  const maxLength = Math.max(a.length, b.length);
+  return 1 - levenshtein(a, b) / maxLength;
+}
+
 function compareWords(original: string, recognized: string): WordResult[] {
   const origWords = original.split(/\s+/).filter(Boolean);
   const recogWords = recognized.split(/\s+/).filter(Boolean);
+  const origClean = origWords.map(cleanWord);
+  const recogClean = recogWords.map(cleanWord);
+  const m = origWords.length;
+  const n = recogWords.length;
+
+  const substitutionCost = (orig: string, recog: string) => {
+    if (orig === recog) return 0;
+    const similarity = wordSimilarity(orig, recog);
+    if (orig.length > 3 && similarity >= 0.62) return 0.45;
+    return 0.9;
+  };
+
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  const back: ('match' | 'delete' | 'insert')[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill('match')
+  );
+
+  for (let i = 1; i <= m; i++) {
+    dp[i][0] = i;
+    back[i][0] = 'delete';
+  }
+  for (let j = 1; j <= n; j++) {
+    dp[0][j] = j;
+    back[0][j] = 'insert';
+  }
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const matchCost = dp[i - 1][j - 1] + substitutionCost(origClean[i - 1], recogClean[j - 1]);
+      const deleteCost = dp[i - 1][j] + 1;
+      const insertCost = dp[i][j - 1] + 1;
+      const best = Math.min(matchCost, deleteCost, insertCost);
+
+      dp[i][j] = best;
+      if (best === matchCost) back[i][j] = 'match';
+      else if (best === deleteCost) back[i][j] = 'delete';
+      else back[i][j] = 'insert';
+    }
+  }
+
   const results: WordResult[] = [];
-  let ri = 0;
+  let i = m;
+  let j = n;
 
-  for (let oi = 0; oi < origWords.length; oi++) {
-    const orig = cleanWord(origWords[oi]);
+  while (i > 0 || j > 0) {
+    const step = back[i][j];
 
-    if (ri >= recogWords.length) {
-      results.push({ word: origWords[oi], status: 'missing' });
-      continue;
-    }
-
-    const recog = cleanWord(recogWords[ri]);
-
-    if (orig === recog) {
-      results.push({ word: origWords[oi], spokenWord: recogWords[ri], status: 'correct' });
-      ri++;
-      continue;
-    }
-
-    const dist = levenshtein(orig, recog);
-    if (dist <= 2 && orig.length > 3) {
+    if (i > 0 && j > 0 && step === 'match') {
+      const orig = origClean[i - 1];
+      const recog = recogClean[j - 1];
+      const similarity = wordSimilarity(orig, recog);
+      const status =
+        orig === recog
+          ? 'correct'
+          : orig.length > 3 && similarity >= 0.62
+            ? 'weak_pronunciation'
+            : 'wrong';
       results.push({
-        word: origWords[oi],
-        spokenWord: recogWords[ri],
-        status: 'weak_pronunciation',
-        comment: `You said "${recogWords[ri]}"`,
+        word: origWords[i - 1],
+        spokenWord: recogWords[j - 1],
+        status,
+        ...(status !== 'correct' ? { comment: `You said "${recogWords[j - 1]}"` } : {}),
       });
-      ri++;
+      i--;
+      j--;
       continue;
     }
 
-    // Try lookahead: maybe a word was skipped or inserted
-    const nextRecog = cleanWord(recogWords[ri + 1] ?? '');
-    if (nextRecog === orig) {
-      results.push({
-        word: origWords[oi],
-        spokenWord: recogWords[ri],
-        status: 'wrong',
-        comment: `You said "${recogWords[ri]}"`,
-      });
-      ri += 2;
-    } else {
-      results.push({ word: origWords[oi], status: 'missing' });
+    if (i > 0 && (step === 'delete' || j === 0)) {
+      results.push({ word: origWords[i - 1], status: 'missing' });
+      i--;
+      continue;
+    }
+
+    if (j > 0) {
+      results.push({ word: recogWords[j - 1], status: 'extra' });
+      j--;
     }
   }
 
-  // Remaining recognized words are extra
-  while (ri < recogWords.length) {
-    results.push({ word: recogWords[ri], status: 'extra' });
-    ri++;
-  }
-
-  return results;
+  return results.reverse();
 }
 
 /** Deterministic local scoring based purely on word comparison. No randomness. */

@@ -137,7 +137,7 @@ const PictureDescriptionList = () => {
               className="gs-pd-card glass-card rounded-2xl shadow group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col overflow-hidden cursor-pointer"
             >
               {/* Image */}
-              <div className="relative aspect-[16/10] bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div className="relative aspect-video bg-slate-100 dark:bg-slate-800 overflow-hidden">
                 {imgErrors.has(practice.id) ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <Image className="w-12 h-12 text-slate-300 dark:text-slate-600" />
@@ -146,7 +146,7 @@ const PictureDescriptionList = () => {
                   <img
                     src={practice.imageUrl}
                     alt={practice.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain"
                     onError={() => setImgErrors((prev) => new Set(prev).add(practice.id))}
                   />
                 )}

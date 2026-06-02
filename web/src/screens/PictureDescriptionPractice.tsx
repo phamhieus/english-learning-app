@@ -143,7 +143,7 @@ const PictureDescriptionPractice = () => {
       <div className="mb-6 shrink-0">
         <div className="relative rounded-3xl overflow-hidden shadow-lg bg-slate-100 dark:bg-slate-800">
           {imgError || !practice.imageUrl ? (
-            <div className="w-full h-64 md:h-80 flex flex-col items-center justify-center gap-3">
+            <div className="w-full aspect-video max-h-[26rem] flex flex-col items-center justify-center gap-3">
               <Image className="w-16 h-16 text-slate-300 dark:text-slate-600" />
               <p className="text-slate-400 text-sm">Image not available</p>
             </div>
@@ -151,7 +151,7 @@ const PictureDescriptionPractice = () => {
             <img
               src={practice.imageUrl}
               alt={practice.title}
-              className="w-full h-64 md:h-80 object-cover"
+              className="w-full aspect-video max-h-[26rem] object-contain"
               onError={() => setImgError(true)}
             />
           )}

@@ -156,20 +156,24 @@ export const evaluateShadowing = async (
 Compare the user's recognized text against the target text and return STRICT JSON matching this schema:
 {
   "finalScore": number (0-100 overall shadowing score),
-  "pronunciationScore": number (0-100, lower if many words were mis-recognized),
-  "completenessScore": number (0-100, percentage of target words that appeared),
+  "pronunciationScore": number (0-100, based on word-by-word matches; give partial credit for close-sounding words),
+  "completenessScore": number (0-100, percentage of target words that were attempted or appeared),
   "fluencyScore": number (0-100, smoothness — penalize if user said far fewer words than target for the duration),
   "rhythmScore": number (0-100, natural English rhythm/timing — estimate from word coverage and length),
   "intonationScore": number (0-100, pitch variation — estimate similarly),
   "feedback": "string (1-2 concise sentences with the SINGLE most important actionable advice — mention specific words or sounds when possible)"
 }
 
-Scoring guidelines (be honest, not lenient):
+Scoring guidelines:
+- Score word by word. Do not fail the whole sentence because of one wrong or missing word.
+- A single wrong word in an otherwise correct sentence should usually stay around 80-90, depending on sentence length.
+- Close-sounding substitutions should receive partial credit, not zero.
+- Preserve credit for correct words before and after an error.
 - 90+ : near-perfect, almost all words correct, smooth
-- 75-89: good attempt, a few minor word errors
-- 60-74: partial — missed several words or mispronounced enough to confuse STT
-- 40-59: weak — missed half or more
-- < 40 : barely intelligible
+- 75-89: good attempt, a few word-level errors
+- 60-74: partial — several missed or unclear words, but the sentence is still recognizable
+- 40-59: weak — about half the target words are missing or unclear
+- < 40 : barely intelligible or mostly unrelated
 - If recognized text is empty or just 1-2 words for a long target: all scores below 25, finalScore around 0-15
 - If recognized text is completely off-topic from target: low pronunciation/completeness, feedback should note it`;
 

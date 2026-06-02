@@ -129,7 +129,7 @@ export default function ReviewSegmentsPage() {
             </button>
             <div className="flex gap-2">
               <button onClick={() => save(false)} className="px-5 py-3 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Save draft</button>
-              <button onClick={() => save(true)} disabled={segments.length === 0} className="flex items-center gap-2 px-7 py-3 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 disabled:opacity-50">
+              <button onClick={() => save(true)} disabled={segments.length === 0} className="flex items-center gap-2 px-7 py-3 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 disabled:cursor-not-allowed">
                 <Check className="w-5 h-5" /> Save & Start Practice
               </button>
             </div>

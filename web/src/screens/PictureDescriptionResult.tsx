@@ -119,11 +119,11 @@ const PictureDescriptionResult = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Picture reference */}
           {practice?.imageUrl && (
-            <div className="rounded-2xl overflow-hidden shadow-md">
+            <div className="rounded-2xl overflow-hidden shadow-md bg-slate-100 dark:bg-slate-800">
               <img
                 src={practice.imageUrl}
                 alt={practice.title}
-                className="w-full h-48 md:h-56 object-cover"
+                className="w-full aspect-video max-h-72 object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}

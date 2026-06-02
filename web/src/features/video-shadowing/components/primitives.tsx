@@ -74,7 +74,7 @@ export function VideoThumb({
       ) : (
         <>
           <div
-            className="absolute inset-0 opacity-25"
+            className="absolute inset-0"
             style={{ backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,0.18) 0 2px,transparent 2px 26px)' }}
           />
           <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 42%,rgba(255,255,255,0.22),transparent 60%)' }} />

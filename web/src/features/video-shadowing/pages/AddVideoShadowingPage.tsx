@@ -250,7 +250,7 @@ export default function AddVideoShadowingPage() {
           <button
             disabled={!canGenerate}
             onClick={handleGenerate}
-            className="mt-2 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition"
+            className="mt-2 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 disabled:cursor-not-allowed hover:brightness-110 transition"
           >
             <Sparkles className="w-5 h-5" /> {busy || importing ? 'Đang xử lý…' : 'Generate Shadow Lesson'}
           </button>

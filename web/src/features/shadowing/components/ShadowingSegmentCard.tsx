@@ -313,12 +313,9 @@ export const ShadowingSegmentCard = React.forwardRef<
               {!isActivelyRecording && !isStopping ? (
                 <button
                   onClick={handleStartRecording}
-                  disabled={isLocked || recorder.status === 'requesting_permission'}
                   className={cn(
                     'flex items-center gap-2 px-5 py-2.5 rounded-2xl font-semibold text-sm transition-all',
-                    isLocked || recorder.status === 'requesting_permission'
-                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
-                      : 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95'
+                   'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95'
                   )}
                 >
                   {recorder.status === 'requesting_permission' ? (

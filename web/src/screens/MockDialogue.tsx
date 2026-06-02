@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, Send, MoreVertical, X } from 'lucide-react';
+import { Mic, Send, MoreVertical, X, Volume2 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
 import { UnifiedChatSession } from '../services/ai';
 import { useSpeechRecognition } from '../services/useSpeechRecognition';
+import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
+import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
 
 const MockDialogue = () => {
   const navigate = useNavigate();
@@ -19,13 +21,26 @@ const MockDialogue = () => {
 
   const speech = useSpeechRecognition();
   const recognizedText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
+  const voiceReader = useVoiceReader({ exerciseId: `dialogue-${title}` });
 
   const chatSessionRef = React.useRef<UnifiedChatSession | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
+  const readMessageIdsRef = React.useRef<Set<string>>(new Set());
+  const dialogueSegments = React.useMemo(
+    () => messages.map((message) => ({ id: message.id, text: message.text })),
+    [messages]
+  );
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    const last = messages[messages.length - 1];
+    if (!last || last.sender !== 'ai' || readMessageIdsRef.current.has(last.id)) return;
+    readMessageIdsRef.current.add(last.id);
+    voiceReader.speakSegments([{ id: last.id, text: last.text }], { mode: 'dialogue' });
+  }, [messages, voiceReader]);
 
   useEffect(() => {
     const initChat = async () => {
@@ -108,6 +123,22 @@ const MockDialogue = () => {
         </div>
       </div>
 
+      <div className="px-6 py-3 border-b border-[var(--border)] bg-white/30 dark:bg-slate-900/30">
+        <VoiceReaderControls
+          supported={voiceReader.supported}
+          globallyEnabled={voiceReader.globalVoiceReaderEnabled}
+          muted={voiceReader.isTemporarilyMuted}
+          onChange={voiceReader.setTemporarilyMuted}
+          status={voiceReader.status}
+          canPlay={voiceReader.canPlayAudio && dialogueSegments.length > 0}
+          onPlay={() => voiceReader.speakSegments(dialogueSegments, { mode: 'dialogue', gapMs: settings.userAudioSettings.dialogueGapMs })}
+          onPause={voiceReader.pause}
+          onResume={voiceReader.resume}
+          onReplay={() => voiceReader.speakSegments(dialogueSegments, { mode: 'dialogue', gapMs: settings.userAudioSettings.dialogueGapMs })}
+          onStop={voiceReader.stop}
+        />
+      </div>
+
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
         {messages.map(m => (
@@ -118,11 +149,22 @@ const MockDialogue = () => {
               </div>
             )}
             <div className={cn(
-              "p-4 rounded-2xl shadow-sm text-[15px] leading-relaxed",
+              "p-4 rounded-2xl shadow-sm text-[15px] leading-relaxed transition-colors",
               m.sender === 'user' 
                 ? "bg-indigo-600 text-white rounded-tr-sm" 
-                : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm border border-slate-100 dark:border-slate-700"
+                : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm border border-slate-100 dark:border-slate-700",
+              voiceReader.activeSegmentId === m.id && 'ring-2 ring-indigo-300 dark:ring-indigo-600 bg-indigo-50 dark:bg-indigo-950/40'
             )}>
+              {m.sender === 'ai' && (
+                <button
+                  type="button"
+                  onClick={() => voiceReader.speakSegments([{ id: m.id, text: m.text }], { mode: 'dialogue' })}
+                  disabled={!voiceReader.canPlayAudio}
+                  className="float-right ml-3 mb-1 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 text-indigo-500 inline-flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Volume2 className="w-3.5 h-3.5" />
+                </button>
+              )}
               {m.text}
             </div>
           </div>

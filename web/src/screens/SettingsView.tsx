@@ -1,9 +1,28 @@
-import { Save, AudioLines, BrainCircuit, Sun, Moon, Monitor, Target } from 'lucide-react';
+import { useEffect, useState, type ReactNode } from 'react';
+import {
+  Save,
+  AudioLines,
+  BrainCircuit,
+  Sun,
+  Moon,
+  Monitor,
+  Target,
+  Volume2,
+  VolumeX,
+  Globe,
+  Gauge,
+  MessagesSquare,
+  Timer,
+  Mic2,
+  LoaderCircle,
+} from 'lucide-react';
 import { useSettings } from '../components/useSettings';
 import { useToast } from '../components/useToast';
 import { useTheme } from '../components/useTheme';
 import { cn } from '../components/classNames';
-import type { AIProvider, PrimaryExam } from '../components/settings-context';
+import { Select } from '../components/Select';
+import { PasswordInput } from '../components/PasswordInput';
+import type { AIProvider, PrimaryExam, UserAudioSettings } from '../components/settings-context';
 
 const SettingsView = () => {
   const toast = useToast();
@@ -14,8 +33,57 @@ const SettingsView = () => {
     geminiKey, setGeminiKey,
     openAiKey, setOpenAiKey,
     deepseekKey, setDeepseekKey,
-    textModel, setTextModel
+    textModel, setTextModel,
+    userAudioSettings, setUserAudioSettings
   } = useSettings();
+
+  const [isVoiceInitializing, setIsVoiceInitializing] = useState(false);
+  const [supportedAccents, setSupportedAccents] = useState<UserAudioSettings['language'][]>(['en-US', 'en-GB']);
+  const isVoiceReaderSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+  const isVoiceReaderOn = userAudioSettings.isVoiceReaderEnabled;
+  const canConfigureVoiceReader = isVoiceReaderSupported && isVoiceReaderOn;
+  const isAccentLocked = supportedAccents.length === 1;
+  const updateAudio = (patch: Partial<UserAudioSettings>) => setUserAudioSettings(patch);
+
+  useEffect(() => {
+    if (!isVoiceReaderSupported || !window.speechSynthesis) return;
+    let cancelled = false;
+
+    const loadSupportedAccents = async () => {
+      const accents = detectSupportedAccents(await waitForVoices(window.speechSynthesis));
+      if (cancelled) return;
+      setSupportedAccents(accents.length > 0 ? accents : ['en-US', 'en-GB']);
+      if (accents.length === 1 && userAudioSettings.language !== accents[0]) {
+        setUserAudioSettings({ language: accents[0] });
+      }
+    };
+
+    loadSupportedAccents();
+    window.speechSynthesis.addEventListener('voiceschanged', loadSupportedAccents);
+    return () => {
+      cancelled = true;
+      window.speechSynthesis.removeEventListener('voiceschanged', loadSupportedAccents);
+    };
+  }, [isVoiceReaderSupported, setUserAudioSettings, userAudioSettings.language]);
+
+  const previewVoice = async () => {
+    if (!canConfigureVoiceReader || !window.speechSynthesis || isVoiceInitializing) return;
+    setIsVoiceInitializing(true);
+    try {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const voices = await waitForVoices(synth);
+      const utterance = new SpeechSynthesisUtterance('This is how EngCoach will read your practice aloud.');
+      const matchingVoice = pickVoiceForLanguage(voices, userAudioSettings.language, userAudioSettings.voiceGender);
+      utterance.lang = userAudioSettings.language;
+      utterance.rate = userAudioSettings.speed;
+      utterance.pitch = userAudioSettings.pitch;
+      if (matchingVoice) utterance.voice = matchingVoice;
+      synth.speak(utterance);
+    } finally {
+      setIsVoiceInitializing(false);
+    }
+  };
 
   return (
     <div className="animate-in fade-in duration-500 max-w-4xl mx-auto pb-10">
@@ -103,7 +171,7 @@ const SettingsView = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">AI Provider</label>
-              <select 
+              <Select
                 value={aiProvider}
                 onChange={(e) => {
                   const newProvider = e.target.value as AIProvider;
@@ -112,12 +180,11 @@ const SettingsView = () => {
                   if (newProvider === 'openai') setTextModel('gpt-4o-mini');
                   if (newProvider === 'deepseek') setTextModel('deepseek-v4-flash');
                 }}
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 transition-all font-medium"
               >
                 <option value="gemini">Google Gemini</option>
                 <option value="openai">OpenAI (ChatGPT)</option>
                 <option value="deepseek">DeepSeek</option>
-              </select>
+              </Select>
             </div>
 
             {aiProvider === 'gemini' && (
@@ -128,12 +195,10 @@ const SettingsView = () => {
                     (Get your API key here)
                   </a>
                 </label>
-                <input 
-                  type="password" 
+                <PasswordInput
                   placeholder="AIzaSy..."
                   value={geminiKey}
                   onChange={(e) => setGeminiKey(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono"
                 />
               </div>
             )}
@@ -146,12 +211,10 @@ const SettingsView = () => {
                     (Get your API key here)
                   </a>
                 </label>
-                <input 
-                  type="password" 
+                <PasswordInput
                   placeholder="sk-..."
                   value={openAiKey}
                   onChange={(e) => setOpenAiKey(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono"
                 />
               </div>
             )}
@@ -164,22 +227,19 @@ const SettingsView = () => {
                     (Get your API key here)
                   </a>
                 </label>
-                <input 
-                  type="password" 
+                <PasswordInput
                   placeholder="sk-..."
                   value={deepseekKey}
                   onChange={(e) => setDeepseekKey(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono"
                 />
               </div>
             )}
 
             <div>
               <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Default Text Model</label>
-              <select 
+              <Select
                 value={textModel}
                 onChange={(e) => setTextModel(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 transition-all"
               >
                 {aiProvider === 'gemini' && (
                   <>
@@ -201,11 +261,141 @@ const SettingsView = () => {
                     <option value="deepseek-v4-pro">deepseek-v4-pro</option>
                   </>
                 )}
-              </select>
+              </Select>
             </div>
             
             <p className="text-xs text-slate-500 mt-2">Your keys are stored locally on your device and never sent to our servers.</p>
           </div>
+        </section>
+
+        {/* Audio & Voice Reader */}
+        <section className="glass-card rounded-3xl p-8">
+          <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+            <Volume2 className="w-5 h-5 text-indigo-500" /> Audio & Voice Reader
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+            Control how EngCoach reads content aloud across the app.
+          </p>
+
+          <div className="flex items-center justify-between gap-4 p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'w-11 h-11 rounded-2xl flex items-center justify-center transition-colors',
+                  isVoiceReaderOn
+                    ? 'bg-indigo-500 text-white'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-400'
+                )}
+              >
+                {isVoiceReaderOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              </div>
+              <div>
+                <p className="font-bold text-[15px]">Voice Reader</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Read questions, sample answers and dialogues aloud.
+                </p>
+              </div>
+            </div>
+            <ToggleSwitch
+              checked={isVoiceReaderOn}
+              disabled={!isVoiceReaderSupported}
+              onClick={() => updateAudio({ isVoiceReaderEnabled: !isVoiceReaderOn })}
+            />
+          </div>
+
+          <div
+            className={cn(
+              'mt-5 grid grid-cols-1 md:grid-cols-2 gap-4 transition-opacity',
+              !canConfigureVoiceReader && 'opacity-40 pointer-events-none select-none'
+            )}
+            aria-hidden={!canConfigureVoiceReader}
+          >
+            <AudioField icon={<Globe className="w-4 h-4" />} label="Accent" sub="Synthesised voice region">
+              <SegmentedControl
+                value={userAudioSettings.language}
+                disabled={isAccentLocked}
+                options={supportedAccents.map((accent) => ({
+                  value: accent,
+                  label: accent === 'en-GB' ? 'UK' : 'US',
+                }))}
+                onPick={(language) => updateAudio({ language })}
+              />
+            </AudioField>
+
+            <AudioField icon={<Gauge className="w-4 h-4" />} label="Speed" sub="Playback rate">
+              <SegmentedControl
+                value={userAudioSettings.speed}
+                options={[
+                  { value: 0.75, label: '0.75x' },
+                  { value: 1, label: '1x' },
+                  { value: 1.25, label: '1.25x' },
+                ]}
+                onPick={(speed) => updateAudio({ speed })}
+              />
+            </AudioField>
+
+            <AudioField icon={<Mic2 className="w-4 h-4" />} label="Speaker voice" sub="Best match from browser voices">
+              <SegmentedControl
+                value={userAudioSettings.voiceGender}
+                options={[
+                  { value: 'auto', label: 'Auto' },
+                  { value: 'female', label: 'Female' },
+                  { value: 'male', label: 'Male' },
+                ]}
+                onPick={(voiceGender) => updateAudio({ voiceGender })}
+              />
+            </AudioField>
+
+            <AudioField icon={<MessagesSquare className="w-4 h-4" />} label="Dialogue gap" sub="Pause between turns">
+              <SegmentedControl
+                value={userAudioSettings.dialogueGapMs}
+                options={[
+                  { value: 400, label: '0.4s' },
+                  { value: 500, label: '0.5s' },
+                  { value: 800, label: '0.8s' },
+                ]}
+                onPick={(dialogueGapMs) => updateAudio({ dialogueGapMs })}
+              />
+            </AudioField>
+
+            <AudioField icon={<Timer className="w-4 h-4" />} label="Shadowing gap" sub="Pause before you repeat">
+              <SegmentedControl
+                value={userAudioSettings.shadowingGapMs}
+                options={[
+                  { value: 1000, label: '1.0s' },
+                  { value: 2500, label: '2.5s' },
+                  { value: 3000, label: '3.0s' },
+                ]}
+                onPick={(shadowingGapMs) => updateAudio({ shadowingGapMs })}
+              />
+            </AudioField>
+
+            <AudioField icon={<Mic2 className="w-4 h-4" />} label="Preview voice" sub="Hear the current settings">
+              <button
+                type="button"
+                onClick={previewVoice}
+                disabled={!canConfigureVoiceReader || isVoiceInitializing}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 disabled:cursor-not-allowed"
+              >
+                {isVoiceInitializing ? (
+                  <LoaderCircle className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
+                {isVoiceInitializing ? 'Loading voice' : 'Preview'}
+              </button>
+            </AudioField>
+          </div>
+
+          {!isVoiceReaderSupported ? (
+            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs font-semibold border border-slate-200 dark:border-slate-700">
+              <VolumeX className="w-3.5 h-3.5" /> Voice Reader is not supported on this device.
+            </div>
+          ) : !isVoiceReaderOn && (
+            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs font-semibold border border-slate-200 dark:border-slate-700">
+              <VolumeX className="w-3.5 h-3.5" /> Voice Reader is disabled in Settings.
+            </div>
+          )}
         </section>
 
         {/* Audio API */}
@@ -247,5 +437,171 @@ const SettingsView = () => {
     </div>
   );
 };
+
+function ToggleSwitch({ checked, disabled, onClick }: { checked: boolean; disabled?: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      role="switch"
+      aria-checked={checked}
+      className={cn(
+        'w-12 h-6 rounded-full relative transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed',
+        checked ? 'bg-indigo-500' : 'bg-slate-300 dark:bg-slate-700'
+      )}
+    >
+      <div
+        className={cn(
+          'w-4 h-4 bg-white rounded-full absolute top-1 shadow-sm transition-all',
+          checked ? 'right-1' : 'left-1'
+        )}
+      />
+    </button>
+  );
+}
+
+function AudioField({
+  icon,
+  label,
+  sub,
+  children,
+}: {
+  icon: ReactNode;
+  label: string;
+  sub: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center shrink-0">
+          {icon}
+        </div>
+        <div className="min-w-0">
+          <p className="font-semibold text-sm">{label}</p>
+          <p className="text-xs text-slate-400">{sub}</p>
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function SegmentedControl<T extends string | number>({
+  value,
+  options,
+  disabled,
+  onPick,
+}: {
+  value: T;
+  options: Array<{ value: T; label: string }>;
+  disabled?: boolean;
+  onPick: (value: T) => void;
+}) {
+  return (
+    <div className={cn('flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1', disabled && 'opacity-70')}>
+      {options.map((option) => {
+        const active = value === option.value;
+        return (
+          <button
+            key={String(option.value)}
+            type="button"
+            disabled={disabled}
+            onClick={() => onPick(option.value)}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap disabled:cursor-not-allowed',
+              active
+                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            )}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function waitForVoices(synth: SpeechSynthesis): Promise<SpeechSynthesisVoice[]> {
+  const loaded = synth.getVoices();
+  if (loaded.length > 0) return Promise.resolve(loaded);
+
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      synth.removeEventListener('voiceschanged', finish);
+      resolve(synth.getVoices());
+    };
+
+    synth.addEventListener('voiceschanged', finish);
+    window.setTimeout(finish, 800);
+  });
+}
+
+function pickVoiceForLanguage(
+  voices: SpeechSynthesisVoice[],
+  language: UserAudioSettings['language'],
+  gender: UserAudioSettings['voiceGender'] = 'auto',
+): SpeechSynthesisVoice | null {
+  const target = language.toLowerCase();
+  const normalize = (lang: string) => lang.toLowerCase().replace('_', '-');
+  const accentHint = language === 'en-GB' ? /\b(uk|gb|british|england)\b/i : /\b(us|usa|american)\b/i;
+  const accentVoices = voices.filter(
+    (voice) =>
+      normalize(voice.lang) === target ||
+      normalize(voice.lang).startsWith(`${target}-`) ||
+      (normalize(voice.lang).startsWith('en') && accentHint.test(voice.name)),
+  );
+  const genderVoice = findVoiceByGender(accentVoices, gender) ?? findVoiceByGender(voices, gender);
+
+  return (
+    genderVoice ??
+    voices.find((voice) => normalize(voice.lang) === target) ??
+    voices.find((voice) => normalize(voice.lang).startsWith(`${target}-`)) ??
+    voices.find((voice) => normalize(voice.lang).startsWith('en') && accentHint.test(voice.name)) ??
+    voices.find((voice) => normalize(voice.lang).startsWith('en')) ??
+    null
+  );
+}
+
+function findVoiceByGender(
+  voices: SpeechSynthesisVoice[],
+  gender: UserAudioSettings['voiceGender'],
+): SpeechSynthesisVoice | null {
+  if (gender === 'auto') return null;
+  const femaleHint = /\b(female|woman|girl|zira|susan|hazel|samantha|victoria|karen|moira|tessa|serena|aria|jenny|michelle|emma|amy|libby|sonia)\b/i;
+  const maleHint = /\b(male|man|boy|david|mark|george|daniel|alex|fred|tom|guy|ryan|brian|christopher|eric|roger)\b/i;
+  const hint = gender === 'female' ? femaleHint : maleHint;
+  return voices.find((voice) => normalizeVoiceLang(voice.lang).startsWith('en') && hint.test(voice.name)) ?? null;
+}
+
+function detectSupportedAccents(voices: SpeechSynthesisVoice[]): UserAudioSettings['language'][] {
+  const englishVoices = voices.filter((voice) => normalizeVoiceLang(voice.lang).startsWith('en'));
+  const hasUs = englishVoices.some((voice) => isUsVoice(voice));
+  const hasUk = englishVoices.some((voice) => isUkVoice(voice));
+  const accents: UserAudioSettings['language'][] = [];
+
+  if (hasUs) accents.push('en-US');
+  if (hasUk) accents.push('en-GB');
+  if (accents.length > 0) return accents;
+
+  return englishVoices.length === 1 ? ['en-US'] : [];
+}
+
+function normalizeVoiceLang(lang: string) {
+  return lang.toLowerCase().replace('_', '-');
+}
+
+function isUsVoice(voice: SpeechSynthesisVoice) {
+  return normalizeVoiceLang(voice.lang).startsWith('en-us') || /\b(us|usa|american)\b/i.test(voice.name);
+}
+
+function isUkVoice(voice: SpeechSynthesisVoice) {
+  return normalizeVoiceLang(voice.lang).startsWith('en-gb') || /\b(uk|gb|british|england)\b/i.test(voice.name);
+}
 
 export default SettingsView;

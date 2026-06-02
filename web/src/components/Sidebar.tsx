@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, History, Settings, Repeat2, Flame, Trophy } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, Activity, Settings, Repeat2, Flame, Trophy } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useUserStats } from '../services/useUserStats';
@@ -9,7 +9,7 @@ const navItems = [
   { name: 'Speaking',     icon: Mic2,            path: '/speaking' },
   { name: 'Writing',      icon: Edit3,           path: '/writing' },
   { name: 'Shadowing',    icon: Repeat2,         path: '/shadowing' },
-  { name: 'History',      icon: History,         path: '/history' },
+  { name: 'Learning Progress', icon: Activity,   path: '/progress' },
   { name: 'Settings',     icon: Settings,        path: '/settings' },
 ];
 

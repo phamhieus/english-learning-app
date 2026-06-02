@@ -12,8 +12,9 @@ import { useVideoShadowingSession } from '../hooks/useVideoShadowingSession';
 import { useVideoSegmentPlayer, type PlaybackRate } from '../hooks/useVideoSegmentPlayer';
 import { useYouTubeSegmentPlayer } from '../hooks/useYouTubeSegmentPlayer';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
-import { useTextToSpeech } from '../hooks/useTextToSpeech';
 import { useLiveTranscript } from '../hooks/useLiveTranscript';
+import { VoiceReaderToggle } from '../../voice-reader/VoiceReaderControls';
+import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { parseYouTubeId } from '../utils/youtube';
 import { fileStorage } from '../services/storage/opfsFileStorage';
 import { getBuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
@@ -65,7 +66,7 @@ export default function VideoShadowingPracticePage() {
     : htmlPlayer;
 
   const recorder = useAudioRecorder();
-  const tts = useTextToSpeech();
+  const voiceReader = useVoiceReader({ exerciseId: `video-shadowing-${lessonId}` });
   const live = useLiveTranscript();
 
   // Resolve a playable URL for user uploads / direct links (VOA has none yet).
@@ -170,7 +171,7 @@ export default function VideoShadowingPracticePage() {
 
   const goto = (i: number) => {
     pause();
-    tts.cancel();
+    voiceReader.stop();
     live.stop();
     live.reset();
     recorder.reset();
@@ -181,13 +182,13 @@ export default function VideoShadowingPracticePage() {
 
   const listen = () => {
     pause();
-    if (tts.speaking) tts.cancel();
-    else tts.speak(active.text, rate);
+    if (voiceReader.status === 'playing' || voiceReader.status === 'loading') voiceReader.stop();
+    else voiceReader.speakSegments([{ id: active.id, text: active.text }], { mode: 'shadowing' });
   };
 
   const startRecording = () => {
     pause();
-    tts.cancel();
+    voiceReader.stop();
     live.start();
     recorder.startRecording();
   };
@@ -311,11 +312,27 @@ export default function VideoShadowingPracticePage() {
         </button>
         <button onClick={() => goto(activeIndex + 1)} disabled={activeIndex >= segments.length - 1} className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shadow-sm disabled:opacity-40"><SkipForward className="w-5 h-5" /></button>
         <button onClick={() => playSegment(active.id)} className="ml-1 h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2"><Captions className="w-4 h-4" /> Play Original</button>
-        {tts.supported && (
-          <button onClick={listen} className={cn('h-11 px-4 rounded-full border text-sm font-medium flex items-center gap-2 transition', tts.speaking ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300')}>
-            <Volume2 className="w-4 h-4" /> {tts.speaking ? 'Stop' : 'Listen'}
+        {voiceReader.supported && (
+          <button
+            onClick={listen}
+            disabled={!voiceReader.canPlayAudio}
+            className={cn(
+              'h-11 px-4 rounded-full border text-sm font-medium flex items-center gap-2 transition',
+              voiceReader.status === 'playing' || voiceReader.status === 'loading'
+                ? 'bg-indigo-600 text-white border-indigo-600'
+                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300',
+              !voiceReader.canPlayAudio && 'opacity-40 cursor-not-allowed'
+            )}
+          >
+            <Volume2 className="w-4 h-4" /> {voiceReader.status === 'playing' || voiceReader.status === 'loading' ? 'Stop' : 'Listen'}
           </button>
         )}
+        <VoiceReaderToggle
+          supported={voiceReader.supported}
+          globallyEnabled={voiceReader.globalVoiceReaderEnabled}
+          muted={voiceReader.isTemporarilyMuted}
+          onChange={voiceReader.setTemporarilyMuted}
+        />
         <button onClick={() => setShowScript((v) => !v)} className="h-11 px-4 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex items-center gap-2">
           {showScript ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />} {showScript ? 'Hide script' : 'Show script'}
         </button>
@@ -326,7 +343,14 @@ export default function VideoShadowingPracticePage() {
         {/* Record + script */}
         <div className="glass-card rounded-2xl p-5 flex flex-col">
           <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1.5">Repeat after the speaker</p>
-          <p className="text-xl font-bold leading-tight py-2">{active.text}</p>
+          <p
+            className={cn(
+              'text-xl font-bold leading-tight py-2 rounded-xl transition-colors',
+              voiceReader.activeSegmentId === active.id && 'bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-200 px-3'
+            )}
+          >
+            {active.text}
+          </p>
           {active.translation && <p className="text-sm text-slate-500 italic mb-4">{active.translation}</p>}
 
           <div className="mt-auto rounded-2xl bg-indigo-50/60 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 p-4 flex items-center gap-4">

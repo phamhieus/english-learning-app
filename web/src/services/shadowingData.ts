@@ -26,3 +26,26 @@ export function saveLessonProgress(lessonId: string, completedSegments: number, 
     JSON.stringify({ completedSegments, totalSegments })
   );
 }
+
+const RECENT_FREE_KEY = 'shadowing_recent_free';
+const RECENT_FREE_LIMIT = 3;
+
+/** The 3 most recent free-style shadowing sets the user generated, newest first. */
+export function getRecentFreeLessons(): ShadowingLesson[] {
+  try {
+    const raw = localStorage.getItem(RECENT_FREE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as ShadowingLesson[];
+    return Array.isArray(parsed) ? parsed.slice(0, RECENT_FREE_LIMIT) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Persist a generated free-style lesson, keeping only the newest few. Returns the updated list. */
+export function saveRecentFreeLesson(lesson: ShadowingLesson): ShadowingLesson[] {
+  const existing = getRecentFreeLessons().filter((l) => l.id !== lesson.id);
+  const next = [lesson, ...existing].slice(0, RECENT_FREE_LIMIT);
+  localStorage.setItem(RECENT_FREE_KEY, JSON.stringify(next));
+  return next;
+}

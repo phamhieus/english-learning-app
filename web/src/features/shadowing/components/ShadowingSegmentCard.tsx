@@ -15,6 +15,7 @@ import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { AudioPlayback } from './AudioPlayback';
 import { SegmentResultInline } from './SegmentResultInline';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
+import { splitVoiceReaderText } from '../../voice-reader/voiceReaderText';
 
 const STATUS_CONFIG = {
   not_started: {
@@ -58,6 +59,9 @@ interface ShadowingSegmentCardProps {
     audioDurationMs?: number
   ) => Promise<void>;
   onRetry: (segmentId: string) => void;
+  activeVoiceSegmentId?: string | null;
+  canUseVoiceReader?: boolean;
+  onReadSentence?: (sentenceId: string, text: string) => void;
 }
 
 export const ShadowingSegmentCard = React.forwardRef<
@@ -72,6 +76,9 @@ export const ShadowingSegmentCard = React.forwardRef<
       onStartPracticing,
       onSubmitAttempt,
       onRetry,
+      activeVoiceSegmentId,
+      canUseVoiceReader,
+      onReadSentence,
     },
     ref
   ) => {
@@ -98,6 +105,10 @@ export const ShadowingSegmentCard = React.forwardRef<
     const showRecordingUI = !hasResult || isRetrying || segment.status === 'practicing';
     const isActivelyRecording = recorder.status === 'recording';
     const isStopping = recorder.status === 'stopping';
+    const sentences = splitVoiceReaderText(segment.text).map((sentence) => ({
+      ...sentence,
+      id: `${segment.id}:${sentence.id}`,
+    }));
 
     // When a new attempt comes in, stop retry mode
     useEffect(() => {
@@ -211,16 +222,42 @@ export const ShadowingSegmentCard = React.forwardRef<
         </div>
 
         {/* Segment text */}
-        <p
-          className={cn(
-            'text-base leading-relaxed mb-5',
-            segment.type === 'paragraph'
-              ? 'text-slate-700 dark:text-slate-200'
-              : 'text-slate-800 dark:text-slate-100 font-medium'
-          )}
-        >
-          {segment.text}
-        </p>
+        <div className="space-y-2 mb-5">
+          {sentences.map((sentence) => {
+            const isActiveSentence = activeVoiceSegmentId === sentence.id || activeVoiceSegmentId === segment.id;
+            return (
+              <div
+                key={sentence.id}
+                className={cn(
+                  'flex items-start gap-2 rounded-xl transition-colors',
+                  isActiveSentence && 'bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-200 px-3 py-2'
+                )}
+              >
+                {onReadSentence && !segment.audioUrl && (
+                  <button
+                    type="button"
+                    onClick={() => onReadSentence(sentence.id, sentence.text)}
+                    disabled={!canUseVoiceReader}
+                    className="mt-0.5 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-indigo-500 flex items-center justify-center shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label="Read this sentence"
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <p
+                  className={cn(
+                    'text-base leading-relaxed',
+                    segment.type === 'paragraph'
+                      ? 'text-slate-700 dark:text-slate-200'
+                      : 'text-slate-800 dark:text-slate-100 font-medium'
+                  )}
+                >
+                  {sentence.text}
+                </p>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Sample audio + speed */}
         {segment.audioUrl && (
@@ -340,7 +377,7 @@ export const ShadowingSegmentCard = React.forwardRef<
               {!isActivelyRecording && !segment.audioUrl && (
                 <span className="text-xs text-slate-400 flex items-center gap-1">
                   <Volume2 className="w-3 h-3" />
-                  Listen, then shadow
+                  Use the speaker beside each sentence
                 </span>
               )}
             </div>

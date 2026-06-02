@@ -16,6 +16,7 @@ import WritingList from './screens/WritingList';
 import WritingEditor from './screens/WritingEditor';
 import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
+import LearningProgressPage from './features/learning-progress/pages/LearningProgressPage';
 import SettingsView from './screens/SettingsView';
 import ShadowingList from './screens/ShadowingList';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
@@ -60,6 +61,7 @@ function App() {
 
                   {videoShadowingRoutes()}
 
+                  <Route path="/progress" element={<LearningProgressPage />} />
                   <Route path="/history" element={<HistoryView />} />
                   <Route path="/settings" element={<SettingsView />} />
                 </Routes>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Mic, RotateCcw, Check, Activity, Image, ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
@@ -7,6 +7,9 @@ import { evaluatePictureDescription } from '../services/ai';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
+import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
+import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
+import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
 
 const PictureDescriptionPractice = () => {
   const navigate = useNavigate();
@@ -26,7 +29,11 @@ const PictureDescriptionPractice = () => {
   const [recognizedText, setRecognizedText] = useState('');
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [didAutoRead, setDidAutoRead] = useState(false);
   const recognitionRef = React.useRef<SpeechRecognition | null>(null);
+  const promptText = `Describe everything you see in this picture. ${practice.title}`;
+  const voiceSegments = useMemo(() => splitVoiceReaderText(promptText), [promptText]);
+  const voiceReader = useVoiceReader({ exerciseId: `picture-${practice.id ?? practice.title}` });
 
   useEffect(() => {
     const recognition = createSpeechRecognition();
@@ -53,6 +60,16 @@ const PictureDescriptionPractice = () => {
       showError('Speech Recognition is not supported in this browser.');
     }
   }, [showError]);
+
+  useEffect(() => {
+    setDidAutoRead(false);
+  }, [practice.id, practice.title]);
+
+  useEffect(() => {
+    if (didAutoRead || voiceSegments.length === 0) return;
+    voiceReader.speakSegments(voiceSegments, { mode: 'sequence' });
+    setDidAutoRead(true);
+  }, [didAutoRead, voiceReader, voiceSegments]);
 
   const toggleRecording = () => {
     if (isRecording) {
@@ -139,9 +156,34 @@ const PictureDescriptionPractice = () => {
             />
           )}
         </div>
-        <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-3 font-medium">
-          Describe everything you see in this picture
-        </p>
+        <div className="mt-3 flex flex-col items-center gap-3">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
+            {voiceSegments.map((segment) => (
+              <span
+                key={segment.id}
+                className={cn(
+                  'rounded-md transition-colors',
+                  voiceReader.activeSegmentId === segment.id && 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-200'
+                )}
+              >
+                {segment.text}{' '}
+              </span>
+            ))}
+          </p>
+          <VoiceReaderControls
+            supported={voiceReader.supported}
+            globallyEnabled={voiceReader.globalVoiceReaderEnabled}
+            muted={voiceReader.isTemporarilyMuted}
+            onChange={voiceReader.setTemporarilyMuted}
+            status={voiceReader.status}
+            canPlay={voiceReader.canPlayAudio}
+            onPlay={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
+            onPause={voiceReader.pause}
+            onResume={voiceReader.resume}
+            onReplay={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
+            onStop={voiceReader.stop}
+          />
+        </div>
       </div>
 
       {/* Live Audio Feedback */}

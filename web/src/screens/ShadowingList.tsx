@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { getLessonsByMode, getLessonProgress, type ShadowingMode } from '../services/shadowingData';
+import { getLessonsByMode, getLessonProgress, getRecentFreeLessons, saveRecentFreeLesson, type ShadowingMode } from '../services/shadowingData';
 import type { ShadowingLesson } from '../features/shadowing/types/shadowing.types';
 import { VideoLessonCard, type LessonCardData } from '../features/video-shadowing/components/VideoLessonCard';
 import { useVideoShadowingLibrary } from '../features/video-shadowing/hooks/useVideoShadowingLibrary';
@@ -199,21 +199,47 @@ const topicPrompts: Record<string, string> = {
   Sports: 'Playing sports keeps me active, teaches teamwork, and helps me manage stress after a busy day.',
 };
 
-const splitFreeSegments = (text: string) => {
-  const sentenceParts = text
-    .replace(/\s+/g, ' ')
-    .split(/(?<=[.!?])\s+/)
-    .map(part => part.trim())
-    .filter(Boolean);
+type SplitMode = 'sentence' | 'phrase' | 'paragraph';
 
-  if (sentenceParts.length > 1) return sentenceParts;
+const SPLIT_MODES: { key: SplitMode; label: string; hint: string; Icon: typeof Type }[] = [
+  { key: 'sentence',  label: 'Sentence',  hint: 'One line each', Icon: Type },
+  { key: 'phrase',    label: 'Phrase',    hint: 'Short chunks',  Icon: AlignLeft },
+  { key: 'paragraph', label: 'Paragraph', hint: 'Whole blocks',  Icon: Pilcrow },
+];
 
+const chunkWords = (text: string, size: number) => {
   const words = text.trim().split(/\s+/).filter(Boolean);
   const chunks: string[] = [];
-  for (let i = 0; i < words.length; i += 12) {
-    chunks.push(words.slice(i, i + 12).join(' '));
+  for (let i = 0; i < words.length; i += size) {
+    chunks.push(words.slice(i, i + size).join(' '));
   }
   return chunks.filter(Boolean);
+};
+
+const splitFreeSegments = (text: string, mode: SplitMode = 'sentence'): string[] => {
+  const clean = text.trim();
+  if (!clean) return [];
+
+  if (mode === 'paragraph') {
+    // Honour blank-line breaks first; otherwise group sentences into ~3-sentence blocks.
+    const paras = clean.split(/\n\s*\n+/).map(p => p.replace(/\s+/g, ' ').trim()).filter(Boolean);
+    if (paras.length > 1) return paras;
+    const sentences = clean.replace(/\s+/g, ' ').split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
+    if (sentences.length <= 1) return [clean.replace(/\s+/g, ' ')];
+    const grouped: string[] = [];
+    for (let i = 0; i < sentences.length; i += 3) grouped.push(sentences.slice(i, i + 3).join(' '));
+    return grouped;
+  }
+
+  if (mode === 'phrase') {
+    // Split on clause punctuation (commas, semicolons, sentence-enders); fall back to word chunks.
+    const parts = clean.replace(/\s+/g, ' ').split(/(?<=[,;:.!?])\s+/).map(p => p.trim()).filter(Boolean);
+    return parts.length > 1 ? parts : chunkWords(clean, 8);
+  }
+
+  // sentence (default)
+  const sentenceParts = clean.replace(/\s+/g, ' ').split(/(?<=[.!?])\s+/).map(p => p.trim()).filter(Boolean);
+  return sentenceParts.length > 1 ? sentenceParts : chunkWords(clean, 12);
 };
 
 const FreeMode = () => {
@@ -221,10 +247,16 @@ const FreeMode = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('Daily routine');
+  const [splitMode, setSplitMode] = useState<SplitMode>('sentence');
+  const [recent, setRecent] = useState<ShadowingLesson[]>(() => getRecentFreeLessons());
+
+  const openLesson = (lesson: ShadowingLesson) => {
+    navigate('/shadowing/practice', { state: { lesson } });
+  };
 
   const startFreeLesson = (sourceText = text, topic = selectedTopic) => {
     const body = sourceText.trim() || topicPrompts[topic] || topicPrompts['Daily routine'];
-    const segmentTexts = splitFreeSegments(body);
+    const segmentTexts = splitFreeSegments(body, splitMode);
     const lessonId = `free-${Date.now()}`;
     const lesson: ShadowingLesson = {
       id: lessonId,
@@ -237,14 +269,15 @@ const FreeMode = () => {
       segments: segmentTexts.map((segmentText, index) => ({
         id: `${lessonId}-${index}`,
         lessonId,
-        type: segmentTexts.length === 1 ? 'sentence' : 'paragraph',
+        type: splitMode === 'paragraph' ? 'paragraph' : 'sentence',
         order: index + 1,
         text: segmentText,
         status: 'not_started',
         attempts: [],
       })),
     };
-    navigate('/shadowing/practice', { state: { lesson } });
+    setRecent(saveRecentFreeLesson(lesson));
+    openLesson(lesson);
   };
 
   const chooseTopic = (topic: string) => {
@@ -288,6 +321,31 @@ const FreeMode = () => {
           className="hidden"
           onChange={(event) => handleTxtUpload(event.target.files?.[0])}
         />
+        <div className="mt-4">
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Split into</p>
+          <div className="grid grid-cols-3 gap-2">
+            {SPLIT_MODES.map(({ key, label, hint, Icon }) => {
+              const on = splitMode === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSplitMode(key)}
+                  className={cn(
+                    'flex flex-col items-center gap-1 py-2.5 rounded-xl border text-center transition-all duration-200 active:scale-95',
+                    on
+                      ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 ring-2 ring-indigo-500/20'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-xs font-semibold">{label}</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 leading-none">{hint}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
         <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <button
@@ -333,13 +391,40 @@ const FreeMode = () => {
           </div>
         </div>
         <div className="glass-card rounded-2xl p-5 flex-1">
-          <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Quick start</p>
-          <button
-            onClick={() => startFreeLesson(topicPrompts[selectedTopic], selectedTopic)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-600 dark:text-fuchsia-300 py-3 font-semibold hover:bg-fuchsia-600 hover:text-white transition-colors"
-          >
-            <Play className="w-4 h-4" /> Practice {selectedTopic}
-          </button>
+          <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Recent free sets</p>
+          {recent.length > 0 ? (
+            <div className="flex flex-col gap-2.5">
+              {recent.map((lesson) => {
+                const seg = lesson.totalSegments;
+                const typeLabel = (lesson.segments[0]?.type ?? 'paragraph') === 'sentence' ? 'Sentence' : 'Paragraph';
+                return (
+                  <button
+                    key={lesson.id}
+                    onClick={() => openLesson(lesson)}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 text-left hover:border-fuchsia-200 dark:hover:border-fuchsia-800 hover:bg-fuchsia-50/60 dark:hover:bg-fuchsia-900/10 transition-colors active:scale-[0.99]"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/30 text-fuchsia-600 dark:text-fuchsia-300 flex items-center justify-center shrink-0">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm truncate">{lesson.title}</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500">{typeLabel} · {seg} seg</p>
+                    </div>
+                    <Play className="w-4 h-4 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center text-center py-6 px-2">
+              <div className="w-10 h-10 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-900/20 text-fuchsia-500 flex items-center justify-center mb-3">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Your last 3 free-style sets show up here. Generate one to get started.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -583,8 +668,31 @@ const ShadowingListPage = () => {
         )}
       </div>
 
-      {/* Mode picker */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mb-9">
+      {/* Mode picker — mobile: horizontal scroll pills */}
+      <div className="md:hidden -mx-1 mb-7">
+        <div className="flex gap-2 overflow-x-auto px-1 pb-2 no-scrollbar">
+          {SHADOW_MODES.map((m) => {
+            const on = m.key === mode;
+            return (
+              <button
+                key={m.key}
+                onClick={() => setMode(m.key)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 whitespace-nowrap px-3.5 py-2 rounded-full text-[13px] font-bold transition-all duration-200 active:scale-95 [&>svg]:w-4 [&>svg]:h-4',
+                  on
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                )}
+              >
+                {m.icon} {m.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mode picker — tablet/desktop: cards */}
+      <div className="hidden md:grid md:grid-cols-3 xl:grid-cols-5 gap-3 mb-9">
         {SHADOW_MODES.map((m) => {
           const on = m.key === mode;
           const count = ['sentence', 'paragraph', 'dialogue'].includes(m.key)

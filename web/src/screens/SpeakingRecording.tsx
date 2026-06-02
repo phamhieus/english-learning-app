@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Mic, RotateCcw, Check, Volume2, Activity } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
@@ -7,6 +7,9 @@ import { evaluateSpeaking, generateSpeakingTranscript } from '../services/ai';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import { useSpeechRecognition } from '../services/useSpeechRecognition';
+import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
+import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
+import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
 
 const SpeakingRecording = () => {
   const navigate = useNavigate();
@@ -20,9 +23,12 @@ const SpeakingRecording = () => {
   const [transcript, setTranscript] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [didAutoRead, setDidAutoRead] = useState(false);
 
   const speech = useSpeechRecognition();
   const recognizedText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
+  const voiceSegments = useMemo(() => splitVoiceReaderText(transcript), [transcript]);
+  const voiceReader = useVoiceReader({ exerciseId: `speaking-${practice.id ?? practice.title}` });
 
   useEffect(() => {
     if (!speech.isSupported) {
@@ -44,6 +50,16 @@ const SpeakingRecording = () => {
     };
     generateTranscript();
   }, [practice.title, settings, practice.level, practice.type, showError]);
+
+  useEffect(() => {
+    setDidAutoRead(false);
+  }, [practice.id, practice.title]);
+
+  useEffect(() => {
+    if (isLoading || didAutoRead || voiceSegments.length === 0) return;
+    voiceReader.speakSegments(voiceSegments, { mode: 'sequence' });
+    setDidAutoRead(true);
+  }, [didAutoRead, isLoading, voiceReader, voiceSegments]);
 
   const toggleRecording = () => {
     if (speech.isListening) {
@@ -111,7 +127,11 @@ const SpeakingRecording = () => {
         
         {/* Target Card */}
         <div className="w-full glass-card rounded-3xl p-8 relative shadow-lg">
-          <button className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-indigo-500 hover:scale-110 transition-transform">
+          <button
+            onClick={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
+            disabled={!voiceReader.canPlayAudio || isLoading}
+            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-indigo-500 hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+          >
             <Volume2 className="w-5 h-5" />
           </button>
           
@@ -119,8 +139,38 @@ const SpeakingRecording = () => {
 
           {!practice.image && (
             <p className="text-3xl font-medium leading-relaxed text-slate-800 dark:text-slate-200 pr-12">
-              {isLoading ? <span className="animate-pulse text-slate-400 text-xl">Generating practice text via Gemini...</span> : transcript}
+              {isLoading ? (
+                <span className="animate-pulse text-slate-400 text-xl">Generating practice text via Gemini...</span>
+              ) : (
+                voiceSegments.map((segment) => (
+                  <span
+                    key={segment.id}
+                    className={cn(
+                      'rounded-lg transition-colors',
+                      voiceReader.activeSegmentId === segment.id && 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-200'
+                    )}
+                  >
+                    {segment.text}{' '}
+                  </span>
+                ))
+              )}
             </p>
+          )}
+          {!isLoading && (
+            <VoiceReaderControls
+              className="mt-6"
+              supported={voiceReader.supported}
+              globallyEnabled={voiceReader.globalVoiceReaderEnabled}
+              muted={voiceReader.isTemporarilyMuted}
+              onChange={voiceReader.setTemporarilyMuted}
+              status={voiceReader.status}
+              canPlay={voiceReader.canPlayAudio}
+              onPlay={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
+              onPause={voiceReader.pause}
+              onResume={voiceReader.resume}
+              onReplay={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
+              onStop={voiceReader.stop}
+            />
           )}
         </div>
 

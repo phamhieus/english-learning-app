@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   AlertCircle,
@@ -15,6 +15,7 @@ import { ShadowingSegmentCard } from './ShadowingSegmentCard';
 import { ShadowingProgressSidebar } from './ShadowingProgressSidebar';
 import { ShadowingSessionResultPanel } from './ShadowingSessionResultPanel';
 import { useSettings } from '../../../components/useSettings';
+import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 
 const LEVEL_BADGE: Record<string, string> = {
   beginner:
@@ -54,6 +55,15 @@ export default function ShadowingPracticePage() {
   const [resultError, setResultError] = useState<string | null>(null);
 
   const segmentCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const voiceReader = useVoiceReader({ exerciseId: `shadowing-${lesson.id ?? lesson.title}` });
+  const shadowingOptions = useMemo(
+    () => ({
+      mode: 'shadowing' as const,
+      gapMs: settings.userAudioSettings.shadowingGapMs,
+      repeatEachLine: settings.userAudioSettings.repeatEachLine,
+    }),
+    [settings.userAudioSettings.repeatEachLine, settings.userAudioSettings.shadowingGapMs]
+  );
 
   const handleSegmentClick = useCallback((segmentId: string) => {
     const el = segmentCardRefs.current[segmentId];
@@ -185,10 +195,8 @@ export default function ShadowingPracticePage() {
           )}
 
           {segments.map(segment => {
-            // Hide segments that are locked (another one is being analyzed right now)
             const isLocked =
               analyzingSegmentId !== null && analyzingSegmentId !== segment.id;
-            if (isLocked) return null;
 
             return (
               <ShadowingSegmentCard
@@ -197,11 +205,16 @@ export default function ShadowingPracticePage() {
                   segmentCardRefs.current[segment.id] = el;
                 }}
                 segment={segment}
-                isLocked={false}
+                isLocked={isLocked}
                 isAnalyzing={analyzingSegmentId === segment.id}
                 onStartPracticing={startPracticing}
                 onSubmitAttempt={handleSubmitAttempt}
                 onRetry={retrySegment}
+                activeVoiceSegmentId={voiceReader.activeSegmentId}
+                canUseVoiceReader={voiceReader.canPlayAudio}
+                onReadSentence={(sentenceId, text) =>
+                  voiceReader.speakSegments([{ id: sentenceId, text }], shadowingOptions)
+                }
               />
             );
           })}

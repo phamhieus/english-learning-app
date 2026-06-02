@@ -62,6 +62,7 @@ interface ShadowingSegmentCardProps {
   activeVoiceSegmentId?: string | null;
   canUseVoiceReader?: boolean;
   onReadSentence?: (sentenceId: string, text: string) => void;
+  onStopReading?: () => void;
 }
 
 export const ShadowingSegmentCard = React.forwardRef<
@@ -79,6 +80,7 @@ export const ShadowingSegmentCard = React.forwardRef<
       activeVoiceSegmentId,
       canUseVoiceReader,
       onReadSentence,
+      onStopReading,
     },
     ref
   ) => {
@@ -157,6 +159,14 @@ export const ShadowingSegmentCard = React.forwardRef<
       lastRecognizedRef.current = '';
       lastDurationRef.current = 0;
       onStartPracticing(segment.id);
+
+      // Stop speech synthesis & audio playback
+      onStopReading?.();
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+
       await recorder.startRecording();
       speech.start();
     };
@@ -172,6 +182,14 @@ export const ShadowingSegmentCard = React.forwardRef<
       speech.reset();
       lastRecognizedRef.current = '';
       recorder.reset();
+
+      // Stop speech synthesis & audio playback
+      onStopReading?.();
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+
       onRetry(segment.id);
     };
 

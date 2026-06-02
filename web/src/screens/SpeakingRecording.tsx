@@ -65,8 +65,25 @@ const SpeakingRecording = () => {
     if (speech.isListening) {
       speech.stop();
     } else {
+      voiceReader.stop();
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
       speech.start();
     }
+  };
+
+  const handleReset = () => {
+    if (speech.isListening) {
+      speech.stop();
+    }
+    speech.reset();
+    voiceReader.stop();
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
   };
 
   const handleEvaluate = async () => {
@@ -181,7 +198,7 @@ const SpeakingRecording = () => {
               {[1, 2, 3, 4, 5, 4, 3, 2, 5, 3, 1].map((h, i) => (
                 <div 
                   key={i} 
-                  className="w-1.5 bg-indigo-500 rounded-full animate-pulse"
+                  className="w-1.5 bg-indigo-50 rounded-full animate-pulse"
                   style={{ height: `${h * 12}px`, animationDelay: `${i * 0.1}s` }}
                 />
               ))}
@@ -207,7 +224,10 @@ const SpeakingRecording = () => {
 
       {/* Bottom Controls */}
       <div className="shrink-0 flex items-center justify-center gap-6 mt-8">
-        <button className="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <button 
+          onClick={handleReset}
+          className="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors"
+        >
           <RotateCcw className="w-6 h-6" />
         </button>
 

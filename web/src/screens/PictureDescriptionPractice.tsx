@@ -77,6 +77,11 @@ const PictureDescriptionPractice = () => {
       setIsRecording(false);
     } else {
       setRecognizedText('');
+      voiceReader.stop();
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
       recognitionRef.current?.start();
       setIsRecording(true);
     }
@@ -108,6 +113,11 @@ const PictureDescriptionPractice = () => {
     if (isRecording) recognitionRef.current?.stop();
     setIsRecording(false);
     setRecognizedText('');
+    voiceReader.stop();
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
   };
 
   return (

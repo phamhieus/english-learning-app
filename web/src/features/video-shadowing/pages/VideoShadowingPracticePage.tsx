@@ -38,6 +38,7 @@ export default function VideoShadowingPracticePage() {
   const [scoring, setScoring] = useState(false);
   const [scoringMsg, setScoringMsg] = useState('Đang chấm…');
   const userAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [dismissedSegmentIds, setDismissedSegmentIds] = useState<Set<string>>(new Set());
 
   const active = segments[activeIndex] ?? null;
   const grad = getBuiltInVoaLesson(lessonId)?.grad ?? 'amber';
@@ -95,12 +96,15 @@ export default function VideoShadowingPracticePage() {
     };
   }, [lesson, lessonId]);
 
-  const doneCount = useMemo(() => new Set(attempts.map((a) => a.segmentId)).size, [attempts]);
+  const doneCount = useMemo(
+    () => new Set(attempts.filter((a) => !dismissedSegmentIds.has(a.segmentId)).map((a) => a.segmentId)).size,
+    [attempts, dismissedSegmentIds],
+  );
 
   // Latest attempt for the active segment drives the quick-feedback card.
   const activeAttempt = useMemo(
-    () => (active ? [...attempts].reverse().find((a) => a.segmentId === active.id) : undefined),
-    [attempts, active],
+    () => (active && !dismissedSegmentIds.has(active.id) ? [...attempts].reverse().find((a) => a.segmentId === active.id) : undefined),
+    [attempts, active, dismissedSegmentIds],
   );
 
   // When a recording finishes: transcribe it locally (Whisper), then score +
@@ -132,6 +136,11 @@ export default function VideoShadowingPracticePage() {
       }
       try {
         await saveAttempt({ segment: seg, audioBlob: blob, audioDurationMs: durationMs, recognizedText });
+        setDismissedSegmentIds((prev) => {
+          const next = new Set(prev);
+          next.delete(seg.id);
+          return next;
+        });
       } catch {
         if (!cancelled) toast.error('Không lưu được bản ghi.');
       }
@@ -189,8 +198,26 @@ export default function VideoShadowingPracticePage() {
   const startRecording = () => {
     pause();
     voiceReader.stop();
+    if (active) {
+      setDismissedSegmentIds((prev) => {
+        const next = new Set(prev);
+        next.add(active.id);
+        return next;
+      });
+    }
     live.start();
     recorder.startRecording();
+  };
+
+  const handleRetryClick = () => {
+    recorder.reset();
+    if (active) {
+      setDismissedSegmentIds((prev) => {
+        const next = new Set(prev);
+        next.add(active.id);
+        return next;
+      });
+    }
   };
 
   const stopRecording = () => {
@@ -419,7 +446,7 @@ export default function VideoShadowingPracticePage() {
           )}
 
           <div className="grid grid-cols-3 gap-2 mt-auto pt-3">
-            <button onClick={() => recorder.reset()} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold"><RotateCcw className="w-4 h-4" /> Retry</button>
+            <button onClick={handleRetryClick} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold"><RotateCcw className="w-4 h-4" /> Retry</button>
             <button onClick={playMyRecording} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold"><GitCompare className="w-4 h-4" /> Compare</button>
             {activeIndex >= segments.length - 1 ? (
               <button onClick={finish} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-green-600 text-white text-xs font-semibold shadow-md shadow-green-500/25">Finish <ArrowRight className="w-4 h-4" /></button>
@@ -438,7 +465,7 @@ export default function VideoShadowingPracticePage() {
         </div>
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {segments.map((s, i) => {
-            const recorded = attempts.some((a) => a.segmentId === s.id);
+            const recorded = attempts.some((a) => a.segmentId === s.id) && !dismissedSegmentIds.has(s.id);
             const current = i === activeIndex;
             return (
               <button

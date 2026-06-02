@@ -69,6 +69,11 @@ const MockDialogue = () => {
         sendMessage(finalText);
       }
     } else {
+      voiceReader.stop();
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
       speech.start();
     }
   };

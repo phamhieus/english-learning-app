@@ -148,7 +148,7 @@ export function useShadowingSession(
     setActiveSegmentId(segmentId);
     setSegments(prev =>
       prev.map(s =>
-        s.id === segmentId ? { ...s, status: 'practicing' } : s
+        s.id === segmentId ? { ...s, status: 'practicing', latestAttempt: undefined } : s
       )
     );
   }, []);

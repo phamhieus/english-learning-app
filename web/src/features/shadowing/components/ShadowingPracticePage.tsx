@@ -215,6 +215,7 @@ export default function ShadowingPracticePage() {
                 onReadSentence={(sentenceId, text) =>
                   voiceReader.speakSegments([{ id: sentenceId, text }], shadowingOptions)
                 }
+                onStopReading={voiceReader.stop}
               />
             );
           })}

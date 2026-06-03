@@ -61,19 +61,19 @@ const IeltsSpeakingP1Lobby = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const preselected = (location.state as { selectedTopic?: string } | null)?.selectedTopic;
+  const preselectedTopic = preselected
+    ? IELTS_P1_TOPICS.find((t) => t.name.toLowerCase() === preselected.toLowerCase())
+    : undefined;
+  const hasPreselectedTopic = Boolean(preselectedTopic);
 
-  const [activeMode, setActiveMode] = useState<IeltsSpeakingMode>('full_mock_test');
+  const [activeMode, setActiveMode] = useState<IeltsSpeakingMode>(
+    hasPreselectedTopic ? 'practice_by_topic' : 'full_mock_test',
+  );
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(() => {
-    if (preselected) {
-      const match = IELTS_P1_TOPICS.find(
-        (t) => t.name.toLowerCase() === preselected.toLowerCase(),
-      );
-      return match ? [match.id] : [];
-    }
-    return [];
+    return preselectedTopic ? [preselectedTopic.id] : [];
   });
 
-  const needsTopicPicker = activeMode === 'practice_by_topic';
+  const needsTopicPicker = activeMode === 'practice_by_topic' && !hasPreselectedTopic;
 
   const toggleTopic = (id: string) => {
     setSelectedTopicIds((prev) =>
@@ -160,7 +160,12 @@ const IeltsSpeakingP1Lobby = () => {
           return (
             <button
               key={m.key}
-              onClick={() => setActiveMode(m.key)}
+              onClick={() => {
+                setActiveMode(m.key);
+                if (preselectedTopic && m.key === 'practice_by_topic') {
+                  setSelectedTopicIds([preselectedTopic.id]);
+                }
+              }}
               className={cn(
                 'text-left p-4 rounded-2xl border transition-all',
                 active
@@ -198,6 +203,16 @@ const IeltsSpeakingP1Lobby = () => {
           );
         })}
       </div>
+
+      {preselectedTopic && activeMode === 'practice_by_topic' && (
+        <div className="mb-8 p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/40">
+          <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">Selected Topic</p>
+          <p className="text-base font-bold text-slate-800 dark:text-slate-100">{preselectedTopic.name}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            This topic was selected from the speaking list.
+          </p>
+        </div>
+      )}
 
       {/* Topic picker (only for practice_by_topic) */}
       {needsTopicPicker && (

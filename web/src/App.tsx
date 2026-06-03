@@ -25,6 +25,9 @@ import PictureDescriptionList from './screens/PictureDescriptionList';
 import PictureDescriptionPractice from './screens/PictureDescriptionPractice';
 import PictureDescriptionResult from './screens/PictureDescriptionResult';
 import { videoShadowingRoutes } from './features/video-shadowing/routes';
+import IeltsSpeakingP1Lobby from './features/ielts-speaking/pages/IeltsSpeakingP1Lobby';
+import IeltsSpeakingP1Session from './features/ielts-speaking/pages/IeltsSpeakingP1Session';
+import IeltsSpeakingP1Result from './features/ielts-speaking/pages/IeltsSpeakingP1Result';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -58,6 +61,10 @@ function App() {
                   <Route path="/picture-description/practice" element={<PictureDescriptionPractice />} />
                   <Route path="/picture-description/result" element={<PictureDescriptionResult />} />
 
+
+                  <Route path="/speaking/ielts-p1" element={<IeltsSpeakingP1Lobby />} />
+                  <Route path="/speaking/ielts-p1/session" element={<IeltsSpeakingP1Session />} />
+                  <Route path="/speaking/ielts-p1/result" element={<IeltsSpeakingP1Result />} />
 
                   {videoShadowingRoutes()}
 

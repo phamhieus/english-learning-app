@@ -124,6 +124,10 @@ const SpeakingList = () => {
                     navigate('/speaking/picture');
                     return;
                   }
+                  if (t.key === 'p1') {
+                    navigate('/speaking/ielts-p1');
+                    return;
+                  }
                   setActiveTaskKey(t.key);
                 }}
                 className={cn(
@@ -158,6 +162,10 @@ const SpeakingList = () => {
               role="button"
               tabIndex={0}
               onClick={() => {
+                if (activeTaskKey === 'p1') {
+                  navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                  return;
+                }
                 const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
                 const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
                 navigate(route, { state });
@@ -165,6 +173,10 @@ const SpeakingList = () => {
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
+                  if (activeTaskKey === 'p1') {
+                    navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                    return;
+                  }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
                   const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
                   navigate(route, { state });
@@ -200,6 +212,10 @@ const SpeakingList = () => {
               <button
                 onClick={(event) => {
                   event.stopPropagation();
+                  if (activeTaskKey === 'p1') {
+                    navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                    return;
+                  }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
                   const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
                   navigate(route, { state });

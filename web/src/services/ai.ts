@@ -415,6 +415,159 @@ No markdown wrappers.`;
   return [];
 };
 
+// ── IELTS Speaking Part 1 ────────────────────────────────────────────────────
+
+export interface IeltsP1AnswerInput {
+  questionId: string;
+  question: string;
+  topicName: string;
+  transcript: string;
+  durationSeconds: number;
+}
+
+export interface IeltsP1CriterionResult {
+  estimatedBand: number;
+  strengths: string[];
+  issues: string[];
+  usefulAlternatives?: string[];
+  improvementTip: string;
+}
+
+export interface IeltsP1QuestionResult {
+  questionId: string;
+  question: string;
+  topicName: string;
+  transcript: string;
+  durationSeconds: number;
+  quickScore: number;
+  detectedIssues: string[];
+  correctedTranscript: string;
+  improvedAnswer: string;
+  pronunciationWords: string[];
+}
+
+export interface IeltsP1SessionResult {
+  sessionTitle: string;
+  mode: string;
+  durationSeconds: number;
+  topicCount: number;
+  questionCount: number;
+  estimatedBand: number;
+  criteria: {
+    fluencyCoherence: IeltsP1CriterionResult;
+    lexicalResource: IeltsP1CriterionResult;
+    grammaticalRangeAccuracy: IeltsP1CriterionResult;
+    pronunciation: IeltsP1CriterionResult;
+  };
+  questionResults: IeltsP1QuestionResult[];
+  keyStrengths: string[];
+  priorityImprovements: string[];
+}
+
+export const evaluateIeltsP1Session = async (
+  settings: AppSettings,
+  answers: IeltsP1AnswerInput[],
+  durationSeconds: number,
+): Promise<IeltsP1SessionResult> => {
+  const qBlock = answers
+    .map(
+      (a, i) =>
+        `Q${i + 1} [${a.topicName}]: ${a.question}\nAnswer (${a.durationSeconds}s): ${a.transcript || '(no speech detected)'}`,
+    )
+    .join('\n\n');
+
+  const topicNames = [...new Set(answers.map((a) => a.topicName))];
+
+  const systemInstruction = `You are an expert IELTS Speaking examiner evaluating a Part 1 practice session.
+Score on the official 4 criteria: Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.
+Each criterion uses the 0–9 IELTS band scale (with .5 increments).
+estimatedBand = average of the 4 criterion bands, rounded to nearest .5.
+
+Return STRICT JSON matching this schema — no markdown wrappers:
+{
+  "sessionTitle": "IELTS Speaking Part 1 — Practice Session",
+  "estimatedBand": number,
+  "keyStrengths": ["string"],
+  "priorityImprovements": ["string"],
+  "criteria": {
+    "fluencyCoherence": {
+      "estimatedBand": number,
+      "strengths": ["string"],
+      "issues": ["string"],
+      "improvementTip": "string"
+    },
+    "lexicalResource": {
+      "estimatedBand": number,
+      "strengths": ["string"],
+      "issues": ["string"],
+      "usefulAlternatives": ["string"],
+      "improvementTip": "string"
+    },
+    "grammaticalRangeAccuracy": {
+      "estimatedBand": number,
+      "strengths": ["string"],
+      "issues": ["string"],
+      "improvementTip": "string"
+    },
+    "pronunciation": {
+      "estimatedBand": number,
+      "strengths": ["string"],
+      "issues": ["string"],
+      "improvementTip": "string"
+    }
+  },
+  "questionResults": [
+    {
+      "questionId": "string",
+      "question": "string",
+      "topicName": "string",
+      "transcript": "string",
+      "durationSeconds": number,
+      "quickScore": number (0-9 band estimate for this single answer),
+      "detectedIssues": ["string (brief issue label)"],
+      "correctedTranscript": "string (fix grammar/word-choice but keep the candidate's meaning)",
+      "improvedAnswer": "string (a natural, band 7 reference answer for this question)",
+      "pronunciationWords": ["string (words the candidate should practise pronouncing)"]
+    }
+  ]
+}
+
+Band guidelines:
+- 9: Expert. Near-native fluency, wide vocabulary, precise grammar, clear pronunciation.
+- 8: Very good. Minor slips only, almost no impact on communication.
+- 7: Good. Some errors but communication is effective throughout.
+- 6: Competent. Noticeable errors; communication is maintained with some effort.
+- 5: Modest. Frequent errors; meaning sometimes unclear.
+- 4: Limited. Basic vocabulary and grammar; frequent breakdowns.
+- Below 4: Very limited or no speech detected.
+
+Important: if a transcript is empty or "(no speech detected)", give that answer a quickScore of 0–2 and note it in detectedIssues.
+Result disclaimer: this is an AI estimate for practice. It is not an official IELTS score.`;
+
+  const userContent = `Session duration: ${durationSeconds}s\nTopics: ${topicNames.join(', ')}\nQuestion count: ${answers.length}\n\n${qBlock}\n\nReturn the full JSON evaluation.`;
+
+  try {
+    const raw = await callAI(settings, systemInstruction, userContent);
+    const parsed: IeltsP1SessionResult = JSON.parse(raw);
+    // Attach original answer fields to each question result so the UI has full data
+    parsed.questionResults = parsed.questionResults.map((qr, i) => ({
+      ...qr,
+      questionId: answers[i]?.questionId ?? qr.questionId,
+      topicName: answers[i]?.topicName ?? qr.topicName,
+      transcript: answers[i]?.transcript ?? qr.transcript,
+      durationSeconds: answers[i]?.durationSeconds ?? qr.durationSeconds,
+    }));
+    parsed.durationSeconds = durationSeconds;
+    parsed.topicCount = topicNames.length;
+    parsed.questionCount = answers.length;
+    parsed.mode = 'practice_session';
+    return parsed;
+  } catch (e) {
+    console.error('Failed to parse IELTS P1 session result:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
 export class UnifiedChatSession {
   private settings: AppSettings;
   private systemInstruction: string;

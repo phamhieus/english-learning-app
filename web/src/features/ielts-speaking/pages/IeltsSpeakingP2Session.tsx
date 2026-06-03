@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, Clock, Mic, RefreshCw, Trash2, Volume2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, Mic, RefreshCw, Trash2, Volume2 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
@@ -138,8 +138,11 @@ const IeltsSpeakingP2Session = () => {
     return (
       <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-300">
         <div className="flex items-center justify-between gap-3 mb-6">
-          <button onClick={() => navigate('/speaking')} className="text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white">
-            Back
+          <button
+            onClick={() => navigate('/speaking/ielts')}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white"
+          >
+            <ChevronLeft className="w-4 h-4" /> Back
           </button>
           <button
             onClick={() => navigate('/speaking/ielts/part-2', { state: { cueCardId: getRandomCueCard().id } })}
@@ -210,7 +213,20 @@ const IeltsSpeakingP2Session = () => {
 
       {phase === 'prep' && (
         <div className="grid xl:grid-cols-[1fr_1.1fr_0.8fr] gap-5">
-          <section className="rounded-2xl border border-indigo-100 dark:border-indigo-900/40 bg-white dark:bg-slate-900 p-5 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm overflow-hidden">
+            <div className="rounded-2xl bg-slate-950 text-white p-4 mb-5">
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-1">Preparation room</p>
+                  <p className="text-lg font-black">1 minute to plan your long turn</p>
+                </div>
+                <span className="text-4xl font-black tabular-nums text-amber-300">{prepLeft}s</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-full bg-amber-400 rounded-full transition-all duration-500" style={{ width: `${prepProgress}%` }} />
+              </div>
+            </div>
+
             <div className="flex items-start justify-between gap-4 mb-5">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">Cue card</p>
@@ -243,7 +259,7 @@ const IeltsSpeakingP2Session = () => {
                 <p className="flex items-center gap-2 text-sm font-bold text-amber-700 dark:text-amber-300">
                   <Clock className="w-4 h-4" /> Preparation time
                 </p>
-                <span className="text-3xl font-black tabular-nums text-amber-700 dark:text-amber-300">{prepLeft}s</span>
+                <span className="text-sm font-black tabular-nums text-amber-700 dark:text-amber-300">{Math.max(0, PREP_SECONDS - prepLeft)}s used</span>
               </div>
               <div className="h-2 rounded-full bg-amber-100 dark:bg-amber-900/30 overflow-hidden">
                 <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${prepProgress}%` }} />
@@ -326,37 +342,40 @@ const IeltsSpeakingP2Session = () => {
             </section>
           </aside>
 
-          <section className="glass-card rounded-2xl p-5 border border-transparent flex flex-col min-h-[560px]">
-            <div className="flex items-center justify-between mb-4">
+          <section className="rounded-2xl border border-slate-800 bg-slate-950 text-white p-5 flex flex-col min-h-[560px] shadow-xl shadow-slate-950/10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Speaking now</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Speak continuously for 1 to 2 minutes.</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-cyan-300">Long turn in progress</p>
+                <p className="text-sm text-slate-400">Speak continuously for 1 to 2 minutes.</p>
               </div>
-              <p className="text-5xl font-black tabular-nums text-indigo-600 dark:text-indigo-400">{speakingSeconds}s</p>
+              <div className="text-left sm:text-right">
+                <p className="text-5xl font-black tabular-nums text-cyan-300">{speakingSeconds}s</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Max 120s</p>
+              </div>
             </div>
 
-            <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden mb-4">
-              <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${speakingProgress}%` }} />
+            <div className="h-2 rounded-full bg-white/10 overflow-hidden mb-4">
+              <div className="h-full bg-cyan-400 rounded-full transition-all duration-500" style={{ width: `${speakingProgress}%` }} />
             </div>
 
             <div className="grid grid-cols-3 gap-2 mb-6">
               {[60, 90, 120].map((mark) => (
-                <div key={mark} className={cn('rounded-xl p-2 text-center text-xs font-bold border', speakingSeconds >= mark ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-300 dark:border-emerald-800/40' : 'text-slate-400 border-slate-200 dark:border-slate-700')}>
+                <div key={mark} className={cn('rounded-xl p-2 text-center text-xs font-bold border', speakingSeconds >= mark ? 'bg-emerald-400/10 text-emerald-300 border-emerald-400/30' : 'text-slate-500 border-white/10 bg-white/5')}>
                   {mark === 60 ? '60s reached' : `${mark}s`}
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-col items-center justify-center gap-4 py-6 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 mb-5">
-              <button onClick={finishLongTurn} className="relative w-24 h-24 rounded-full bg-indigo-600 text-white shadow-xl shadow-indigo-500/30 flex items-center justify-center hover:bg-indigo-700 transition-colors">
-                <span className="absolute inset-0 rounded-full border-4 border-indigo-400 animate-ping opacity-50" />
+            <div className="flex flex-col items-center justify-center gap-4 py-6 rounded-2xl bg-white/5 border border-white/10 mb-5">
+              <button onClick={finishLongTurn} className="relative w-24 h-24 rounded-full bg-cyan-400 text-slate-950 shadow-xl shadow-cyan-500/20 flex items-center justify-center hover:bg-cyan-300 transition-colors">
+                <span className="absolute inset-0 rounded-full border-4 border-cyan-300 animate-ping opacity-40" />
                 <Mic className="w-10 h-10" />
               </button>
               <WaveformBars active={speech.isListening} />
               <p className="text-xs text-slate-400">Recording - tap the microphone or Finish when your answer is complete</p>
             </div>
 
-            <TranscriptBox text={liveText} placeholder="Realtime transcript will appear here while you speak..." />
+            <TranscriptBox text={liveText} placeholder="Realtime transcript will appear here while you speak..." darkPanel />
             <button onClick={finishLongTurn} className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">
               Finish answer <ChevronRight className="w-4 h-4" />
             </button>
@@ -379,11 +398,18 @@ const IeltsSpeakingP2Session = () => {
   );
 };
 
-function TranscriptBox({ text, placeholder }: { text: string; placeholder: string }) {
+function TranscriptBox({ text, placeholder, darkPanel = false }: { text: string; placeholder: string; darkPanel?: boolean }) {
   return (
-    <div className="flex-1 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4 min-h-52">
+    <div
+      className={cn(
+        'flex-1 rounded-2xl border p-4 min-h-52',
+        darkPanel
+          ? 'border-white/10 bg-white/5'
+          : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50',
+      )}
+    >
       {text ? (
-        <p className="text-base text-slate-700 dark:text-slate-200 leading-relaxed">{text}</p>
+        <p className={cn('text-base leading-relaxed', darkPanel ? 'text-slate-100' : 'text-slate-700 dark:text-slate-200')}>{text}</p>
       ) : (
         <p className="text-sm text-slate-400 italic">{placeholder}</p>
       )}

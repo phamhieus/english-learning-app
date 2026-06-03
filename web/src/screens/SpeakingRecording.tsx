@@ -103,7 +103,7 @@ const SpeakingRecording = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
+    <div className="max-w-4xl mx-auto min-h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white font-medium">
@@ -140,22 +140,22 @@ const SpeakingRecording = () => {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col justify-center items-center gap-12">
-        
+      <div className="flex-1 flex flex-col justify-center items-center gap-6 sm:gap-8">
+
         {/* Target Card */}
-        <div className="w-full glass-card rounded-3xl p-8 relative shadow-lg">
+        <div className="w-full glass-card rounded-3xl p-5 sm:p-8 relative shadow-lg">
           <button
             onClick={() => voiceReader.speakSegments(voiceSegments, { mode: 'sequence' })}
             disabled={!voiceReader.canPlayAudio || isLoading}
-            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-indigo-500 hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-indigo-500 hover:scale-110 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Volume2 className="w-5 h-5" />
           </button>
-          
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">{practice.title}</h2>
+
+          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 pr-12">{practice.title}</h2>
 
           {!practice.image && (
-            <p className="text-3xl font-medium leading-relaxed text-slate-800 dark:text-slate-200 pr-12">
+            <p className="text-xl sm:text-2xl font-medium leading-relaxed text-slate-800 dark:text-slate-200 pr-12">
               {isLoading ? (
                 <span className="animate-pulse text-slate-400 text-xl">Generating practice text via Gemini...</span>
               ) : (
@@ -223,7 +223,7 @@ const SpeakingRecording = () => {
       </div>
 
       {/* Bottom Controls */}
-      <div className="shrink-0 flex items-center justify-center gap-6 mt-8">
+      <div className="shrink-0 flex items-center justify-center gap-5 sm:gap-6 mt-6 sm:mt-8">
         <button 
           onClick={handleReset}
           className="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors"
@@ -235,7 +235,7 @@ const SpeakingRecording = () => {
           onClick={toggleRecording}
           disabled={isEvaluating}
           className={cn(
-            "w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl relative group",
+            "w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl relative group",
             speech.isListening 
               ? "bg-indigo-600 dark:bg-indigo-500 shadow-indigo-500/50 scale-110" 
               : "bg-white dark:bg-slate-800 border-2 border-indigo-100 dark:border-indigo-900 shadow-indigo-500/10 hover:scale-105",

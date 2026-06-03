@@ -73,7 +73,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-24 md:px-10 md:py-8 md:pb-8 relative">
         <div
           key={location.pathname}
-          className="max-w-6xl mx-auto w-full h-full pb-10 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"
+          className="max-w-6xl mx-auto w-full min-h-full pb-10 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"
         >
           {children}
         </div>

@@ -87,7 +87,7 @@ const PictureDescriptionResult = () => {
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-400">
       {/* Title */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-850 dark:text-slate-100 tracking-tight">
           Picture Description Result
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">

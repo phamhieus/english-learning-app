@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { Play, Clock, Volume2, Image, MessagesSquare, Table2, Lightbulb, Megaphone, UserRound, RectangleEllipsis, MessageCircle, Timer } from 'lucide-react';
+import { Play, Volume2, Image, MessagesSquare, Table2, Megaphone, UserRound, RectangleEllipsis, MessageCircle, Timer, Target, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
@@ -85,14 +85,14 @@ const SpeakingList = () => {
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
-      <div className="gs-sp-header flex items-start justify-between mb-6 gap-4 flex-wrap">
+      <div className="gs-sp-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Speaking Practice</h1>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Speaking Practice</h1>
+          <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
         </div>
         <button
           onClick={() => navigate('/shadowing/mock-dialogue')}
-          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
+          className="hidden sm:flex items-center justify-center gap-2 shrink-0 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
         >
           <MessageCircle className="w-4 h-4" /> Mock Interview
         </button>
@@ -100,18 +100,20 @@ const SpeakingList = () => {
 
       <div className="gs-sp-filters space-y-5 mb-7">
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-            <ExamPill exam={activeExam} />
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              {activeExam === 'TOEIC' ? 'Speaking & Writing Test format' : 'Academic & General format'}
-            </span>
+          <span className="inline-flex items-center gap-2 px-3.5 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-semibold">
+            <Target className="w-4 h-4" /> {activeExam}
+            <span className="text-indigo-400 dark:text-indigo-400/80 font-medium hidden md:inline">· {activeExam === 'TOEIC' ? 'Speaking & Writing format' : 'Academic & General'}</span>
           </span>
-          <span className="text-sm text-slate-400 dark:text-slate-500 font-medium hidden md:inline-flex items-center gap-1.5">
-            Change exam target in Settings
-          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/settings')}
+            className="text-sm text-slate-400 dark:text-slate-500 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1.5"
+          >
+            <Settings className="w-3.5 h-3.5" /> Change in Settings
+          </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {conf.tasks.map((t) => {
             const on = activeTaskKey === t.key;
             return (
@@ -125,7 +127,7 @@ const SpeakingList = () => {
                   setActiveTaskKey(t.key);
                 }}
                 className={cn(
-                  'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border',
+                  'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border shrink-0 whitespace-nowrap',
                   on
                     ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20'
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
@@ -133,7 +135,7 @@ const SpeakingList = () => {
               >
                 {t.icon}
                 {t.label}
-                <span className={cn('text-[10px] font-bold px-1.5 py-0.5 rounded', on ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500')}>
+                <span className={cn('hidden sm:inline-block text-[10px] font-bold px-1.5 py-0.5 rounded', on ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500')}>
                   {t.q}
                 </span>
               </button>
@@ -168,7 +170,7 @@ const SpeakingList = () => {
                   navigate(route, { state });
                 }
               }}
-              className="gs-sp-card glass-card rounded-2xl shadow p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+              className="gs-sp-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
@@ -188,7 +190,7 @@ const SpeakingList = () => {
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold mb-1.5 leading-snug">{practice.title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-snug">{practice.title}</h3>
               <p className="text-sm text-slate-400 dark:text-slate-500 font-medium mb-5">{practice.type}</p>
 
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6 mt-auto">

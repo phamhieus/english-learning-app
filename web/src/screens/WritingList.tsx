@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { PenTool, Clock, Image, Mail, FileText, BarChart3 } from 'lucide-react';
+import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
@@ -92,24 +92,26 @@ const WritingList = () => {
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
       <div className="gs-wr-header mb-6">
-        <h1 className="text-3xl font-bold mb-2">Writing Practice</h1>
-        <p className="text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Writing Practice</h1>
+        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
       </div>
 
       <div className="gs-wr-filters space-y-5 mb-7">
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
-            <ExamPill exam={activeExam} />
-            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              {activeExam === 'TOEIC' ? 'TOEIC Writing Test' : 'Academic & General Training'}
-            </span>
+          <span className="inline-flex items-center gap-2 px-3.5 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-xl text-sm font-semibold">
+            <Target className="w-4 h-4" /> {activeExam}
+            <span className="text-orange-400 dark:text-orange-400/80 font-medium hidden md:inline">· {activeExam === 'TOEIC' ? 'TOEIC Writing Test' : 'Academic & General Training'}</span>
           </span>
-          <span className="text-sm text-slate-400 dark:text-slate-500 font-medium hidden md:inline-flex items-center gap-1.5">
-            Change exam target in Settings
-          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/settings')}
+            className="text-sm text-slate-400 dark:text-slate-500 font-medium hover:text-orange-600 dark:hover:text-orange-400 flex items-center gap-1.5"
+          >
+            <Settings className="w-3.5 h-3.5" /> Change in Settings
+          </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {conf.tasks.map((t) => {
             const on = activeTaskKey === t.key;
             return (
@@ -117,7 +119,7 @@ const WritingList = () => {
                 key={t.key}
                 onClick={() => setActiveTaskKey(t.key)}
                 className={cn(
-                  'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border',
+                  'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border shrink-0 whitespace-nowrap',
                   on
                     ? 'bg-orange-500 text-white border-orange-500 shadow-md shadow-orange-500/20'
                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
@@ -125,7 +127,7 @@ const WritingList = () => {
               >
                 {t.icon}
                 {t.label}
-                <span className={cn('text-[10px] font-bold px-1.5 py-0.5 rounded', on ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500')}>
+                <span className={cn('hidden sm:inline-block text-[10px] font-bold px-1.5 py-0.5 rounded', on ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500')}>
                   {t.q}
                 </span>
               </button>
@@ -154,7 +156,7 @@ const WritingList = () => {
                   navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
                 }
               }}
-              className="gs-wr-card glass-card rounded-2xl shadow p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+              className="gs-wr-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
@@ -174,7 +176,7 @@ const WritingList = () => {
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold mb-1.5 leading-snug">{practice.title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-snug">{practice.title}</h3>
               <p className="text-sm text-slate-400 dark:text-slate-500 font-medium mb-5">{practice.type}</p>
 
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6 mt-auto">

@@ -33,7 +33,7 @@ const WritingResult = () => {
 
   return (
     <div className="animate-in slide-in-from-bottom-8 duration-500 pb-10">
-      <h1 className="text-3xl font-bold mb-8">AI Feedback</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">AI Feedback</h1>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
@@ -86,7 +86,7 @@ const WritingResult = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Original Text with Highlights */}
-        <div className="glass-card rounded-3xl p-8 flex flex-col">
+        <div className="glass-card rounded-3xl p-5 sm:p-8 flex flex-col">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
               Your Writing <span className="bg-slate-100 dark:bg-slate-800 text-xs px-2 py-1 rounded">{originalText?.trim().split(/\s+/).length || 0} words</span>
@@ -98,7 +98,7 @@ const WritingResult = () => {
             </div>
           </div>
           
-          <div className="text-lg leading-loose font-medium text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+          <div className="text-base sm:text-lg leading-loose font-medium text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
             <DiffViewer original={originalText} modified={result.improvedText} />
           </div>
 
@@ -124,7 +124,7 @@ const WritingResult = () => {
         </div>
 
         {/* Improved Version */}
-        <div className="glass-card rounded-3xl p-8 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900/80 border-2 border-green-100 dark:border-green-900/30 flex flex-col relative overflow-hidden">
+        <div className="glass-card rounded-3xl p-5 sm:p-8 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900/80 border-2 border-green-100 dark:border-green-900/30 flex flex-col relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-green-400/10 rounded-full blur-3xl"></div>
           
           <div className="flex justify-between items-center mb-4 relative z-10">
@@ -136,7 +136,7 @@ const WritingResult = () => {
             </button>
           </div>
           
-          <div className="text-lg leading-loose font-medium text-slate-800 dark:text-slate-200 relative z-10 whitespace-pre-wrap">
+          <div className="text-base sm:text-lg leading-loose font-medium text-slate-800 dark:text-slate-200 relative z-10 whitespace-pre-wrap">
             {result.improvedText}
           </div>
 
@@ -148,16 +148,16 @@ const WritingResult = () => {
         </div>
       </div>
 
-      <div className="flex justify-center gap-4">
-        <button 
+      <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+        <button
           onClick={() => navigate('/writing/editor')}
-          className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md hover:shadow-lg transition-all"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md hover:shadow-lg transition-all"
         >
           <RefreshCw className="w-5 h-5" /> Revise Again
         </button>
-        <button 
+        <button
           onClick={() => navigate('/writing')}
-          className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-xl hover:scale-105 transition-all"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-xl hover:scale-105 transition-all"
         >
           Next Lesson <ArrowRight className="w-5 h-5" />
         </button>

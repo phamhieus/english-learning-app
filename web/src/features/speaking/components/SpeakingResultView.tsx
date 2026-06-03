@@ -67,7 +67,7 @@ export function SpeakingResultView({
       
       {/* Title */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-extrabold text-slate-850 dark:text-slate-100 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-850 dark:text-slate-100 tracking-tight">
           Speaking Practice Results
         </h1>
         <p className="text-sm text-slate-450 dark:text-slate-400">

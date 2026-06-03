@@ -105,7 +105,7 @@ const WritingEditor = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
+    <div className="lg:h-[calc(100vh-8rem)] flex flex-col pb-32 lg:pb-0 animate-in slide-in-from-bottom-8 duration-500">
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white font-medium">
           ← Exit
@@ -127,8 +127,8 @@ const WritingEditor = () => {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
-        <div className="w-full lg:w-1/3 glass-card rounded-3xl p-6 flex flex-col shrink-0 overflow-y-auto">
+      <div className="flex flex-col lg:flex-row gap-6 lg:flex-1 lg:min-h-0">
+        <div className="w-full lg:w-1/3 glass-card rounded-3xl p-5 sm:p-6 flex flex-col lg:shrink-0 lg:overflow-y-auto">
           <h2 className="text-xl font-bold mb-3">{practice.title}</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
             {isPictureWriting
@@ -201,14 +201,14 @@ const WritingEditor = () => {
           </div>
 
           <textarea
-            className="flex-1 w-full bg-transparent p-6 resize-none outline-none text-lg leading-relaxed text-[var(--foreground)] placeholder:text-slate-400"
+            className="flex-1 min-h-[42vh] lg:min-h-0 w-full bg-transparent p-5 sm:p-6 resize-none outline-none text-base sm:text-lg leading-relaxed text-[var(--foreground)] placeholder:text-slate-400"
             placeholder={isPictureWriting ? 'In the picture, I can see...' : isChartTask ? 'The chart illustrates...' : 'Write your response here...'}
             value={text}
             onChange={handleChange}
             autoFocus
           />
 
-          <div className="p-4 border-t border-[var(--border)] bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur shrink-0 flex items-center justify-between gap-3">
+          <div className="hidden lg:flex p-4 border-t border-[var(--border)] bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur shrink-0 items-center justify-between gap-3">
             <span className="text-xs text-slate-400 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" /> AI examiner ready
             </span>
@@ -234,6 +234,30 @@ const WritingEditor = () => {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Mobile submit — fixed just above the bottom nav so it's always at the bottom */}
+      <div className="lg:hidden fixed inset-x-0 bottom-[78px] z-30 px-4 pt-4 pb-2 bg-gradient-to-t from-[var(--background)] via-[var(--background)] to-transparent">
+        <button
+          onClick={handleSubmit}
+          disabled={wordCount < 10 || isEvaluating}
+          className={cn(
+            'w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold shadow-lg transition-all',
+            wordCount >= 10 && !isEvaluating
+              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+              : 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
+          )}
+        >
+          {isEvaluating ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white dark:border-slate-900 border-t-transparent rounded-full animate-spin" /> Evaluating...
+            </>
+          ) : (
+            <>
+              {activeExam === 'IELTS' ? 'Submit for Band' : 'Submit for Score'} <Send className="w-4 h-4" />
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

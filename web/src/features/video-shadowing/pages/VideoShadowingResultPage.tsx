@@ -62,15 +62,25 @@ export default function VideoShadowingResultPage() {
     ['Completion', session?.completionScore, 'stroke-purple-500', ListChecks],
   ];
 
+  // Mobile shows plain number blocks instead of rings.
+  const mobileScores = [
+    { label: 'Pron', value: session?.pronunciationScore, color: 'text-green-500 dark:text-green-400' },
+    { label: 'Fluency', value: session?.fluencyScore, color: 'text-indigo-500 dark:text-indigo-400' },
+    { label: 'Rhythm', value: session?.rhythmScore, color: 'text-orange-500 dark:text-orange-400' },
+    { label: 'Compl.', value: session?.completionScore, color: 'text-purple-500 dark:text-purple-400' },
+  ];
+
   return (
     <div>
       <div className="text-center mb-7">
-        <h1 className="text-3xl font-bold mb-1">Session Complete 🎉</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-1">Session Complete 🎉</h1>
         <p className="text-slate-500 dark:text-slate-400">{title}{credit ? ` · ${credit}` : ''}</p>
       </div>
 
       {/* Summary */}
-      <div className="glass-card rounded-3xl p-8 mb-6 flex flex-wrap items-center gap-8 justify-between">
+      <div className="glass-card rounded-3xl p-5 sm:p-8 mb-6 flex flex-wrap items-center gap-5 sm:gap-8 justify-between">
+        {/* Total ring — desktop */}
+        <div className="hidden lg:block">
         {hasScores ? (
           <ScoreRing score={total} label="Total Score" colorClass="stroke-indigo-500" size={150} />
         ) : (
@@ -79,6 +89,14 @@ export default function VideoShadowingResultPage() {
             <span className="text-[11px] text-slate-400 px-3 mt-1">Local AI grading enabled</span>
           </div>
         )}
+        </div>
+        {/* Total score — mobile (number only, same first card) */}
+        <div className="lg:hidden flex flex-col items-center justify-center w-full">
+          <span className="text-5xl font-black text-indigo-600 dark:text-indigo-400 leading-none">
+            {hasScores ? total : '—'}
+          </span>
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-2">Total Score</span>
+        </div>
         <div className="flex-1 grid grid-cols-3 gap-6 min-w-[300px]">
           {([['Recorded', `${recordedCount} / ${segments.length}`, ListChecks, 'text-indigo-500'],
              ['Practice time', formatClock(session?.practiceDurationMs ?? 0), Clock, 'text-purple-500'],
@@ -100,17 +118,30 @@ export default function VideoShadowingResultPage() {
 
       {/* Score cards */}
       {hasScores && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {cards.map(([k, v, col, Icon]) => (
-            <div key={k} className="glass-card rounded-2xl p-5 flex items-center gap-4">
-              <ScoreRing score={v ?? 0} colorClass={col} size={86} />
-              <div>
-                <Icon className="w-4 h-4 text-slate-400 mb-1" />
-                <p className="font-semibold text-slate-700 dark:text-slate-200 text-sm leading-tight">{k}</p>
+        <>
+          {/* Mobile: sub-scores as plain number blocks in one row */}
+          <div className="lg:hidden grid grid-cols-4 gap-2 mb-6">
+            {mobileScores.map((s) => (
+              <div key={s.label} className="glass-card rounded-xl flex flex-col items-center justify-center text-center py-3 px-1">
+                <span className={cn('text-xl font-bold leading-none', s.color)}>{s.value ?? 0}</span>
+                <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wide mt-1">{s.label}</span>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {/* Desktop: ring cards */}
+          <div className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {cards.map(([k, v, col, Icon]) => (
+              <div key={k} className="glass-card rounded-2xl p-5 flex items-center gap-4">
+                <ScoreRing score={v ?? 0} colorClass={col} size={86} />
+                <div>
+                  <Icon className="w-4 h-4 text-slate-400 mb-1" />
+                  <p className="font-semibold text-slate-700 dark:text-slate-200 text-sm leading-tight">{k}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Per-segment breakdown */}
@@ -122,11 +153,11 @@ export default function VideoShadowingResultPage() {
         })}
       </div>
 
-      <div className="flex justify-center gap-4 pb-4">
-        <button onClick={() => navigate(`/video-shadowing/lessons/${lessonId}/practice`)} className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700">
+      <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pb-4">
+        <button onClick={() => navigate(`/video-shadowing/lessons/${lessonId}/practice`)} className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700">
           <RotateCcw className="w-5 h-5" /> Practice Again
         </button>
-        <button onClick={() => navigate('/video-shadowing')} className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
+        <button onClick={() => navigate('/video-shadowing')} className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
           <LayoutGrid className="w-5 h-5" /> Back to Library
         </button>
       </div>

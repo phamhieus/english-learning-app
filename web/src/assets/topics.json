@@ -7314,310 +7314,348 @@
       "level": "Beginner to Intermediate",
       "taskType": "Letter writing",
       "topicGroup": "Formal, semi-formal, informal letters",
-      "topicCount": 16,
+      "topicCount": 18,
       "topics": [
         {
           "id": "ielts-writing-task-1-general-01",
           "topicNo": 1,
-          "topicName": "Writing to complain about a product",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You have recently moved to a new city and would like your friend to visit you.\n\nWrite a letter to your friend. In your letter:\n• describe your new home\n• explain what you like about the city\n• suggest some activities you can do together",
+          "topicGroup": "Informal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Writing to complain about a product.",
+          "taskType": "Informal Letter",
+          "description": "IELTS General Writing Task 1 — Informal Letter. Inviting a friend to visit your new city.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Writing to complain about a product. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Writing to complain about a product.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Writing to complain about a product."
+            "Evaluate this IELTS General Writing Task 1 Informal Letter. Check that all three bullet points are fully addressed, the register is appropriately informal (friendly, personal tone), and the letter is organised with a suitable opening and closing. Give a band score and feedback.",
+            "Write a model Band 6.5 informal letter of around 160 words. Use a friendly tone, contractions, and informal phrases. Cover all three bullet points.",
+            "List 10 useful informal phrases and expressions for inviting a friend and describing a new home."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Informal — students should use a warm, personal tone (Hi/Hey [Name], contractions, exclamations).",
+            "All three bullet points must be addressed: home description, city highlights, and specific activity suggestions.",
+            "Common error: switching to formal language mid-letter. Reinforce consistent informal register throughout."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-02",
           "topicNo": 2,
-          "topicName": "Asking a landlord for repairs",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "A friend invited you to a birthday party, but you were unable to attend.\n\nWrite a letter to your friend. In your letter:\n• apologise for missing the party\n• explain why you could not attend\n• suggest a time to meet your friend",
+          "topicGroup": "Informal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Asking a landlord for repairs.",
+          "taskType": "Informal Letter",
+          "description": "IELTS General Writing Task 1 — Informal Letter. Apologising for missing a birthday party.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Asking a landlord for repairs. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Asking a landlord for repairs.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Asking a landlord for repairs."
+            "Evaluate this IELTS General Writing Task 1 Informal Letter apologising for missing a party. Check register, bullet point coverage, and organisation. Give a band score and feedback.",
+            "Write a model Band 6.5 informal letter of around 160 words apologising and suggesting a meeting time.",
+            "List useful informal phrases for apologising, giving excuses, and suggesting plans with a friend."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Informal — tone must be warm and genuine, not stiff or overly formal.",
+            "Key language focus: expressing regret (I am so sorry I missed..., I felt terrible about...) and making suggestions (How about we meet...?).",
+            "Students often write too short apologies. Encourage them to expand on both the explanation and the invitation."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-03",
           "topicNo": 3,
-          "topicName": "Inviting a friend to an event",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You are going away for a short holiday and would like a friend to take care of your home.\n\nWrite a letter to your friend. In your letter:\n• explain when you will be away\n• describe what you would like your friend to do\n• tell your friend how to contact you during your trip",
+          "topicGroup": "Informal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Inviting a friend to an event.",
+          "taskType": "Informal Letter",
+          "description": "IELTS General Writing Task 1 — Informal Letter. Asking a friend to house-sit.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Inviting a friend to an event. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Inviting a friend to an event.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Inviting a friend to an event."
+            "Evaluate this IELTS General Writing Task 1 Informal Letter asking a friend to look after a home. Give a band score and feedback on register, bullet point coverage, and cohesion.",
+            "Write a model Band 6.5 informal letter of around 160 words covering all three bullet points with a natural, friendly tone.",
+            "List useful informal phrases for making requests, giving instructions, and sharing contact details."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Informal — students must use a friendly, relaxed tone while being clear about the requests.",
+            "Bullet 2 (what to do) is often underdeveloped. Encourage specific tasks: watering plants, collecting post, feeding pets.",
+            "Bullet 3 must give a real means of contact (phone number, email) not just say \"you can contact me\"."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-04",
           "topicNo": 4,
-          "topicName": "Requesting information from a course provider",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "A friend recently helped you prepare for an important event.\n\nWrite a letter to your friend. In your letter:\n• thank your friend for the help\n• explain how the event went\n• invite your friend to do something together",
+          "topicGroup": "Informal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Requesting information from a course provider.",
+          "taskType": "Informal Letter",
+          "description": "IELTS General Writing Task 1 — Informal Letter. Thanking a friend for their help.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Requesting information from a course provider. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Requesting information from a course provider.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Requesting information from a course provider."
+            "Evaluate this IELTS General Writing Task 1 Informal Letter thanking a friend. Give a band score and feedback.",
+            "Write a model Band 6.5 informal letter of around 160 words with warm thanks, a description of the event, and an invitation.",
+            "List useful phrases for expressing gratitude informally and describing a past event."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Informal — students should sound genuinely warm and personal, not formulaic.",
+            "Bullet 2 (how the event went) must be specific, not vague. Encourage details: outcome, how they felt, what went well.",
+            "Bullet 3 should include a specific suggestion (e.g., dinner this Saturday, a film next week)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-05",
           "topicNo": 5,
-          "topicName": "Apologizing for missing a meeting",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "Your friend is planning to visit your hometown and has asked for your advice.\n\nWrite a letter to your friend. In your letter:\n• recommend a place to stay\n• suggest some places to visit\n• give advice about transport",
+          "topicGroup": "Informal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Apologizing for missing a meeting.",
+          "taskType": "Informal Letter",
+          "description": "IELTS General Writing Task 1 — Informal Letter. Giving travel advice to a visiting friend.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Apologizing for missing a meeting. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Apologizing for missing a meeting.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Apologizing for missing a meeting."
+            "Evaluate this IELTS General Writing Task 1 Informal Letter giving travel advice. Give a band score and feedback.",
+            "Write a model Band 6.5 informal letter of around 160 words with specific recommendations for accommodation, sightseeing, and getting around.",
+            "List useful informal phrases for giving recommendations, suggestions, and travel advice."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Informal — advice should feel friendly and enthusiastic, like a personal recommendation.",
+            "All three bullet points require specific details: actual place names or types, not vague suggestions.",
+            "Transport advice often missed: remind students to cover how to get from A to B (bus, taxi, walking distance)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-06",
           "topicNo": 6,
-          "topicName": "Thanking a friend for help",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You are taking an evening course, but you will be unable to attend several classes.\n\nWrite a letter to your teacher. In your letter:\n• explain why you cannot attend the classes\n• say how long you will be absent\n• ask how you can keep up with the course",
+          "topicGroup": "Semi-formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Thanking a friend for help.",
+          "taskType": "Semi-formal Letter",
+          "description": "IELTS General Writing Task 1 — Semi-formal Letter. Writing to a teacher about absence.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Thanking a friend for help. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Thanking a friend for help.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Thanking a friend for help."
+            "Evaluate this IELTS General Writing Task 1 Semi-formal Letter to a teacher. Check that the tone is polite but not overly formal, all bullet points are addressed, and the letter is well-organised. Give a band score and feedback.",
+            "Write a model Band 6.5 semi-formal letter of around 160 words to a teacher explaining an absence and asking how to catch up.",
+            "List useful semi-formal phrases for explaining absence, apologising, and requesting help from a teacher."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Semi-formal — tone should be respectful but warmer than a formal complaint letter (Dear Mr/Ms [Name], Regards).",
+            "Students often confuse formal and semi-formal register. Key difference: semi-formal uses the recipient name and a less rigid tone.",
+            "Bullet 3 is key: students must ask specifically how to catch up (missed notes, extra sessions, online materials)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-07",
           "topicNo": 7,
-          "topicName": "Applying for a part-time job",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "Your neighbour frequently plays loud music late at night.\n\nWrite a letter to your neighbour. In your letter:\n• explain how the noise affects you\n• describe when the problem usually occurs\n• suggest a possible solution",
+          "topicGroup": "Semi-formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Applying for a part-time job.",
+          "taskType": "Semi-formal Letter",
+          "description": "IELTS General Writing Task 1 — Semi-formal Letter. Complaining to a neighbour about noise.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Applying for a part-time job. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Applying for a part-time job.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Applying for a part-time job."
+            "Evaluate this IELTS General Writing Task 1 Semi-formal Letter to a neighbour about noise. Give a band score and feedback on tone, bullet point coverage, and language use.",
+            "Write a model Band 6.5 semi-formal letter of around 160 words that is firm but polite, covering all three bullet points.",
+            "List useful semi-formal phrases for making a complaint politely and suggesting a compromise."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Semi-formal — the tone must be polite but assertive, not aggressive or too casual.",
+            "Register challenge: students must NOT write \"I am writing to complain...\" (too formal) but also avoid \"You always wake me up\" (too informal/aggressive).",
+            "Bullet 3 must include a realistic, constructive suggestion (a quiet time after 10pm, using headphones, etc.)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-08",
           "topicNo": 8,
-          "topicName": "Resigning from a job",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You are considering changing your job and would like advice from a former colleague.\n\nWrite a letter to your former colleague. In your letter:\n• explain why you are thinking about changing jobs\n• describe the type of job you are looking for\n• ask for advice or useful contacts",
+          "topicGroup": "Semi-formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Resigning from a job.",
+          "taskType": "Semi-formal Letter",
+          "description": "IELTS General Writing Task 1 — Semi-formal Letter. Asking a former colleague for career advice.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Resigning from a job. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Resigning from a job.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Resigning from a job."
+            "Evaluate this IELTS General Writing Task 1 Semi-formal Letter asking for career advice. Give a band score and feedback.",
+            "Write a model Band 6.5 semi-formal letter of around 160 words to a former colleague asking for job advice and contacts.",
+            "List useful semi-formal phrases for explaining career decisions and requesting advice or referrals."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Semi-formal — a former colleague is known but in a professional context, so avoid overly casual language.",
+            "Bullet 2 must be specific: what industry, role type, or skills the writer wants to use — not just \"a better job\".",
+            "Bullet 3: students should ask a specific question, not just \"please give me advice\"."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-09",
           "topicNo": 9,
-          "topicName": "Asking a neighbor to reduce noise",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You live in an apartment building and think that some improvements are needed.\n\nWrite a letter to the building manager. In your letter:\n• describe the current problems\n• explain how they affect the residents\n• suggest some improvements",
+          "topicGroup": "Semi-formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Asking a neighbor to reduce noise.",
+          "taskType": "Semi-formal Letter",
+          "description": "IELTS General Writing Task 1 — Semi-formal Letter. Suggesting improvements to a building manager.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Asking a neighbor to reduce noise. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Asking a neighbor to reduce noise.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Asking a neighbor to reduce noise."
+            "Evaluate this IELTS General Writing Task 1 Semi-formal Letter to a building manager. Give a band score and feedback on register, bullet point coverage, and organisation.",
+            "Write a model Band 6.5 semi-formal letter of around 160 words politely describing problems and proposing practical improvements.",
+            "List useful semi-formal phrases for describing problems in a building and making polite suggestions to a manager."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Semi-formal — writing to a building manager requires respect but is not as formal as writing to a company CEO.",
+            "Problems should be specific: broken lift, poor lighting in hallways, no recycling bins, etc.",
+            "Students often write a formal complaint instead of a constructive improvement request — emphasise the suggestion focus."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-10",
           "topicNo": 10,
-          "topicName": "Requesting a refund",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You recently completed a course and found it very useful.\n\nWrite a letter to your teacher. In your letter:\n• thank the teacher\n• explain what you found useful about the course\n• describe how the course may help you in the future",
+          "topicGroup": "Semi-formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Requesting a refund.",
+          "taskType": "Semi-formal Letter",
+          "description": "IELTS General Writing Task 1 — Semi-formal Letter. Thanking a teacher after completing a course.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Requesting a refund. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Requesting a refund.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Requesting a refund."
+            "Evaluate this IELTS General Writing Task 1 Semi-formal Letter thanking a teacher. Give a band score and feedback.",
+            "Write a model Band 6.5 semi-formal letter of around 160 words expressing genuine gratitude and explaining the value of the course.",
+            "List useful semi-formal phrases for expressing gratitude, describing learning outcomes, and discussing future goals."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Semi-formal — warm and appreciative, but still professional (not a casual thank-you note to a friend).",
+            "Bullet 2 must identify specific content or skills from the course, not just say \"everything was useful\".",
+            "Bullet 3 should link the course to a realistic future goal (career, further study, daily life)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-11",
           "topicNo": 11,
-          "topicName": "Giving advice to a friend",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You recently bought an electronic device online, but it does not work properly.\n\nWrite a letter to the company. In your letter:\n• describe the product and the problem\n• explain what happened when you tried to use it\n• say what you would like the company to do",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Giving advice to a friend.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Complaining about a faulty electronic device.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Giving advice to a friend. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Giving advice to a friend.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Giving advice to a friend."
+            "Evaluate this IELTS General Writing Task 1 Formal Letter of complaint. Check for formal register throughout (Dear Sir/Madam, Yours faithfully), clear bullet point coverage, and appropriate complaint language. Give a band score and feedback.",
+            "Write a model Band 6.5 formal complaint letter of around 160 words to a company about a faulty product.",
+            "List 10 useful formal phrases for writing a complaint letter, describing faults, and requesting action."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — must use Dear Sir/Madam, Yours faithfully, no contractions, no casual language.",
+            "Bullet 3 must state a specific resolution: full refund, replacement, repair — not just \"please fix it\".",
+            "Register is frequently wrong here: students mix formal and informal phrases. Drill formal vocabulary explicitly."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-12",
           "topicNo": 12,
-          "topicName": "Booking a hotel room",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You recently stayed at a hotel and were dissatisfied with the service.\n\nWrite a letter to the hotel manager. In your letter:\n• explain when you stayed at the hotel\n• describe the problems you experienced\n• say what action you would like the manager to take",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Booking a hotel room.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Complaining about hotel service.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Booking a hotel room. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Booking a hotel room.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Booking a hotel room."
+            "Evaluate this IELTS General Writing Task 1 Formal complaint letter about a hotel. Give a band score and feedback on formal register, bullet point coverage, and tone.",
+            "Write a model Band 6.5 formal letter of around 160 words complaining about hotel service and requesting compensation or an apology.",
+            "List useful formal phrases for hotel complaints and requesting specific actions from management."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — even though a hotel manager may seem approachable, this is a business complaint and requires formal register.",
+            "Students should include specific dates and room details in Bullet 1 to make the letter credible and realistic.",
+            "Bullet 3: request must be concrete — compensation, partial refund, formal apology, written acknowledgement."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-13",
           "topicNo": 13,
-          "topicName": "Reporting a lost item",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You are interested in taking a language course in another country.\n\nWrite a letter to the course provider. In your letter:\n• explain why you are interested in the course\n• ask about the schedule and fees\n• ask about accommodation options",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Reporting a lost item.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Requesting information about a language course abroad.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Reporting a lost item. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Reporting a lost item.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Reporting a lost item."
+            "Evaluate this IELTS General Writing Task 1 Formal Letter requesting course information. Give a band score and feedback.",
+            "Write a model Band 6.5 formal inquiry letter of around 160 words covering all three bullet points clearly.",
+            "List useful formal phrases for inquiry letters: expressing interest, asking polite questions, and requesting information."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — writing to an unknown organisation requires Dear Sir/Madam and Yours faithfully.",
+            "Bullets 2 and 3 require direct questions, but phrased politely (Could you please inform me...? I would be grateful if you could...).",
+            "Students often forget to state their purpose clearly in the opening paragraph before asking questions."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-14",
           "topicNo": 14,
-          "topicName": "Inviting a colleague to dinner",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You have seen an advertisement for volunteers at a community event.\n\nWrite a letter to the organisers. In your letter:\n• explain why you would like to volunteer\n• describe your relevant skills or experience\n• ask for more information about the work",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Inviting a colleague to dinner.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Applying to volunteer at a community event.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Inviting a colleague to dinner. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Inviting a colleague to dinner.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Inviting a colleague to dinner."
+            "Evaluate this IELTS General Writing Task 1 Formal Letter applying for volunteer work. Give a band score and feedback.",
+            "Write a model Band 6.5 formal volunteer application letter of around 160 words covering motivation, relevant experience, and a question about the role.",
+            "List useful formal phrases for expressing interest in volunteering and describing relevant skills."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — organisers are unknown, so formal register is required throughout.",
+            "Bullet 2 is often weak: students should write specific skills or experiences, not just \"I am hard-working and friendly\".",
+            "Bullet 3 must ask a genuine clarifying question about the role (hours, location, training, dress code, etc.)."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-15",
           "topicNo": 15,
-          "topicName": "Explaining a travel problem",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You recently experienced a problem while using public transport.\n\nWrite a letter to the transport company. In your letter:\n• describe the journey\n• explain what went wrong\n• suggest how the service could be improved",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Explaining a travel problem.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Complaining about a public transport problem.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Explaining a travel problem. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Explaining a travel problem.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Explaining a travel problem."
+            "Evaluate this IELTS General Writing Task 1 Formal Letter to a transport company. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 formal complaint and suggestion letter of around 160 words about a transport problem.",
+            "List useful formal phrases for describing travel incidents, expressing dissatisfaction, and proposing service improvements."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — a transport company is an institution; formal register is required.",
+            "Bullet 1 must include specific journey details: route, date, time, ticket type — this makes the complaint credible.",
+            "Bullet 3 is often missed or vague. Remind students to offer a concrete, realistic improvement suggestion."
           ]
         },
         {
           "id": "ielts-writing-task-1-general-16",
           "topicNo": 16,
-          "topicName": "Writing to a local council",
-          "topicGroup": "Formal, semi-formal, informal letters",
+          "topicName": "You have an appointment with an organisation but cannot attend at the arranged time.\n\nWrite a letter to the organisation. In your letter:\n• explain why you cannot attend\n• apologise for the inconvenience\n• suggest another suitable time",
+          "topicGroup": "Formal Letter",
           "level": "Beginner to Intermediate",
-          "taskType": "Letter writing",
-          "description": "Practice topic for IELTS Writing - Task 1 General: Writing to a local council.",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Requesting to reschedule an appointment.",
           "samplePrompts": [
-            "Create an IELTS General Writing Task 1 letter task about Writing to a local council. Include requirements and sample answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Writing to a local council.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Writing to a local council."
+            "Evaluate this IELTS General Writing Task 1 Formal Letter rescheduling an appointment. Give a band score and feedback.",
+            "Write a model Band 6.5 formal letter of around 160 words politely explaining an absence and proposing a new appointment time.",
+            "List useful formal phrases for apologising for an inconvenience and proposing alternative arrangements."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Letter type: Formal — writing to an unknown organisation requires formal register throughout.",
+            "Bullet 2 (apology) must sound sincere and formal, not casual: \"I sincerely apologise for any inconvenience this may cause.\"",
+            "Bullet 3 must give two or three specific time options, not just say \"whenever is convenient for you\"."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-1-general-17",
+          "topicNo": 17,
+          "topicName": "You left an important item at a hotel during a recent trip.\n\nWrite a letter to the hotel manager. In your letter:\n• describe the item\n• explain where you think you left it\n• ask the hotel staff to send it to you if it is found",
+          "topicGroup": "Formal Letter",
+          "level": "Beginner to Intermediate",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Reporting a lost item at a hotel.",
+          "samplePrompts": [
+            "Evaluate this IELTS General Writing Task 1 Formal Letter about a lost item. Give a band score and feedback on formal register, accuracy of bullet point coverage, and clarity of request.",
+            "Write a model Band 6.5 formal letter of around 160 words describing the lost item and asking for it to be returned.",
+            "List useful formal phrases for describing a lost item, explaining circumstances, and making a polite request."
+          ],
+          "teacherNotes": [
+            "Letter type: Formal — a hotel manager is an institution representative; formal register is required.",
+            "Bullet 1 must be very specific: colour, size, brand, distinguishing features — the more detail, the more realistic.",
+            "Bullet 3 must include the writer's postal address or instructions for how to return the item, not just \"please send it back\"."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-1-general-18",
+          "topicNo": 18,
+          "topicName": "You are a member of a local gym and believe that some improvements are needed.\n\nWrite a letter to the gym manager. In your letter:\n• describe the current problems\n• explain how they affect members\n• suggest some improvements",
+          "topicGroup": "Formal Letter",
+          "level": "Beginner to Intermediate",
+          "taskType": "Formal Letter",
+          "description": "IELTS General Writing Task 1 — Formal Letter. Suggesting gym improvements to the manager.",
+          "samplePrompts": [
+            "Evaluate this IELTS General Writing Task 1 Formal Letter to a gym manager suggesting improvements. Give a band score and feedback.",
+            "Write a model Band 6.5 formal letter of around 160 words identifying gym problems, their impact on members, and constructive improvement suggestions.",
+            "List useful formal phrases for describing facility problems, explaining their impact, and making polite suggestions to a manager."
+          ],
+          "teacherNotes": [
+            "Letter type: Formal — even though the writer is a member (a client relationship), writing to a gym manager requires formal register.",
+            "Bullet 1: encourage specific problems (broken equipment, dirty changing rooms, overcrowding at peak times).",
+            "Bullet 3: improvements must directly address the problems raised, showing logical cause-and-effect thinking."
           ]
         }
       ],
@@ -7627,313 +7665,389 @@
       "exam": "IELTS",
       "skill": "Writing",
       "section": "Task 2 Essay",
-      "level": "Intermediate to Advanced",
+      "level": "Pre-Intermediate to Intermediate",
       "taskType": "Essay writing",
       "topicGroup": "Common IELTS essay topics",
-      "topicCount": 16,
+      "topicCount": 20,
       "topics": [
         {
           "id": "ielts-writing-task-2-essay-01",
           "topicNo": 1,
-          "topicName": "Education and exams",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Education and exams.",
+          "topicName": "Some people think that students should study a foreign language with classmates from different countries rather than with people from their own country. Do you agree or disagree?",
+          "topicGroup": "Education",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Agree/Disagree Essay",
+          "description": "IELTS Task 2 Agree/Disagree Essay — Language learning with international classmates.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Education and exams. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Education and exams.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Education and exams."
+            "Evaluate this IELTS Writing Task 2 Agree/Disagree essay. Give a band score (0-9) and detailed feedback on Task Achievement, Coherence, Lexical Resource, and Grammar.",
+            "Write a model Band 6.5 answer for this question with a clear introduction, two supporting body paragraphs, and a conclusion.",
+            "List 10 key vocabulary items and 5 useful sentence structures for this topic."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Agree/Disagree — students must state and maintain a clear position throughout.",
+            "Key focus: explain WHY studying with international classmates helps or does not help language learning.",
+            "Band 6 target: clear topic sentences, cohesive devices, avoid repetition of the same ideas."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-02",
           "topicNo": 2,
-          "topicName": "Technology in daily life",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Technology in daily life.",
+          "topicName": "Some people believe that school children should be given homework every day, while others think that homework is unnecessary. Discuss both views and give your own opinion.",
+          "topicGroup": "Education",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Discussion Essay",
+          "description": "IELTS Task 2 Discussion Essay — Daily homework for school children.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Technology in daily life. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Technology in daily life.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Technology in daily life."
+            "Evaluate this IELTS Writing Task 2 Discussion Essay. Give a band score and feedback on Task Achievement, Coherence, Lexical Resource, and Grammar.",
+            "Write a model Band 6.5 answer: one paragraph for each view, then a paragraph with your own opinion, plus intro and conclusion.",
+            "List 10 key vocabulary items and 5 useful expressions for discussing homework and education."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Discuss Both Views + Opinion — students must cover BOTH sides before giving their own view.",
+            "Common mistake: only writing one side. Remind students the structure is view A / view B / opinion.",
+            "Useful language: advocates of..., critics argue that..., from my perspective..."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-03",
           "topicNo": 3,
-          "topicName": "Online learning",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Online learning.",
+          "topicName": "Online learning is becoming increasingly popular. Do the advantages of online learning outweigh the disadvantages?",
+          "topicGroup": "Education",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Advantages-Disadvantages Essay",
+          "description": "IELTS Task 2 Advantages-Disadvantages Essay — Online learning.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Online learning. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Online learning.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Online learning."
+            "Evaluate this IELTS Writing Task 2 Advantages-Disadvantages essay on online learning. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing that the advantages outweigh the disadvantages, with intro, two body paragraphs, and conclusion.",
+            "List 10 key vocabulary items and useful phrases for discussing online education."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Outweigh — students must take a clear stance (advantages > disadvantages or vice versa).",
+            "Tip: do not simply list pros and cons; compare and show which side is stronger.",
+            "Topic link: pairs well with working from home topic for extended vocabulary practice."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-04",
           "topicNo": 4,
-          "topicName": "Environment and climate change",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Environment and climate change.",
+          "topicName": "Some people think that all young people should attend university. Others believe that vocational training is more suitable for some students. Discuss both views and give your own opinion.",
+          "topicGroup": "Education",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Discussion Essay",
+          "description": "IELTS Task 2 Discussion Essay — University vs vocational training.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Environment and climate change. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Environment and climate change.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Environment and climate change."
+            "Evaluate this IELTS Writing Task 2 Discussion essay on university versus vocational training. Give a band score and feedback.",
+            "Write a model Band 6.5 answer presenting both sides and concluding with a supported personal opinion.",
+            "List vocabulary and phrases for comparing university education and vocational training."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Discuss Both Views + Opinion — must acknowledge university benefits AND vocational strengths.",
+            "Encourage students to use specific examples (e.g., trade skills, engineering degrees).",
+            "Watch for Band 5 trap: writing only about one side instead of both."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-05",
           "topicNo": 5,
-          "topicName": "Public transport and traffic",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Public transport and traffic.",
+          "topicName": "Some people believe that children should start learning a foreign language at primary school rather than secondary school. Do the advantages outweigh the disadvantages?",
+          "topicGroup": "Education",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Advantages-Disadvantages Essay",
+          "description": "IELTS Task 2 Advantages-Disadvantages Essay — Early foreign language learning.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Public transport and traffic. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Public transport and traffic.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Public transport and traffic."
+            "Evaluate this IELTS Writing Task 2 essay on early foreign language learning. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing that starting a foreign language at primary school has more advantages than disadvantages.",
+            "List 10 vocabulary items and useful phrases for this topic."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Outweigh — students must decide whether early learning is overall beneficial or harmful.",
+            "Key arguments FOR: brain plasticity, accent acquisition, confidence building.",
+            "Key arguments AGAINST: curriculum overload, lack of qualified teachers, potential stress."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-06",
           "topicNo": 6,
-          "topicName": "Healthcare and lifestyle",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Healthcare and lifestyle.",
+          "topicName": "Many people spend too much time using smartphones. What problems can this cause? What solutions can you suggest?",
+          "topicGroup": "Technology",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Problem-Solution Essay",
+          "description": "IELTS Task 2 Problem-Solution Essay — Excessive smartphone use.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Healthcare and lifestyle. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Healthcare and lifestyle.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Healthcare and lifestyle."
+            "Evaluate this IELTS Writing Task 2 Problem-Solution essay on smartphone overuse. Give a band score and feedback.",
+            "Write a model Band 6.5 answer: one paragraph on problems, one paragraph on solutions, with intro and conclusion.",
+            "List 10 vocabulary items and useful phrases for discussing smartphone addiction and digital wellbeing."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Problem-Solution — students must identify specific problems AND offer realistic solutions.",
+            "Problems: social isolation, reduced attention span, sleep disruption, neck/eye strain.",
+            "Solutions: screen time limits, digital detox, educational apps, parental controls."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-07",
           "topicNo": 7,
-          "topicName": "Work and career",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Work and career.",
+          "topicName": "Social media has changed the way people communicate with each other. Do the advantages of this development outweigh the disadvantages?",
+          "topicGroup": "Technology",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Advantages-Disadvantages Essay",
+          "description": "IELTS Task 2 Advantages-Disadvantages Essay — Social media and communication.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Work and career. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Work and career.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Work and career."
+            "Evaluate this IELTS Writing Task 2 essay on social media. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing that social media has more advantages than disadvantages for communication.",
+            "List 10 key vocabulary items and phrases for writing about social media and digital communication."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Outweigh — students should weigh advantages vs disadvantages and state a clear overall position.",
+            "Advantages: instant global communication, reconnecting with old friends, sharing information quickly.",
+            "Disadvantages: misinformation, reduced face-to-face interaction, privacy concerns, cyberbullying."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-08",
           "topicNo": 8,
-          "topicName": "Crime and punishment",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Crime and punishment.",
+          "topicName": "More people are working from home because of modern technology. Do you think this is a positive or negative development?",
+          "topicGroup": "Technology",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Positive/Negative Development Essay",
+          "description": "IELTS Task 2 Positive/Negative Development Essay — Working from home.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Crime and punishment. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Crime and punishment.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Crime and punishment."
+            "Evaluate this IELTS Writing Task 2 essay on remote working. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing this is mostly a positive development, with balanced acknowledgement of drawbacks.",
+            "List vocabulary and expressions for discussing remote work, productivity, and work-life balance."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Positive/Negative — students must take a clear stance and support it consistently.",
+            "Positive points: flexibility, no commute, better work-life balance, environmental benefits.",
+            "Negative points: isolation, blurred home/work boundaries, reduced collaboration."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-09",
           "topicNo": 9,
-          "topicName": "Government spending",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Government spending.",
+          "topicName": "Children are spending more time using electronic devices and less time playing outdoors. Why is this happening? Is this a positive or negative development?",
+          "topicGroup": "Technology",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Cause + Evaluation Essay",
+          "description": "IELTS Task 2 Cause + Evaluation Essay — Children, screens, and outdoor play.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Government spending. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Government spending.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Government spending."
+            "Evaluate this IELTS Writing Task 2 essay on children and screen time. Give a band score and feedback.",
+            "Write a model Band 6.5 answer: one paragraph on causes, one paragraph evaluating whether this is positive or negative.",
+            "List vocabulary and phrases for discussing children, technology use, and physical activity."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Two-part question — students must answer BOTH why it is happening AND whether it is good or bad.",
+            "Causes: engaging digital content, safety concerns about outdoor play, parental convenience.",
+            "Evaluation: mostly negative (obesity, social skill loss) but some positives (educational apps, digital literacy)."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-10",
           "topicNo": 10,
-          "topicName": "Advertising and consumerism",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Advertising and consumerism.",
+          "topicName": "Some people believe that governments should invest more money in public transport rather than building new roads. To what extent do you agree or disagree?",
+          "topicGroup": "Environment",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Opinion Essay",
+          "description": "IELTS Task 2 Opinion Essay — Public transport investment vs road building.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Advertising and consumerism. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Advertising and consumerism.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Advertising and consumerism."
+            "Evaluate this IELTS Writing Task 2 Opinion essay on public transport. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer largely agreeing that public transport is a better investment, acknowledging some role for roads.",
+            "List 10 vocabulary items and phrases for discussing transport policy and urban planning."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: To What Extent — students should express a clear degree of agreement (fully/largely/partially).",
+            "Arguments for public transport: reduces congestion, lowers emissions, more cost-effective long-term.",
+            "Arguments for roads: necessary for rural areas, supports freight and economic activity."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-11",
           "topicNo": 11,
-          "topicName": "Family and parenting",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Family and parenting.",
+          "topicName": "Plastic waste is becoming a serious environmental problem in many countries. What are the causes of this problem? What measures can be taken to solve it?",
+          "topicGroup": "Environment",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Cause-Solution Essay",
+          "description": "IELTS Task 2 Cause-Solution Essay — Plastic waste pollution.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Family and parenting. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Family and parenting.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Family and parenting."
+            "Evaluate this IELTS Writing Task 2 Cause-Solution essay on plastic waste. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer: one paragraph on causes, one paragraph on solutions, with intro and conclusion.",
+            "List vocabulary and expressions for discussing plastic pollution, recycling, and environmental policy."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Cause-Solution — students must clearly link specific causes to corresponding solutions.",
+            "Causes: excessive packaging, single-use culture, lack of recycling infrastructure, low environmental awareness.",
+            "Solutions: plastic bans, producer responsibility laws, public education campaigns, biodegradable alternatives."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-12",
           "topicNo": 12,
-          "topicName": "Globalization",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Globalization.",
+          "topicName": "Some people think that individuals cannot do much to protect the environment and that only governments and large companies can make a difference. To what extent do you agree or disagree?",
+          "topicGroup": "Environment",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Opinion Essay",
+          "description": "IELTS Task 2 Opinion Essay — Individual vs government responsibility for the environment.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Globalization. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Globalization.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Globalization."
+            "Evaluate this IELTS Writing Task 2 Opinion essay on environmental responsibility. Give a band score and feedback.",
+            "Write a model Band 6.5 answer partially disagreeing: acknowledge that governments and companies have the greatest impact, but argue individuals also play an important role.",
+            "List vocabulary and phrases for discussing environmental responsibility at different levels."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: To What Extent — a partially agree/disagree position is often the strongest approach here.",
+            "Individual actions: reduce consumption, recycling, choosing eco-friendly products, voting for green policies.",
+            "Government/company role: legislation, clean energy investment, banning harmful practices."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-13",
           "topicNo": 13,
-          "topicName": "Culture and tradition",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Culture and tradition.",
+          "topicName": "Some people think that a high salary is more important than job satisfaction. Do you agree or disagree?",
+          "topicGroup": "Work and Lifestyle",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Agree/Disagree Essay",
+          "description": "IELTS Task 2 Agree/Disagree Essay — Salary vs job satisfaction.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Culture and tradition. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Culture and tradition.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Culture and tradition."
+            "Evaluate this IELTS Writing Task 2 Agree/Disagree essay on salary versus job satisfaction. Give a band score and feedback.",
+            "Write a model Band 6.5 answer disagreeing: argue that job satisfaction is ultimately more important than a high salary.",
+            "List vocabulary and phrases for discussing work motivation, career choices, and personal fulfilment."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Agree/Disagree — students must commit to one side throughout the essay.",
+            "Arguments for salary: financial security, ability to support family, reducing stress from debt.",
+            "Arguments for job satisfaction: mental health, long-term motivation, sense of purpose."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-14",
           "topicNo": 14,
-          "topicName": "Artificial intelligence",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Artificial intelligence.",
+          "topicName": "Many people find it difficult to achieve a balance between work and personal life. Why does this happen? What can people do to achieve a better balance?",
+          "topicGroup": "Work and Lifestyle",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Cause-Solution Essay",
+          "description": "IELTS Task 2 Cause-Solution Essay — Work-life balance.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Artificial intelligence. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Artificial intelligence.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Artificial intelligence."
+            "Evaluate this IELTS Writing Task 2 Cause-Solution essay on work-life balance. Give a band score and feedback.",
+            "Write a model Band 6.5 answer: one paragraph explaining why this problem occurs, one paragraph suggesting practical solutions.",
+            "List vocabulary and phrases for discussing work-life balance, stress management, and time management."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Two-part question — students must address both WHY and WHAT TO DO.",
+            "Causes: demanding work culture, technology blurring boundaries, financial pressure, lack of employer flexibility.",
+            "Solutions: setting clear boundaries, flexible working, prioritising leisure, employer wellness programmes."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-15",
           "topicNo": 15,
-          "topicName": "City life and housing",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: City life and housing.",
+          "topicName": "Some people choose to live and work abroad after graduating from university. Do the advantages of this decision outweigh the disadvantages?",
+          "topicGroup": "Work and Lifestyle",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Advantages-Disadvantages Essay",
+          "description": "IELTS Task 2 Advantages-Disadvantages Essay — Living and working abroad.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about City life and housing. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: City life and housing.",
-            "Create vocabulary, useful expressions, and follow-up questions for: City life and housing."
+            "Evaluate this IELTS Writing Task 2 essay on working abroad. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing the advantages of working abroad outweigh the disadvantages.",
+            "List vocabulary and phrases for discussing immigration, career development, and cultural adaptation."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Outweigh — students must take and defend a clear position on balance of advantages/disadvantages.",
+            "Advantages: better career prospects, higher income, cultural experience, language skills.",
+            "Disadvantages: separation from family, cultural shock, recognition of foreign qualifications."
           ]
         },
         {
           "id": "ielts-writing-task-2-essay-16",
           "topicNo": 16,
-          "topicName": "Sports and health",
-          "topicGroup": "Common IELTS essay topics",
-          "level": "Intermediate to Advanced",
-          "taskType": "Essay writing",
-          "description": "Practice topic for IELTS Writing - Task 2 Essay: Sports and health.",
+          "topicName": "In many countries, people are working longer hours than before. Why is this happening? Is this a positive or negative development?",
+          "topicGroup": "Work and Lifestyle",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Cause + Evaluation Essay",
+          "description": "IELTS Task 2 Cause + Evaluation Essay — Increasing working hours.",
           "samplePrompts": [
-            "Create an IELTS Writing Task 2 essay question about Sports and health. Include essay type, outline, vocabulary, and model answer.",
-            "Generate a teacher-friendly lesson activity for the topic: Sports and health.",
-            "Create vocabulary, useful expressions, and follow-up questions for: Sports and health."
+            "Evaluate this IELTS Writing Task 2 essay on longer working hours. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer: one paragraph on reasons, one paragraph arguing this is mostly a negative development.",
+            "List vocabulary and phrases for discussing work culture, productivity, and employee wellbeing."
           ],
           "teacherNotes": [
-            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
-            "Adjust output difficulty based on learner level.",
-            "Prioritize natural English, exam format, and clear scoring criteria."
+            "Essay type: Two-part question — answer BOTH the cause and evaluation parts clearly.",
+            "Causes: economic pressure, competitive job markets, technology making workers always reachable, career ambition.",
+            "Evaluation: largely negative (burnout, health problems, family impact) but some argue it drives economic growth."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-2-essay-17",
+          "topicNo": 17,
+          "topicName": "Some people prefer living in large cities, while others think that the countryside is a better place to live. Discuss both views and give your own opinion.",
+          "topicGroup": "Society",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Discussion Essay",
+          "description": "IELTS Task 2 Discussion Essay — City life vs countryside living.",
+          "samplePrompts": [
+            "Evaluate this IELTS Writing Task 2 Discussion essay on city versus countryside living. Give a band score and feedback.",
+            "Write a model Band 6.5 answer: one paragraph on the appeal of city life, one on countryside life, then a personal opinion paragraph.",
+            "List vocabulary and phrases for comparing urban and rural environments."
+          ],
+          "teacherNotes": [
+            "Essay type: Discuss Both Views + Opinion — all three parts (view A, view B, own opinion) must be present.",
+            "City advantages: job opportunities, services, entertainment, connectivity.",
+            "Countryside advantages: clean air, lower cost of living, community, peaceful environment."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-2-essay-18",
+          "topicNo": 18,
+          "topicName": "Young people today exercise less than previous generations. Why is this happening? What solutions can be introduced?",
+          "topicGroup": "Society",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Cause-Solution Essay",
+          "description": "IELTS Task 2 Cause-Solution Essay — Declining physical activity among young people.",
+          "samplePrompts": [
+            "Evaluate this IELTS Writing Task 2 Cause-Solution essay on youth inactivity. Give a band score and feedback.",
+            "Write a model Band 6.5 answer: one paragraph on causes, one paragraph on solutions, with intro and conclusion.",
+            "List vocabulary and phrases for discussing exercise habits, sedentary lifestyles, and public health."
+          ],
+          "teacherNotes": [
+            "Essay type: Cause-Solution — link each cause logically to a relevant solution.",
+            "Causes: screen time, academic pressure, urban environments with few green spaces, passive entertainment.",
+            "Solutions: mandatory school PE, subsidised gym access, urban park development, digital fitness apps."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-2-essay-19",
+          "topicNo": 19,
+          "topicName": "Advertising encourages people to buy products that they do not really need. To what extent do you agree or disagree?",
+          "topicGroup": "Society",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Opinion Essay",
+          "description": "IELTS Task 2 Opinion Essay — Advertising and unnecessary consumption.",
+          "samplePrompts": [
+            "Evaluate this IELTS Writing Task 2 Opinion essay on advertising. Give a band score and feedback.",
+            "Write a model Band 6.5 answer largely agreeing that advertising manipulates consumer behaviour, while acknowledging its informational role.",
+            "List vocabulary and expressions for discussing advertising, consumer behaviour, and materialism."
+          ],
+          "teacherNotes": [
+            "Essay type: To What Extent — students should express how strongly they agree or disagree, not just list ideas.",
+            "Arguments to agree: psychological manipulation, creating artificial desires, planned obsolescence culture.",
+            "Arguments to disagree: advertising also informs, promotes competition, and supports free media."
+          ]
+        },
+        {
+          "id": "ielts-writing-task-2-essay-20",
+          "topicNo": 20,
+          "topicName": "International tourism has become more popular in recent years. Do the benefits of international tourism outweigh its drawbacks?",
+          "topicGroup": "Society",
+          "level": "Pre-Intermediate to Intermediate",
+          "taskType": "Advantages-Disadvantages Essay",
+          "description": "IELTS Task 2 Advantages-Disadvantages Essay — International tourism.",
+          "samplePrompts": [
+            "Evaluate this IELTS Writing Task 2 essay on international tourism. Give a band score and detailed feedback.",
+            "Write a model Band 6.5 answer arguing that the benefits of international tourism outweigh its drawbacks.",
+            "List vocabulary and phrases for discussing tourism, cultural exchange, and environmental impact."
+          ],
+          "teacherNotes": [
+            "Essay type: Outweigh — students must argue that overall, one side is more significant than the other.",
+            "Benefits: economic growth for host countries, cultural exchange, funding for heritage preservation.",
+            "Drawbacks: environmental damage (carbon emissions, overcrowding), cultural commercialisation, local price inflation."
           ]
         }
       ],

@@ -93,3 +93,43 @@
     display: none;
   }
 }
+
+/* ── Custom scrollbar ─────────────────────────────────────────────── */
+:root {
+  --sb-track: #e2e8f0;
+  --sb-thumb: #94a3b8;
+  --sb-thumb-hover: #6366f1;
+  --sb-width: 6px;
+}
+.dark {
+  --sb-track: #0f172a;
+  --sb-thumb: #1e293b;
+  --sb-thumb-hover: #6366f1;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: var(--sb-width);
+  height: var(--sb-width);
+}
+::-webkit-scrollbar-track {
+  background: var(--sb-track);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border-radius: 99px;
+  border: 1px solid var(--sb-track);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

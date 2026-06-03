@@ -1,18 +1,21 @@
 import React from 'react';
-import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight } from 'lucide-react';
+import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { WritingFeedback } from '../services/ai';
 import { DiffViewer } from '../components/DiffViewer';
 import type { Practice } from '../services/storage';
 import { useSettings } from '../components/useSettings';
+import ChartPrompt, { detectChartType, TREND_VOCAB, CHART_TYPE_LABELS } from '../features/writing/IELTSChart';
 
 const WritingResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const settings = useSettings();
-  const { result, originalText, exam } = (location.state as { result: WritingFeedback, originalText: string, practice: Practice, exam?: 'TOEIC' | 'IELTS' }) || {};
+  const { result, originalText, exam, practice, taskKey = '' } = (location.state as { result: WritingFeedback, originalText: string, practice: Practice, exam?: 'TOEIC' | 'IELTS', taskKey?: string }) || {};
   const activeExam = exam || settings.primaryExam;
+  const isChartTask = taskKey === 't1a';
   const scaleLabel = activeExam === 'TOEIC' ? 'TOEIC Score' : 'Band Score';
+
   const criteriaLabels = activeExam === 'TOEIC'
     ? {
         taskAchievement: 'Task Completion',
@@ -20,11 +23,25 @@ const WritingResult = () => {
         lexicalResource: 'Vocabulary',
         grammar: 'Grammar',
       }
+    : taskKey === 't2'
+    ? {
+        taskAchievement: 'Task Response',
+        coherence: 'Coherence & Cohesion',
+        lexicalResource: 'Lexical Resource',
+        grammar: 'Grammatical Range',
+      }
+    : taskKey === 't1g'
+    ? {
+        taskAchievement: 'Task Achievement (Register + Bullets)',
+        coherence: 'Coherence & Cohesion',
+        lexicalResource: 'Lexical Resource',
+        grammar: 'Grammatical Range',
+      }
     : {
         taskAchievement: 'Task Achievement',
-        coherence: 'Coherence',
+        coherence: 'Coherence & Cohesion',
         lexicalResource: 'Lexical Resource',
-        grammar: 'Grammar',
+        grammar: 'Grammatical Range',
       };
 
   if (!result) {
@@ -83,6 +100,45 @@ const WritingResult = () => {
           </ul>
         </div>
       </div>
+
+      {/* Learning Mode — chart + vocabulary (only for IELTS chart tasks) */}
+      {isChartTask && practice?.title && (
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-amber-500" />
+            Chart Review
+            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-semibold uppercase tracking-wide ml-1">Learning Mode</span>
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Chart with highlights — takes 3/5 on desktop */}
+            <div className="lg:col-span-3">
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">
+                {CHART_TYPE_LABELS[detectChartType(practice.title)]} — key features highlighted
+              </p>
+              <ChartPrompt title={practice.title} learning />
+            </div>
+            {/* Vocabulary guide — takes 2/5 on desktop */}
+            <div className="lg:col-span-2 glass-card rounded-2xl p-5 border border-amber-100 dark:border-amber-900/30 bg-amber-50/40 dark:bg-amber-900/10">
+              <h3 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <BookOpen className="w-4 h-4" /> Trend Vocabulary
+              </h3>
+              <ul className="space-y-2.5">
+                {TREND_VOCAB.map(({ phrase, use }) => (
+                  <li key={phrase} className="flex items-start gap-3 text-sm">
+                    <code className="shrink-0 px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-mono text-xs leading-5 mt-0.5">
+                      {phrase}
+                    </code>
+                    <span className="text-slate-500 dark:text-slate-400 text-xs leading-5 mt-0.5">{use}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-[11px] text-slate-400 dark:text-slate-500 italic">
+                Use these phrases in your overview and body paragraphs to describe trends accurately.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Original Text with Highlights */}

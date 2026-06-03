@@ -1,6 +1,7 @@
 export interface Practice {
   id: number;
   title: string;
+  shortTitle?: string;
   duration: string;
   level: string;
   type: string;

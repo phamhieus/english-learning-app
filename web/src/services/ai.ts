@@ -93,35 +93,95 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
   }
 };
 
-export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string): Promise<WritingFeedback> => {
-  const exam = settings.primaryExam;
-  const scaleInstruction = exam === 'TOEIC'
-    ? `Target exam: TOEIC Writing.
+const buildScoringInstruction = (exam: string, taskKey: string, prompt: string): string => {
+  if (exam === 'TOEIC') {
+    return `Target exam: TOEIC Writing.
 Use TOEIC Speaking/Writing style scoring. The overall "score" is 0-100 for the app UI.
 The "bandScore" field must be a TOEIC scaled writing score string from 0-200, for example "160/200". Do not return IELTS bands.
-Sub-score fields should be TOEIC-style 0-100 strings, for example "82/100".`
-    : `Target exam: IELTS Writing.
-Use IELTS band scoring. The overall "score" is 0-100 for the app UI.
-The "bandScore" field must be an IELTS band string from 0-9, for example "7.5".`;
+Sub-score fields should be TOEIC-style 0-100 strings, for example "82/100".`;
+  }
 
-  const systemInstruction = `You are an expert ${exam} English writing coach. Evaluate the user's text based on the given prompt.
-${scaleInstruction}
+  const base = `Target exam: IELTS Writing.
+Use IELTS band scoring (0–9). The overall "score" is 0-100 for the app UI.
+The "bandScore" field must be an IELTS band string, for example "6.5". Sub-score fields must also be IELTS band strings, for example "6.0".`;
+
+  if (taskKey === 't1a') {
+    return `${base}
+Task type: IELTS Academic Writing Task 1 (visual data — chart, graph, table, map, or process diagram).
+Minimum word count: 150 words. Deduct at least one band from taskAchievement if under 150 words.
+Scoring for taskAchievement (Task Achievement):
+  - MUST include a clear overview sentence summarising the most significant trend or feature. No overview = maximum band 5.
+  - MUST select and accurately report the most relevant data — not every single number.
+  - MUST make meaningful comparisons between categories, time periods, or groups.
+  - Personal opinions, arguments, or unsupported conclusions beyond the data should NOT be rewarded.
+Scoring for lexicalResource: reward accurate use of trend language (rose steadily, peaked at, fluctuated, remained stable, etc.).`;
+  }
+
+  if (taskKey === 't1g') {
+    const lower = prompt.toLowerCase();
+    let registerType = 'Semi-formal';
+    let registerRules = 'Uses recipient name (Dear [Name]), respectful but warm tone, minimal contractions, closing with Regards or Best regards.';
+    if (lower.includes('write a letter to your friend') || lower.includes('write a letter to a friend') || lower.includes('write a letter to your relative')) {
+      registerType = 'Informal';
+      registerRules = 'Uses first name (Hi [Name] / Dear [Name]), contractions allowed, warm and personal language, friendly closing (Best wishes / Take care / Love).';
+    } else if (
+      lower.includes('company') || lower.includes('organisation') || lower.includes('organization') ||
+      lower.includes('hotel') || lower.includes('transport') || lower.includes('gym') ||
+      lower.includes('provider') || lower.includes('manager') && !lower.includes('building manager')
+    ) {
+      registerType = 'Formal';
+      registerRules = 'No contractions, Dear Sir/Madam (unknown recipient) or Dear Mr/Ms [Surname] (known), Yours faithfully (Dear Sir/Madam) or Yours sincerely (named recipient), professional vocabulary throughout.';
+    }
+    return `${base}
+Task type: IELTS General Writing Task 1 (${registerType} Letter).
+Minimum word count: 150 words. Deduct at least one band from taskAchievement if under 150 words.
+Expected register: ${registerType}. ${registerRules}
+Scoring for taskAchievement (Task Achievement):
+  - ALL bullet points must be fully addressed and sufficiently developed. Any bullet point that is missing or only mentioned in passing = maximum band 5.
+  - Register must be consistently ${registerType} throughout the letter. Inconsistent or incorrect register reduces the band.
+  - Letter must have a clear purpose in the opening paragraph and an appropriate closing salutation.
+  - An essay-style response without letter format should NOT receive a high band.
+In overallFeedback: explicitly state (1) whether the register is correct and consistent, and (2) which bullet points, if any, are missing or underdeveloped.`;
+  }
+
+  if (taskKey === 't2') {
+    return `${base}
+Task type: IELTS Writing Task 2 (Essay).
+Minimum word count: 250 words. Deduct at least one band from taskAchievement if under 250 words.
+Scoring for taskAchievement (Task Response in IELTS Task 2 terminology):
+  - The essay must clearly address the specific task type stated in the prompt (Agree/Disagree, Discuss Both Views + Opinion, Advantages/Disadvantages Outweigh, Problem-Solution, Cause-Solution, Positive/Negative Development, etc.).
+  - Agree/Disagree: a clear, consistent position must be stated and supported throughout. A position that keeps shifting reduces the band.
+  - Discuss Both Views + Opinion: BOTH views must be presented before giving a personal opinion. Missing either view = maximum band 5.
+  - Outweigh essays: the writer must state whether advantages/benefits outweigh disadvantages/drawbacks and defend that position.
+  - Arguments must be fully extended and supported with specific reasons or examples — not just listed.
+  - No bullet-point lists, memorised templates, or off-topic content.`;
+  }
+
+  return base;
+};
+
+export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = ''): Promise<WritingFeedback> => {
+  const exam = settings.primaryExam;
+  const scoringInstruction = buildScoringInstruction(exam, taskKey, prompt);
+
+  const systemInstruction = `You are an expert ${exam} English writing coach. Evaluate the user's writing based on the given prompt and task type.
+${scoringInstruction}
 Return your evaluation strictly as a JSON object matching this schema:
 {
   "score": number (0-100 overall score),
-  "bandScore": string (${exam === 'TOEIC' ? 'TOEIC scaled score, e.g. "160/200"' : 'IELTS band, e.g. "7.5"'}),
-  "overallFeedback": "string (Short overall feedback on the article)",
+  "bandScore": string (${exam === 'TOEIC' ? 'TOEIC scaled score, e.g. "160/200"' : 'IELTS band, e.g. "6.5"'}),
+  "overallFeedback": "string (2-3 sentences of overall feedback, including register and bullet-point coverage for letters)",
   "subScores": {
-    "taskAchievement": string (${exam === 'TOEIC' ? 'e.g. "82/100"' : 'e.g. "7.5"'}),
+    "taskAchievement": string (${exam === 'TOEIC' ? 'e.g. "82/100"' : 'IELTS band, e.g. "6.0"'}),
     "coherence": string,
     "lexicalResource": string,
     "grammar": string
   },
   "corrections": [
-    { "original": "string", "replacement": "string", "explanation": "string (briefly explain why it was added, modified, or deleted)" }
+    { "original": "string", "replacement": "string", "explanation": "string (briefly explain the error and the fix)" }
   ],
-  "improvementTips": ["string (Suggestions for improvement based on the target ${exam === 'TOEIC' ? 'TOEIC score' : 'band score'})"],
-  "improvedText": "string (a natural, high-scoring rewrite of the user's text)"
+  "improvementTips": ["string (3-5 specific, actionable tips based on the task type and the user's actual errors)"],
+  "improvedText": "string (a natural, high-scoring rewrite that matches the correct task format and register)"
 }`;
 
   const userContent = `Prompt/Topic: ${prompt}\n\nUser's Text:\n${text}`;

@@ -6,35 +6,7 @@ import { useSettings } from '../components/useSettings';
 import { evaluateWriting } from '../services/ai';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
-
-const ChartPrompt = ({ title }: { title: string }) => (
-  <div
-    className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
-    style={{ aspectRatio: '16 / 10' }}
-  >
-    <svg viewBox="0 0 320 200" className="w-full h-full" preserveAspectRatio="none">
-      <defs>
-        <pattern id="writing-chart-stripe" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-          <rect width="8" height="8" fill="#eef2ff" />
-          <rect width="4" height="8" fill="#e0e7ff" />
-        </pattern>
-      </defs>
-      <rect width="320" height="200" fill="url(#writing-chart-stripe)" />
-      {[40, 88, 136, 184, 232, 280].map((x, i) => {
-        const heights = [120, 80, 150, 60, 110, 90];
-        const h = heights[i];
-        return <rect key={x} x={x - 16} y={180 - h} width="32" height={h} rx="3" fill="#a5b4fc" opacity="0.9" />;
-      })}
-      {[40, 80, 120, 160].map((y) => (
-        <line key={y} x1="20" y1={180 - y} x2="300" y2={180 - y} stroke="#cbd5e1" strokeWidth="0.8" opacity="0.75" />
-      ))}
-      <line x1="20" y1="180" x2="300" y2="180" stroke="#94a3b8" strokeWidth="1.5" />
-    </svg>
-    <div className="absolute top-3 left-3 max-w-[85%] px-2 py-1 rounded-md bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm text-[10px] font-bold tracking-wider text-slate-500 dark:text-slate-300 uppercase">
-      {title.toLowerCase().includes('chart') || title.toLowerCase().includes('graph') ? title : 'Task 1 chart - key data'}
-    </div>
-  </div>
-);
+import ChartPrompt from '../features/writing/IELTSChart';
 
 const pictureVocab = ['foreground', 'background', 'people', 'objects', 'atmosphere'];
 
@@ -92,10 +64,10 @@ const WritingEditor = () => {
       const prompt = isPictureWriting
         ? `${practice.title}\nWrite a picture description paragraph.`
         : practice.title;
-      const result = await evaluateWriting(settings, prompt, text);
+      const result = await evaluateWriting(settings, prompt, text, taskKey);
       addHistory({ title: practice.title, type: practice.type, score: result.score, focus: 'Writing' });
       toast.success('Evaluation completed!');
-      navigate('/writing/result', { state: { result, originalText: text, practice, exam: activeExam } });
+      navigate('/writing/result', { state: { result, originalText: text, practice, exam: activeExam, taskKey } });
     } catch (e) {
       console.error(e);
       toast.error('Failed to evaluate. Please check API key.');
@@ -128,8 +100,8 @@ const WritingEditor = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 lg:flex-1 lg:min-h-0">
-        <div className="w-full lg:w-1/3 glass-card rounded-3xl p-5 sm:p-6 flex flex-col lg:shrink-0 lg:overflow-y-auto">
-          <h2 className="text-xl font-bold mb-3">{practice.title}</h2>
+        <div className={cn('w-full glass-card rounded-3xl p-5 sm:p-6 flex flex-col lg:shrink-0 lg:overflow-y-auto', isChartTask ? 'lg:w-2/5' : 'lg:w-1/3')}>
+          <h2 className="text-xl font-bold mb-3 whitespace-pre-line">{practice.title}</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
             {isPictureWriting
               ? 'Write a clear paragraph describing the picture. Include the main scene, important details, and useful vocabulary.'
@@ -236,7 +208,6 @@ const WritingEditor = () => {
         </div>
       </div>
 
-      {/* Mobile submit — fixed just above the bottom nav so it's always at the bottom */}
       <div className="lg:hidden fixed inset-x-0 bottom-[78px] z-30 px-4 pt-4 pb-2 bg-gradient-to-t from-[var(--background)] via-[var(--background)] to-transparent">
         <button
           onClick={handleSubmit}

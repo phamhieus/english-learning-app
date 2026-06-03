@@ -176,7 +176,7 @@ const WritingList = () => {
                 </span>
               </div>
 
-              <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-snug">{practice.title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-1.5 leading-snug">{practice.shortTitle || practice.title}</h3>
               <p className="text-sm text-slate-400 dark:text-slate-500 font-medium mb-5">{practice.type}</p>
 
               <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6 mt-auto">

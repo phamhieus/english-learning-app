@@ -12,6 +12,7 @@ interface TopicData {
   topicName: string;
   taskType: string;
   level: string;
+  description?: string;
   section?: string;
   topicGroup?: string;
   imageUrl?: string;
@@ -20,6 +21,24 @@ interface TopicData {
     imageUrl?: string;
   };
 }
+
+const extractShortTitle = (description: string | undefined, topicName: string): string => {
+  if (description) {
+    // "... Informal Letter. Inviting a friend to visit..." → "Inviting a friend to visit..."
+    const letterMatch = description.match(/(?:Informal|Semi-formal|Formal) Letter\.\s+(.+?)\.?\s*$/);
+    if (letterMatch) return letterMatch[1];
+
+    // "IELTS Task 2 X Essay — Language learning with..." → "Language learning with..."
+    const dashMatch = description.match(/—\s+(.+?)\.?\s*$/);
+    if (dashMatch) return dashMatch[1];
+
+    // Old format: "Practice topic for IELTS Writing - Task 2 Essay: Education and exams." → "Education and exams"
+    const colonMatch = description.match(/:\s+(.+?)\.?\s*$/);
+    if (colonMatch) return colonMatch[1];
+  }
+  // Fallback: truncate the full question
+  return topicName.length > 72 ? topicName.substring(0, 69).trimEnd() + '…' : topicName;
+};
 
 const matchesFilter = (topic: TopicData, filter: string, hasImage: boolean) => {
   const fLower = filter.toLowerCase();
@@ -50,15 +69,16 @@ export const generateLocalPractices = (domain: 'speaking' | 'writing', filter: s
           const practice: Practice = {
             id: Date.now() + Math.floor(Math.random() * 10000),
             title: topic.topicName,
+            shortTitle: extractShortTitle(topic.description, topic.topicName),
             type: topic.taskType,
             level: mapLevel(topic.level),
             duration: '5 mins'
           };
-          
+
           if (img) {
             practice.image = img;
           }
-          
+
           allTopics.push(practice);
         }
       });
@@ -91,6 +111,7 @@ export const getExamTopics = (
         const practice: Practice = {
           id: Date.now() + Math.floor(Math.random() * 100000),
           title: topic.topicName,
+          shortTitle: extractShortTitle(topic.description, topic.topicName),
           type: topic.taskType,
           level: mapLevel(topic.level),
           duration: '5 mins',

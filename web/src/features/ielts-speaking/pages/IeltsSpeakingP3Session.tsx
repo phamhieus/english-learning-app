@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle2, ChevronLeft, ChevronRight, Circle, MessageSquareText, Mic, Radio, RefreshCw, Volume2 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
+import { useTheme } from '../../../components/useTheme';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
@@ -16,6 +17,7 @@ function createSessionKey() {
 }
 
 const IeltsSpeakingP3Session = () => {
+  const { resolvedTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const sessionState = location.state as { cueCardId?: string; discussionSetId?: string; sessionKey?: string } | null;
@@ -183,162 +185,144 @@ const IeltsSpeakingP3Session = () => {
   const progressPercent = ((idx + (isReading ? 0 : 0.45)) / questions.length) * 100;
 
   return (
-    <div className="max-w-6xl mx-auto min-h-[calc(100vh-8rem)] animate-in fade-in duration-300">
-      <div className="flex items-center justify-between gap-3 mb-5">
-        <button onClick={() => navigate('/speaking/ielts')} className="text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white">
-          Exit
+    <div className="max-w-2xl mx-auto h-full flex flex-col space-y-6 animate-in fade-in duration-300">
+      {/* Header */}
+      <div className="shrink-0 flex items-center justify-between">
+        <button
+          onClick={() => navigate('/speaking/ielts')}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white"
+        >
+          <ChevronLeft className="w-4 h-4" /> Back
         </button>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">IELTS Speaking Part 3 - Discussion</span>
-          <span className="hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-            Exam mode
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300">
+            IELTS
+          </span>
+          <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+            Part 3 · Discussion · Q{idx + 1}/{questions.length}
           </span>
         </div>
       </div>
 
-      <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 text-white p-4 sm:p-5 mb-5 shadow-xl shadow-slate-950/10">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-1">Live speaking test</p>
-            <h1 className="text-2xl font-black">Part 3 examiner discussion</h1>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-xl bg-white/10 border border-white/10 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-wider text-slate-400">Theme</p>
-              <p className="text-xs font-bold text-slate-100 truncate max-w-28">{discussionSet.theme}</p>
-            </div>
-            <div className="rounded-xl bg-white/10 border border-white/10 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-wider text-slate-400">Question</p>
-              <p className="text-xs font-bold text-slate-100">{idx + 1}/{questions.length}</p>
-            </div>
-            <div className="rounded-xl bg-white/10 border border-white/10 px-3 py-2">
-              <p className="text-[10px] uppercase tracking-wider text-slate-400">Status</p>
-              <p className={cn('text-xs font-bold', isReading ? 'text-amber-300' : 'text-emerald-300')}>
-                {isReading ? 'Listening' : 'Recording'}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-          <div className="h-full bg-cyan-400 rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
-        </div>
-      </section>
+      {/* Progress Bar */}
+      <div className="shrink-0 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
 
-      <div className="grid lg:grid-cols-[280px_1fr] gap-5">
-        <aside className="space-y-4">
-          <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/70 p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Question queue</p>
-            <div className="space-y-2">
-              {questions.map((question, questionIndex) => {
-                const isDone = questionIndex < idx;
-                const isActive = questionIndex === idx;
-                return (
-                  <div
-                    key={question.id}
-                    className={cn(
-                      'flex gap-3 rounded-xl border p-3 transition-colors',
-                      isActive
-                        ? 'border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/30',
-                    )}
-                  >
-                    {isDone ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    ) : (
-                      <Circle className={cn('w-4 h-4 shrink-0 mt-0.5', isActive ? 'text-indigo-500' : 'text-slate-300')} />
-                    )}
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Q{questionIndex + 1}</p>
-                      <p className={cn('text-xs leading-snug line-clamp-2', isActive ? 'font-bold text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400')}>
-                        {question.text}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+      {/* Theme + Focus Tags */}
+      <div className="shrink-0 flex items-center gap-2">
+        <span className="px-2.5 py-1 rounded-lg bg-cyan-50 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 text-xs font-bold uppercase tracking-wider">
+          {discussionSet.theme}
+        </span>
+        {current.answerFramework && current.answerFramework[0] && (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300">
+            Discussion
+          </span>
+        )}
+        {isReading && (
+          <span className="flex items-center gap-1.5 text-xs text-slate-400">
+            <Volume2 className="w-3.5 h-3.5 animate-pulse" /> Reading question…
+          </span>
+        )}
+      </div>
 
-          <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/70 p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Response focus</p>
-            <div className="space-y-2">
-              {current.answerFramework?.map((item) => (
-                <p key={item} className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {item}
-                </p>
-              ))}
-            </div>
-          </section>
-        </aside>
+      {/* Question Card */}
+      <div className="shrink-0 glass-card rounded-3xl p-8 shadow-sm relative border border-slate-200 dark:border-slate-800">
+        <p className="text-2xl font-semibold leading-relaxed text-slate-800 dark:text-slate-100 pr-10">
+          {current.text}
+        </p>
+        <button
+          onClick={() => reader.speakSegments(makeVoiceReaderSegments([current.text]), { mode: 'single' })}
+          className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-indigo-500 hover:scale-110 transition-transform"
+          aria-label="Replay question"
+        >
+          <Volume2 className={cn("w-4 h-4", reader.status === 'playing' && "animate-pulse")} />
+        </button>
+      </div>
 
-        <main className="space-y-5">
-          <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-4 mb-5">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2">
-                  Examiner question {idx + 1}
-                </p>
-                <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight text-slate-900 dark:text-white">{current.text}</h2>
-              </div>
-              <button
-                onClick={() => reader.speakSegments(makeVoiceReaderSegments([current.text]), { mode: 'single' })}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-indigo-500 hover:scale-105 transition-transform"
-                aria-label="Replay question"
-              >
-                <Volume2 className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {current.vocabularyHints?.slice(0, 4).map((hint) => (
-                <span key={hint} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-300">
-                  {hint}
+      {/* Answer Framework Hint */}
+      {current.answerFramework && current.answerFramework.length > 0 && (
+        <div className="shrink-0 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 p-4">
+          <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+            <Radio className="w-3.5 h-3.5" /> Answer framework
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            {current.answerFramework.map((s, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-800/40 text-sm font-medium text-indigo-900/80 dark:text-indigo-200/80">
+                  {s}
                 </span>
-              ))}
-            </div>
-          </section>
-
-          <section className="grid md:grid-cols-[220px_1fr] gap-4">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 text-white p-5 flex flex-col items-center justify-center min-h-72">
-              <div className={cn('w-24 h-24 rounded-full flex items-center justify-center mb-4 border-4', isReading ? 'border-amber-400/30 bg-amber-400/10 text-amber-300' : 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300')}>
-                {isReading ? <MessageSquareText className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
-              </div>
-              <p className="text-sm font-bold">{isReading ? 'Examiner is speaking' : 'Microphone is live'}</p>
-              <p className="text-xs text-slate-400 text-center mt-1">
-                {isReading ? 'Listen to the full question first.' : 'Answer naturally with reasons and examples.'}
-              </p>
-              <div className="mt-5 flex items-center gap-2 text-xs text-cyan-300">
-                <Radio className={cn('w-4 h-4', !isReading && 'animate-pulse')} />
-                {isReading ? 'Stand by' : 'Recording answer'}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4 min-h-72 flex flex-col">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Live transcript</p>
-              <div className="flex-1">
-                {isReading ? (
-                  <p className="text-sm text-slate-400 italic flex items-center gap-2">
-                    <MessageSquareText className="w-4 h-4" /> Reading question...
-                  </p>
-                ) : liveText ? (
-                  <p className="text-base text-slate-700 dark:text-slate-200 leading-relaxed">{liveText}</p>
-                ) : (
-                  <p className="text-sm text-slate-400 italic">Recording - answer with reasons, examples, and wider discussion...</p>
+                {i < current.answerFramework!.length - 1 && (
+                  <ChevronRight className="w-3.5 h-3.5 text-indigo-300" />
                 )}
               </div>
-              <button
-                onClick={finishAnswer}
-                disabled={isReading}
-                className={cn(
-                  'mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold transition-colors',
-                  isReading ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white',
-                )}
-              >
-                {idx + 1 >= questions.length ? 'Finish Part 3' : 'Next Question'}
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </section>
-        </main>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Speaking Response Block */}
+      <div className="flex-1 flex flex-col items-center gap-6 min-h-[220px]">
+        {/* Live Transcript Container */}
+        <div className="w-full min-h-[80px] px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 overflow-y-auto">
+          {isReading ? (
+            <p className="text-sm text-slate-400 italic flex items-center gap-2">
+              <MessageSquareText className="w-4 h-4" /> Reading question...
+            </p>
+          ) : liveText ? (
+            <p className="text-base text-slate-700 dark:text-slate-200 leading-relaxed">{liveText}</p>
+          ) : (
+            <p className="text-sm text-slate-400 italic">Recording — develop your answer, then tap Next</p>
+          )}
+        </div>
+
+        {/* Floating Mic Button */}
+        <div className="flex flex-col items-center gap-2">
+          <button
+            onClick={finishAnswer}
+            disabled={isReading}
+            className={cn(
+              'w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl relative',
+              isReading
+                ? 'bg-slate-100 dark:bg-slate-800 text-slate-300 cursor-not-allowed shadow-none'
+                : speech.isListening
+                ? 'bg-indigo-600 text-white scale-110 shadow-indigo-500/40'
+                : 'bg-white dark:bg-slate-700 text-indigo-500 border-2 border-indigo-200 dark:border-indigo-800',
+            )}
+          >
+            {speech.isListening && !isReading && (
+              <span className="absolute inset-0 rounded-full border-4 border-indigo-500 animate-ping opacity-60" />
+            )}
+            <Mic className="w-8 h-8" />
+          </button>
+          <p className="text-xs text-slate-400 text-center mt-2">
+            {isReading
+              ? 'Listen to the question'
+              : speech.isListening
+              ? 'Recording — tap to submit answer'
+              : 'Starting…'}
+          </p>
+        </div>
+      </div>
+
+      {/* Next Question Control */}
+      <div className="shrink-0 mt-6 pb-4">
+        <button
+          onClick={finishAnswer}
+          disabled={isReading}
+          className={cn(
+            'w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold transition-all duration-200 shadow-lg',
+            isReading
+              ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed shadow-none'
+              : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20 hover:scale-[1.01]',
+          )}
+        >
+          {idx + 1 >= questions.length ? 'Finish Part 3' : 'Next Question'}{' '}
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

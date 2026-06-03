@@ -1,7 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Clock, Mic, RefreshCw, Trash2, Volume2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Mic,
+  RefreshCw,
+  Trash2,
+  Volume2,
+  ChevronDown,
+  Pencil,
+  Eraser,
+  CheckCircle2,
+  ListTodo,
+  RotateCcw,
+} from 'lucide-react';
 import { cn } from '../../../components/classNames';
+import { useTheme } from '../../../components/useTheme';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
@@ -15,6 +30,7 @@ const MAX_LONG_TURN_SECONDS = 120;
 const PART2_CATEGORIES = Array.from(new Set(PART2_CUE_CARDS.map((card) => card.category)));
 
 const IeltsSpeakingP2Session = () => {
+  const { resolvedTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const selectedId = (location.state as { cueCardId?: string } | null)?.cueCardId;
@@ -200,8 +216,11 @@ const IeltsSpeakingP2Session = () => {
   return (
     <div className="max-w-6xl mx-auto min-h-[calc(100vh-8rem)] animate-in fade-in duration-300">
       <div className="flex items-center justify-between gap-3 mb-5">
-        <button onClick={() => navigate('/speaking/ielts')} className="text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white">
-          Exit
+        <button
+          onClick={() => navigate('/speaking/ielts')}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 hover:text-slate-700 dark:hover:text-white"
+        >
+          <ChevronLeft className="w-4 h-4" /> Back
         </button>
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">IELTS Speaking Part 2 - Long Turn</span>
@@ -212,187 +231,314 @@ const IeltsSpeakingP2Session = () => {
       </div>
 
       {phase === 'prep' && (
-        <div className="grid xl:grid-cols-[1fr_1.1fr_0.8fr] gap-5">
-          <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm overflow-hidden">
-            <div className="rounded-2xl bg-slate-950 text-white p-4 mb-5">
-              <div className="flex items-center justify-between gap-4 mb-3">
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-1">Preparation room</p>
-                  <p className="text-lg font-black">1 minute to plan your long turn</p>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+          {/* Cue card + prep timer */}
+          <div className="lg:col-span-3 space-y-4">
+            <div className="flex items-center gap-4 mb-4 glass-card rounded-2xl p-4">
+              <div className="relative w-20 h-20 shrink-0">
+                <svg width="80" height="80" className="-rotate-90">
+                  <circle cx="40" cy="40" r={34} className="stroke-slate-200 dark:stroke-slate-800" strokeWidth="7" fill="none" />
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r={34}
+                    className="stroke-cyan-500"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 34}
+                    strokeDashoffset={2 * Math.PI * 34 * ((PREP_SECONDS - prepLeft) / PREP_SECONDS)}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl font-black tabular-nums text-slate-800 dark:text-slate-100">
+                    0:{String(prepLeft).padStart(2, '0')}
+                  </span>
                 </div>
-                <span className="text-4xl font-black tabular-nums text-amber-300">{prepLeft}s</span>
               </div>
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                <div className="h-full bg-amber-400 rounded-full transition-all duration-500" style={{ width: `${prepProgress}%` }} />
-              </div>
-            </div>
-
-            <div className="flex items-start justify-between gap-4 mb-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">Cue card</p>
-                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{cueCard.title}</h1>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest mb-0.5">Preparation time</p>
+                  {reader.status === 'playing' && (
+                    <span className="flex items-center gap-1.5 text-xs text-slate-400 font-normal">
+                      <Volume2 className="w-3 h-3 animate-pulse" /> Reading card…
+                    </span>
+                  )}
+                </div>
+                <p className="text-base font-bold text-slate-800 dark:text-slate-100">You have 1 minute to prepare</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Make notes, then you'll speak for 1–2 minutes.</p>
               </div>
-              <button
-                onClick={() => reader.speakSegments(makeVoiceReaderSegments([cueCard.prompt, ...cueCard.bulletPoints, cueCard.explanationPrompt]), { mode: 'single' })}
-                className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500 hover:scale-105 transition-transform"
-                aria-label="Read cue card aloud"
-              >
-                <Volume2 className="w-4 h-4" />
-              </button>
             </div>
 
-            <div className="rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/40 p-5 mb-5">
-              <p className="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">{cueCard.prompt}</p>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">You should say</p>
-              <ul className="space-y-2.5">
-                {cueCard.bulletPoints.map((point) => (
-                  <li key={point} className="flex gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-indigo-500 shrink-0" /> {point}
+            {/* Styled Cue Card */}
+            <div className="rounded-3xl border-2 border-cyan-200 dark:border-cyan-800 bg-gradient-to-br from-cyan-50/60 to-white dark:from-cyan-950/20 dark:to-slate-900 shadow-sm p-7">
+              <div className="flex items-center justify-between mb-3">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 text-[10px] font-bold uppercase tracking-wider">
+                  Task Card
+                </span>
+                <button
+                  onClick={() => reader.speakSegments(makeVoiceReaderSegments([cueCard.prompt, ...cueCard.bulletPoints, cueCard.explanationPrompt]), { mode: 'single' })}
+                  className="p-1.5 rounded-lg bg-cyan-100/50 hover:bg-cyan-100 dark:bg-cyan-950/50 dark:hover:bg-cyan-950 text-cyan-700 dark:text-cyan-300 hover:scale-105 transition-all"
+                  aria-label="Read cue card aloud"
+                >
+                  <Volume2 className={cn("w-3.5 h-3.5", reader.status === 'playing' && "animate-pulse")} />
+                </button>
+              </div>
+              <p className="font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4 text-2xl">{cueCard.prompt}</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">You should say:</p>
+              <ul className="space-y-1.5 mb-4">
+                {cueCard.bulletPoints.map((b, i) => (
+                  <li key={i} className="flex items-start gap-2.5 text-slate-700 dark:text-slate-200 text-[15px]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 mt-2 shrink-0" /> {b}
                   </li>
                 ))}
               </ul>
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mt-4">{cueCard.explanationPrompt}</p>
+              <p className="text-[15px] font-semibold text-slate-600 dark:text-slate-300 italic">{cueCard.explanationPrompt}</p>
             </div>
+          </div>
 
-            <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 p-4">
+          {/* Notes + framework */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <div className="glass-card rounded-2xl p-4 flex flex-col min-h-[240px]">
               <div className="flex items-center justify-between mb-2">
-                <p className="flex items-center gap-2 text-sm font-bold text-amber-700 dark:text-amber-300">
-                  <Clock className="w-4 h-4" /> Preparation time
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <Pencil className="w-3.5 h-3.5" /> Your notes
                 </p>
-                <span className="text-sm font-black tabular-nums text-amber-700 dark:text-amber-300">{Math.max(0, PREP_SECONDS - prepLeft)}s used</span>
+                <button onClick={() => setNotes('')} className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex items-center gap-1">
+                  <Eraser className="w-3.5 h-3.5" /> Clear
+                </button>
               </div>
-              <div className="h-2 rounded-full bg-amber-100 dark:bg-amber-900/30 overflow-hidden">
-                <div className="h-full bg-amber-500 rounded-full transition-all duration-500" style={{ width: `${prepProgress}%` }} />
-              </div>
+              <textarea
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                className="w-full flex-1 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 p-3 min-h-[150px] text-[15px] leading-7 text-slate-700 dark:text-slate-300 outline-none resize-none"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(transparent, transparent 27px, ${resolvedTheme === 'dark' ? '#334155' : '#e2e8f0'} 27px, ${resolvedTheme === 'dark' ? '#334155' : '#e2e8f0'} 28px)`,
+                  lineHeight: '28px',
+                  paddingTop: '2px',
+                }}
+                placeholder="Write keywords, not full sentences..."
+              />
             </div>
-          </section>
 
-          <section className="glass-card rounded-2xl p-5 border border-transparent flex flex-col min-h-[560px]">
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Preparation notes</label>
-              <button onClick={() => setNotes('')} className="text-xs text-slate-400 hover:text-rose-500 flex items-center gap-1">
-                <Trash2 className="w-3.5 h-3.5" /> Clear notes
-              </button>
-            </div>
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              className="flex-1 w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 text-base leading-relaxed outline-none focus:ring-2 focus:ring-indigo-500/30 resize-none"
-              placeholder="Write keywords, not full sentences..."
-            />
-            <div className="mt-4 flex flex-col sm:flex-row gap-3">
-              <button onClick={startLongTurn} className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/20">
-                <Mic className="w-5 h-5" /> Start speaking now
-              </button>
-              <button onClick={() => reader.speakSegments(makeVoiceReaderSegments([cueCard.prompt]), { mode: 'single' })} className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800">
-                <Volume2 className="w-4 h-4" /> Replay
-              </button>
-            </div>
-          </section>
-
-          <aside className="space-y-4">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/70 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Plan your answer</p>
-              <ol className="space-y-2">
-                {cueCard.preparationFramework?.map((step, index) => (
-                  <li key={step} className="flex gap-3 text-sm text-slate-600 dark:text-slate-300">
-                    <span className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-300 text-xs font-black flex items-center justify-center shrink-0">
-                      {index + 1}
-                    </span>
-                    {step}
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/70 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Useful language</p>
-              <div className="flex flex-wrap gap-2">
-                {cueCard.vocabularyHints?.map((hint) => (
-                  <span key={hint} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-300">
-                    {hint}
-                  </span>
-                ))}
+            {cueCard.preparationFramework && (
+              <div className="rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 p-4">
+                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <ListTodo className="w-3.5 h-3.5" /> Preparation framework
+                </p>
+                <ol className="space-y-1.5">
+                  {cueCard.preparationFramework.map((s, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-indigo-900/80 dark:text-indigo-200/80">
+                      <span className="w-5 h-5 rounded-full bg-indigo-200/60 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        {i + 1}
+                      </span>
+                      {s}
+                    </li>
+                  ))}
+                </ol>
               </div>
+            )}
+
+            <div className="flex flex-wrap gap-1.5">
+              {cueCard.vocabularyHints?.map((v, i) => (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 rounded-full text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-medium"
+                >
+                  {v}
+                </span>
+              ))}
             </div>
-          </aside>
+          </div>
+
+          {/* Full-width start button */}
+          <div className="lg:col-span-5 mt-2">
+            <button
+              onClick={startLongTurn}
+              className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-base bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/30 hover:scale-[1.01] transition-all"
+            >
+              <Mic className="w-5 h-5" /> Start speaking now
+            </button>
+          </div>
         </div>
       )}
 
       {phase === 'long_turn' && (
-        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-5">
-          <aside className="space-y-4">
-            <section className="rounded-2xl border border-indigo-100 dark:border-indigo-900/40 bg-white dark:bg-slate-900 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2">Cue card</p>
-              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white mb-2">{cueCard.title}</h2>
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-3">{cueCard.prompt}</p>
-              <ul className="space-y-1.5">
-                {cueCard.bulletPoints.map((point) => (
-                  <li key={point} className="flex gap-2 text-xs text-slate-500 dark:text-slate-400">
-                    <span className="text-indigo-500">-</span> {point}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-3">{cueCard.explanationPrompt}</p>
-            </section>
-            <section className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/70 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Your notes</p>
-              <p className="min-h-28 text-sm text-slate-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
-                {notes || 'No notes written during preparation.'}
-              </p>
-            </section>
-          </aside>
-
-          <section className="rounded-2xl border border-slate-800 bg-slate-950 text-white p-5 flex flex-col min-h-[560px] shadow-xl shadow-slate-950/10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="max-w-3xl mx-auto h-full flex flex-col space-y-5">
+          {/* Timer + milestones */}
+          <div className="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-end justify-between mb-3">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-cyan-300">Long turn in progress</p>
-                <p className="text-sm text-slate-400">Speak continuously for 1 to 2 minutes.</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Speaking time</p>
+                <p className="text-4xl font-black tabular-nums text-slate-800 dark:text-slate-100 leading-none mt-1">
+                  {Math.floor(speakingSeconds / 60)}:{String(speakingSeconds % 60).padStart(2, '0')}
+                </p>
               </div>
-              <div className="text-left sm:text-right">
-                <p className="text-5xl font-black tabular-nums text-cyan-300">{speakingSeconds}s</p>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Max 120s</p>
-              </div>
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-bold border border-red-100 dark:border-red-900/30">
+                <span className="relative inline-flex">
+                  <span className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-60" />
+                  <span className="relative w-2 h-2 rounded-full bg-red-500" />
+                </span>
+                Recording
+              </span>
             </div>
-
-            <div className="h-2 rounded-full bg-white/10 overflow-hidden mb-4">
-              <div className="h-full bg-cyan-400 rounded-full transition-all duration-500" style={{ width: `${speakingProgress}%` }} />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 mb-6">
-              {[60, 90, 120].map((mark) => (
-                <div key={mark} className={cn('rounded-xl p-2 text-center text-xs font-bold border', speakingSeconds >= mark ? 'bg-emerald-400/10 text-emerald-300 border-emerald-400/30' : 'text-slate-500 border-white/10 bg-white/5')}>
-                  {mark === 60 ? '60s reached' : `${mark}s`}
+            <div className="relative h-2 bg-slate-100 dark:bg-slate-800 rounded-full mt-4">
+              <div
+                className="absolute inset-y-0 left-0 bg-indigo-500 rounded-full transition-all duration-1000"
+                style={{ width: `${speakingProgress}%` }}
+              />
+              {[60, 90, 120].map((t) => (
+                <div key={t} className="absolute -top-0.5" style={{ left: `${(t / 120) * 100}%` }}>
+                  <span
+                    className={cn(
+                      'block w-3 h-3 rounded-full border-2 -translate-x-1/2 transition-colors',
+                      speakingSeconds >= t
+                        ? 'bg-indigo-500 border-indigo-500'
+                        : 'bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700',
+                    )}
+                  />
+                  <span className="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                    {t === 60 ? '1:00' : t === 90 ? '1:30' : '2:00'}
+                  </span>
                 </div>
               ))}
             </div>
-
-            <div className="flex flex-col items-center justify-center gap-4 py-6 rounded-2xl bg-white/5 border border-white/10 mb-5">
-              <button onClick={finishLongTurn} className="relative w-24 h-24 rounded-full bg-cyan-400 text-slate-950 shadow-xl shadow-cyan-500/20 flex items-center justify-center hover:bg-cyan-300 transition-colors">
-                <span className="absolute inset-0 rounded-full border-4 border-cyan-300 animate-ping opacity-40" />
-                <Mic className="w-10 h-10" />
-              </button>
-              <WaveformBars active={speech.isListening} />
-              <p className="text-xs text-slate-400">Recording - tap the microphone or Finish when your answer is complete</p>
+            <div
+              className={cn(
+                'flex items-center gap-1.5 mt-7 text-xs font-medium',
+                speakingSeconds >= 60 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400',
+              )}
+            >
+              {speakingSeconds >= 60 ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Minimum length reached — keep going to 2:00
+                </>
+              ) : (
+                <>
+                  <Clock className="w-3.5 h-3.5 animate-pulse mr-1" /> Keep speaking to reach the 1-minute minimum mark
+                </>
+              )}
             </div>
+          </div>
 
-            <TranscriptBox text={liveText} placeholder="Realtime transcript will appear here while you speak..." darkPanel />
-            <button onClick={finishLongTurn} className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">
-              Finish answer <ChevronRight className="w-4 h-4" />
+          {/* Collapsible Task Card & Notes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <details className="glass-card rounded-2xl px-5 py-3.5 border border-slate-200 dark:border-slate-800" open>
+              <summary className="flex items-center gap-2 cursor-pointer list-none select-none font-bold text-slate-700 dark:text-slate-300 outline-none">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-cyan-50 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-400 text-[10px] uppercase font-black">
+                  Cue Card
+                </span>
+                <span className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{cueCard.title}</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 ml-auto summary-chevron" />
+              </summary>
+              <div className="mt-3 pl-2 border-l-2 border-cyan-200 dark:border-cyan-800/40">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2">{cueCard.prompt}</p>
+                <ul className="space-y-1">
+                  {cueCard.bulletPoints.map((b, i) => (
+                    <li key={i} className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-2">
+                      <span className="w-1 h-1 rounded-full bg-cyan-400 mt-2 shrink-0" /> {b}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic mt-2">{cueCard.explanationPrompt}</p>
+              </div>
+            </details>
+
+            <details className="glass-card rounded-2xl px-5 py-3.5 border border-slate-200 dark:border-slate-800" open>
+              <summary className="flex items-center gap-2 cursor-pointer list-none select-none font-bold text-slate-700 dark:text-slate-300 outline-none">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 text-[10px] uppercase font-black">
+                  Notes
+                </span>
+                <span className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">Your notes</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 ml-auto summary-chevron" />
+              </summary>
+              <div className="mt-3 text-sm text-slate-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed pl-2 border-l-2 border-amber-200 dark:border-amber-800/40 min-h-[50px] max-h-[120px] overflow-y-auto">
+                {notes || 'No notes written during preparation.'}
+              </div>
+            </details>
+          </div>
+
+          {/* Live transcript + waveform */}
+          <div className="flex-1 flex flex-col gap-4 min-h-[220px]">
+            <TranscriptBox text={liveText} placeholder="Realtime transcript will appear here while you speak..." />
+            <div className="h-14 flex items-center justify-center">
+              <WaveformBars active={speech.isListening} />
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="shrink-0 flex items-center justify-center gap-5 mt-5 pb-2">
+            <button
+              onClick={startLongTurn}
+              className="px-5 py-3 rounded-2xl font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" /> Try again
             </button>
-          </section>
+            <button
+              onClick={finishLongTurn}
+              className="px-8 py-3.5 rounded-2xl font-bold bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/30 flex items-center gap-2 transition-colors"
+            >
+              <CheckCircle2 className="w-5 h-5" /> Finish answer
+            </button>
+          </div>
         </div>
       )}
 
       {phase === 'rounding_off' && currentFollowUp && (
-        <section className="max-w-3xl mx-auto glass-card rounded-2xl p-5 border border-transparent flex flex-col min-h-[520px]">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Rounding-off question {roundingIndex + 1}</p>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{currentFollowUp.text}</h2>
-          <TranscriptBox text={liveText} placeholder="Give a short direct answer..." />
-          <button onClick={finishFollowUp} className="mt-5 w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">
-            {roundingIndex + 1 >= cueCard.roundingOffQuestions.length ? 'Finish Part 2' : 'Next question'}
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </section>
+        <div className="max-w-2xl mx-auto h-full flex flex-col space-y-6">
+          <div className="shrink-0 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-cyan-100 text-cyan-700 dark:bg-cyan-950 dark:text-cyan-300">
+                IELTS
+              </span>
+              <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                Part 2 · Rounding-off · Q{roundingIndex + 1}/{cueCard.roundingOffQuestions.length}
+              </span>
+              {reader.status === 'playing' && (
+                <span className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <Volume2 className="w-3.5 h-3.5 animate-pulse" /> Reading question…
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="shrink-0 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+              style={{ width: `${((roundingIndex + 0.5) / cueCard.roundingOffQuestions.length) * 100}%` }}
+            />
+          </div>
+
+          <div className="shrink-0 glass-card rounded-3xl p-8 shadow-sm relative border border-slate-200 dark:border-slate-800">
+            <p className="text-2xl font-semibold leading-relaxed text-slate-800 dark:text-slate-100 pr-10">
+              {currentFollowUp.text}
+            </p>
+            <button
+              onClick={() => reader.speakSegments(makeVoiceReaderSegments([currentFollowUp.text]), { mode: 'single' })}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-indigo-500 hover:scale-110 transition-transform"
+              aria-label="Replay question"
+            >
+              <Volume2 className={cn("w-4 h-4", reader.status === 'playing' && "animate-pulse")} />
+            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-4 min-h-[220px]">
+            <TranscriptBox text={liveText} placeholder="Give a short direct answer..." />
+            <div className="h-14 flex items-center justify-center">
+              <WaveformBars active={speech.isListening} />
+            </div>
+          </div>
+
+          <div className="shrink-0 pt-2">
+            <button
+              onClick={finishFollowUp}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20 hover:scale-[1.01] transition-all"
+            >
+              {roundingIndex + 1 >= cueCard.roundingOffQuestions.length ? 'Finish Part 2' : 'Next question'}{' '}
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

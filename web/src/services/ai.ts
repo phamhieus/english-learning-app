@@ -98,12 +98,19 @@ const buildScoringInstruction = (exam: string, taskKey: string, prompt: string):
     return `Target exam: TOEIC Writing.
 Use TOEIC Speaking/Writing style scoring. The overall "score" is 0-100 for the app UI.
 The "bandScore" field must be a TOEIC scaled writing score string from 0-200, for example "160/200". Do not return IELTS bands.
-Sub-score fields should be TOEIC-style 0-100 strings, for example "82/100".`;
+Sub-score fields should be TOEIC-style 0-100 strings, for example "82/100".
+Score conservatively like a real test rater: do not give high scores to short, generic, off-task, poorly organized, or template-like responses.`;
   }
 
   const base = `Target exam: IELTS Writing.
 Use IELTS band scoring (0–9). The overall "score" is 0-100 for the app UI.
-The "bandScore" field must be an IELTS band string, for example "6.5". Sub-score fields must also be IELTS band strings, for example "6.0".`;
+The "bandScore" field must be an IELTS band string, for example "6.5". Sub-score fields must also be IELTS band strings, for example "6.0".
+Apply strict real-examiner calibration:
+  - Band 7+ requires clear task fulfilment, well-developed ideas, flexible cohesion, precise vocabulary, and mostly error-free grammar.
+  - Do not give band 7+ to writing that is merely understandable but thin, generic, repetitive, underdeveloped, or template-like.
+  - Under-length responses must be capped conservatively even if grammar is good.
+  - Penalize memorised introductions, list-like paragraphs, unsupported claims, missing task elements, weak paragraphing, and vague examples.
+  - If task response/achievement is capped, the overall band should not exceed the cap by more than 0.5.`;
 
   if (taskKey === 't1a') {
     return `${base}
@@ -114,6 +121,7 @@ Scoring for taskAchievement (Task Achievement):
   - MUST select and accurately report the most relevant data — not every single number.
   - MUST make meaningful comparisons between categories, time periods, or groups.
   - Personal opinions, arguments, or unsupported conclusions beyond the data should NOT be rewarded.
+  - A report with no clear comparisons should not exceed band 6 for taskAchievement.
 Scoring for lexicalResource: reward accurate use of trend language (rose steadily, peaked at, fluctuated, remained stable, etc.).`;
   }
 
@@ -141,6 +149,7 @@ Scoring for taskAchievement (Task Achievement):
   - Register must be consistently ${registerType} throughout the letter. Inconsistent or incorrect register reduces the band.
   - Letter must have a clear purpose in the opening paragraph and an appropriate closing salutation.
   - An essay-style response without letter format should NOT receive a high band.
+  - A letter with missing opening/closing conventions should not exceed band 5.5 for taskAchievement.
 In overallFeedback: explicitly state (1) whether the register is correct and consistent, and (2) which bullet points, if any, are missing or underdeveloped.`;
   }
 
@@ -154,11 +163,199 @@ Scoring for taskAchievement (Task Response in IELTS Task 2 terminology):
   - Discuss Both Views + Opinion: BOTH views must be presented before giving a personal opinion. Missing either view = maximum band 5.
   - Outweigh essays: the writer must state whether advantages/benefits outweigh disadvantages/drawbacks and defend that position.
   - Arguments must be fully extended and supported with specific reasons or examples — not just listed.
-  - No bullet-point lists, memorised templates, or off-topic content.`;
+  - No bullet-point lists, memorised templates, or off-topic content.
+  - A Task 2 essay without a clear position, specific examples, and developed body paragraphs should not exceed band 6 for taskResponse.
+  - Fewer than 4 logical paragraphs is usually a coherence weakness and should not receive a high cohesion band.`;
   }
 
   return base;
 };
+
+const countWritingWords = (text: string): number =>
+  text.trim().split(/\s+/).filter(Boolean).length;
+
+const countParagraphs = (text: string): number =>
+  text.split(/\n\s*\n|\r\n\s*\r\n/).map((part) => part.trim()).filter((part) => part.length > 0).length;
+
+const parseIeltsBand = (value: string | number | undefined | null): number | null => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (!value) return null;
+  const match = value.match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : null;
+};
+
+const formatIeltsBand = (value: number): string =>
+  roundToNearestHalf(Math.max(0, Math.min(9, value))).toFixed(1);
+
+const hasAnyPattern = (text: string, patterns: RegExp[]): boolean => {
+  const normalized = text.toLowerCase();
+  return patterns.some((pattern) => pattern.test(normalized));
+};
+
+const IELTS_T1_OVERVIEW_PATTERNS = [
+  /\boverall\b/i,
+  /\bin general\b/i,
+  /\bit is clear\b/i,
+  /\bit can be seen\b/i,
+  /\bthe main (trend|feature)\b/i,
+  /\bthe most (noticeable|significant|striking)\b/i,
+];
+
+const IELTS_COMPARISON_PATTERNS = [
+  /\bcompared with\b/i,
+  /\bwhereas\b/i,
+  /\bwhile\b/i,
+  /\bin contrast\b/i,
+  /\bon the other hand\b/i,
+  /\bhigher than\b/i,
+  /\blower than\b/i,
+  /\bmore than\b/i,
+  /\bless than\b/i,
+];
+
+const IELTS_T2_POSITION_PATTERNS = [
+  /\bi (strongly )?(agree|disagree|believe|think|argue)\b/i,
+  /\bin my opinion\b/i,
+  /\bmy view is\b/i,
+  /\bthis essay (will )?(argues|argue)\b/i,
+  /\bi support\b/i,
+];
+
+const IELTS_EXAMPLE_REASON_PATTERNS = [
+  /\bfor example\b/i,
+  /\bfor instance\b/i,
+  /\bsuch as\b/i,
+  /\bbecause\b/i,
+  /\bdue to\b/i,
+  /\bas a result\b/i,
+  /\btherefore\b/i,
+];
+
+const LETTER_OPENING_PATTERNS = [
+  /\bdear\b/i,
+  /\bhi\b/i,
+  /\bhello\b/i,
+];
+
+const LETTER_CLOSING_PATTERNS = [
+  /\byours faithfully\b/i,
+  /\byours sincerely\b/i,
+  /\bbest regards\b/i,
+  /\bkind regards\b/i,
+  /\bbest wishes\b/i,
+  /\bsee you\b/i,
+  /\btake care\b/i,
+];
+
+function calibrateIeltsWritingResult(result: WritingFeedback, text: string, taskKey: string): WritingFeedback {
+  const wordCount = countWritingWords(text);
+  const paragraphCount = countParagraphs(text);
+  const minWords = taskKey === 't2' ? 250 : taskKey === 't1a' || taskKey === 't1g' ? 150 : 0;
+  const taskBand = parseIeltsBand(result.subScores?.taskAchievement);
+  const coherenceBand = parseIeltsBand(result.subScores?.coherence);
+  const lexicalBand = parseIeltsBand(result.subScores?.lexicalResource);
+  const grammarBand = parseIeltsBand(result.subScores?.grammar);
+
+  if ([taskBand, coherenceBand, lexicalBand, grammarBand].some((band) => band == null)) {
+    return result;
+  }
+
+  let taskCap = 9;
+  let coherenceCap = 9;
+  let lexicalCap = 9;
+  let grammarCap = 9;
+  const notes: string[] = [];
+
+  if (minWords > 0) {
+    if (wordCount < minWords * 0.55) {
+      taskCap = Math.min(taskCap, 4.5);
+      coherenceCap = Math.min(coherenceCap, 5);
+      lexicalCap = Math.min(lexicalCap, 5);
+      grammarCap = Math.min(grammarCap, 5);
+      notes.push(`Severely under length (${wordCount}/${minWords} words).`);
+    } else if (wordCount < minWords * 0.75) {
+      taskCap = Math.min(taskCap, 5);
+      coherenceCap = Math.min(coherenceCap, 5.5);
+      lexicalCap = Math.min(lexicalCap, 6);
+      grammarCap = Math.min(grammarCap, 6);
+      notes.push(`Substantially under length (${wordCount}/${minWords} words).`);
+    } else if (wordCount < minWords) {
+      taskCap = Math.min(taskCap, 5.5);
+      coherenceCap = Math.min(coherenceCap, 6);
+      lexicalCap = Math.min(lexicalCap, 6.5);
+      grammarCap = Math.min(grammarCap, 6.5);
+      notes.push(`Under the minimum word count (${wordCount}/${minWords} words).`);
+    }
+  }
+
+  if (taskKey === 't1a') {
+    if (!hasAnyPattern(text, IELTS_T1_OVERVIEW_PATTERNS)) {
+      taskCap = Math.min(taskCap, 5);
+      notes.push('No clear Task 1 overview detected.');
+    }
+    if (!hasAnyPattern(text, IELTS_COMPARISON_PATTERNS)) {
+      taskCap = Math.min(taskCap, 6);
+      coherenceCap = Math.min(coherenceCap, 6);
+      notes.push('Few clear comparisons detected.');
+    }
+  }
+
+  if (taskKey === 't1g') {
+    if (!hasAnyPattern(text, LETTER_OPENING_PATTERNS) || !hasAnyPattern(text, LETTER_CLOSING_PATTERNS)) {
+      taskCap = Math.min(taskCap, 5.5);
+      coherenceCap = Math.min(coherenceCap, 6);
+      notes.push('Letter opening or closing convention appears weak or missing.');
+    }
+  }
+
+  if (taskKey === 't2') {
+    if (paragraphCount < 4) {
+      coherenceCap = Math.min(coherenceCap, 5.5);
+      taskCap = Math.min(taskCap, 6);
+      notes.push(`Only ${paragraphCount} clear paragraph(s) detected.`);
+    }
+    if (!hasAnyPattern(text, IELTS_T2_POSITION_PATTERNS)) {
+      taskCap = Math.min(taskCap, 6);
+      notes.push('No clear personal position detected.');
+    }
+    if (!hasAnyPattern(text, IELTS_EXAMPLE_REASON_PATTERNS)) {
+      taskCap = Math.min(taskCap, 6);
+      coherenceCap = Math.min(coherenceCap, 6);
+      notes.push('Arguments lack clear reasons or examples.');
+    }
+  }
+
+  const developmentPenalty = minWords > 0 && wordCount < minWords * 1.08 ? 0.5 : 0;
+  const calibrated = {
+    taskAchievement: roundToNearestHalf(Math.min((taskBand ?? 0) - developmentPenalty, taskCap)),
+    coherence: roundToNearestHalf(Math.min((coherenceBand ?? 0) - developmentPenalty, coherenceCap)),
+    lexicalResource: roundToNearestHalf(Math.min((lexicalBand ?? 0) - developmentPenalty * 0.5, lexicalCap)),
+    grammar: roundToNearestHalf(Math.min((grammarBand ?? 0) - developmentPenalty * 0.5, grammarCap)),
+  };
+  const overallCap = Math.min(9, calibrated.taskAchievement + 0.5);
+  const overall = roundToNearestHalf(Math.min(
+    (calibrated.taskAchievement + calibrated.coherence + calibrated.lexicalResource + calibrated.grammar) / 4,
+    overallCap,
+  ));
+
+  return {
+    ...result,
+    score: Math.round((overall / 9) * 100),
+    bandScore: formatIeltsBand(overall),
+    overallFeedback: notes.length > 0
+      ? `${result.overallFeedback} Examiner calibration: ${notes.join(' ')}`
+      : result.overallFeedback,
+    subScores: {
+      taskAchievement: formatIeltsBand(calibrated.taskAchievement),
+      coherence: formatIeltsBand(calibrated.coherence),
+      lexicalResource: formatIeltsBand(calibrated.lexicalResource),
+      grammar: formatIeltsBand(calibrated.grammar),
+    },
+    improvementTips: notes.length > 0
+      ? [...notes.slice(0, 2), ...(result.improvementTips ?? [])].slice(0, 5)
+      : result.improvementTips,
+  };
+}
 
 export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = ''): Promise<WritingFeedback> => {
   const exam = settings.primaryExam;
@@ -188,7 +385,8 @@ Return your evaluation strictly as a JSON object matching this schema:
 
   try {
     const responseText = await callAI(settings, systemInstruction, userContent);
-    return JSON.parse(responseText);
+    const parsed: WritingFeedback = JSON.parse(responseText);
+    return exam === 'IELTS' ? calibrateIeltsWritingResult(parsed, text, taskKey) : parsed;
   } catch (e) {
     console.error("Failed to parse AI response:", e);
     throw new Error("Invalid response from AI.", { cause: e });
@@ -421,6 +619,12 @@ No markdown wrappers.`;
 export const roundToNearestHalf = (value: number): number =>
   Math.round(value * 2) / 2;
 
+const countIeltsWords = (text: string): number =>
+  text.trim().split(/\s+/).filter(Boolean).length;
+
+const clampIeltsBand = (value: number, maxBand = 9): number =>
+  roundToNearestHalf(Math.max(0, Math.min(value, maxBand)));
+
 export interface IeltsP1AnswerInput {
   questionId: string;
   question: string;
@@ -578,6 +782,15 @@ Band guidelines:
 - 4: Limited. Basic vocabulary and grammar; frequent breakdowns.
 - Below 4: Very limited or no speech detected.
 
+Apply strict IELTS Part 1 calibration:
+- Do not reward short but understandable answers too highly. A mostly simple one-sentence answer should usually be band 5.0-6.0.
+- Band 7 requires most answers to be developed beyond the minimum, with clear topic vocabulary, natural linking, and only occasional grammar/vocabulary errors.
+- Band 8 requires consistently extended, natural, precise answers across the session; do not give band 8 for merely fluent basic language.
+- If average answer length is under 12 words or many answers are under 6 seconds, maximum overall band is 5.0.
+- If average answer length is under 20 words, maximum overall band is 6.0 unless the answers are unusually precise and error-free.
+- If 40% or more answers are very short, incomplete, or generic, maximum overall band is 5.5.
+- Penalize repetition, memorised templates, vague answers, missing direct answers, and answers that do not address the question.
+
 If a transcript is empty or "(no speech detected)": quickScore = null, add a "relevance" detectedIssue.
 Never fabricate a score when data is insufficient — use null.`;
 
@@ -593,6 +806,35 @@ Never fabricate a score when data is insufficient — use null.`;
     for (const key of ['fluencyCoherence', 'lexicalResource', 'grammaticalRangeAccuracy', 'pronunciation'] as const) {
       if (parsed.criteria[key]) {
         parsed.criteria[key].estimatedBand = roundBand(parsed.criteria[key].estimatedBand);
+      }
+    }
+
+    const answerStats = answers.map((answer) => ({
+      words: countIeltsWords(answer.transcript),
+      durationSeconds: answer.durationSeconds,
+      hasSpeech: answer.transcript.trim().length > 0,
+    }));
+    const spokenStats = answerStats.filter((stat) => stat.hasSpeech);
+    const averageWords = spokenStats.length > 0
+      ? spokenStats.reduce((sum, stat) => sum + stat.words, 0) / spokenStats.length
+      : 0;
+    const veryShortCount = answerStats.filter((stat) => !stat.hasSpeech || stat.words < 8 || stat.durationSeconds < 5).length;
+    const thinCount = answerStats.filter((stat) => !stat.hasSpeech || stat.words < 15 || stat.durationSeconds < 8).length;
+    const veryShortRatio = answerStats.length > 0 ? veryShortCount / answerStats.length : 1;
+    const thinRatio = answerStats.length > 0 ? thinCount / answerStats.length : 1;
+    const overallCap = (() => {
+      if (veryShortRatio >= 0.4 || averageWords < 12) return 5;
+      if (thinRatio >= 0.4) return 5.5;
+      if (averageWords < 20) return 6;
+      if (averageWords < 30) return 6.5;
+      return 9;
+    })();
+    const examinerPenalty = averageWords < 30 || thinRatio >= 0.25 ? 0.5 : 0;
+
+    for (const key of ['fluencyCoherence', 'lexicalResource', 'grammaticalRangeAccuracy', 'pronunciation'] as const) {
+      const band = parsed.criteria[key]?.estimatedBand;
+      if (band != null) {
+        parsed.criteria[key].estimatedBand = clampIeltsBand(band - examinerPenalty, overallCap);
       }
     }
 
@@ -624,12 +866,32 @@ Never fabricate a score when data is insufficient — use null.`;
       durationSeconds: answers[i]?.durationSeconds ?? qr.durationSeconds,
       detectedIssues: qr.detectedIssues ?? [],
       pronunciationWords: qr.pronunciationWords ?? [],
+      quickScore: (() => {
+        const stat = answerStats[i];
+        if (!stat?.hasSpeech) return null;
+        const cap = stat.words < 8 || stat.durationSeconds < 5
+          ? 4.5
+          : stat.words < 15 || stat.durationSeconds < 8
+            ? 5.5
+            : stat.words < 25
+              ? 6.5
+              : 9;
+        return qr.quickScore == null ? null : clampIeltsBand(qr.quickScore - examinerPenalty, cap);
+      })(),
     }));
 
     parsed.durationSeconds = durationSeconds;
     parsed.topicCount = topicNames.length;
     parsed.questionCount = answers.length;
     parsed.coachingInsights = parsed.coachingInsights ?? [];
+    if (examinerPenalty > 0 || overallCap < 9) {
+      parsed.coachingInsights.push({
+        key: 'examiner_calibration',
+        label: 'Examiner calibration',
+        value: `Average ${Math.round(averageWords)} words/answer`,
+        message: 'Short or thin Part 1 answers are capped conservatively to avoid overestimating the practice band.',
+      });
+    }
 
     return parsed;
   } catch (e) {

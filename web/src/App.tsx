@@ -28,6 +28,10 @@ import { videoShadowingRoutes } from './features/video-shadowing/routes';
 import IeltsSpeakingP1Lobby from './features/ielts-speaking/pages/IeltsSpeakingP1Lobby';
 import IeltsSpeakingP1Session from './features/ielts-speaking/pages/IeltsSpeakingP1Session';
 import IeltsSpeakingP1Result from './features/ielts-speaking/pages/IeltsSpeakingP1Result';
+import IeltsSpeakingOverview from './features/ielts-speaking/pages/IeltsSpeakingOverview';
+import IeltsSpeakingP2Session from './features/ielts-speaking/pages/IeltsSpeakingP2Session';
+import IeltsSpeakingP3Session from './features/ielts-speaking/pages/IeltsSpeakingP3Session';
+import IeltsSpeakingPracticeResult from './features/ielts-speaking/pages/IeltsSpeakingPracticeResult';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -62,9 +66,13 @@ function App() {
                   <Route path="/picture-description/result" element={<PictureDescriptionResult />} />
 
 
+                  <Route path="/speaking/ielts" element={<IeltsSpeakingOverview />} />
                   <Route path="/speaking/ielts-p1" element={<IeltsSpeakingP1Lobby />} />
                   <Route path="/speaking/ielts-p1/session" element={<IeltsSpeakingP1Session />} />
                   <Route path="/speaking/ielts-p1/result" element={<IeltsSpeakingP1Result />} />
+                  <Route path="/speaking/ielts/part-2" element={<IeltsSpeakingP2Session />} />
+                  <Route path="/speaking/ielts/part-3" element={<IeltsSpeakingP3Session />} />
+                  <Route path="/speaking/ielts/result" element={<IeltsSpeakingPracticeResult />} />
 
                   {videoShadowingRoutes()}
 

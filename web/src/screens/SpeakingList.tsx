@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { Play, Volume2, Image, MessagesSquare, Table2, Megaphone, UserRound, RectangleEllipsis, MessageCircle, Timer, Target, Settings } from 'lucide-react';
+import { Play, Volume2, Image, MessagesSquare, Table2, Megaphone, UserRound, MessageCircle, Timer, Target, Settings, Mic2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
@@ -33,6 +33,8 @@ const SPEAKING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
     blurb: '3 parts. Scored by band (0–9) on Fluency, Lexical Resource, Grammar & Pronunciation.',
     tasks: [
       { key: 'p1', label: 'Part 1 · Interview', q: '4–5 min', icon: <UserRound className="w-4 h-4" />, section: 'Part 1 - Introduction and Interview' },
+      { key: 'p2', label: 'Part 2 · Long Turn', q: '3–4 min', icon: <Mic2 className="w-4 h-4" />, section: 'Part 2 - Long Turn' },
+      { key: 'p3', label: 'Part 3 · Discussion', q: '4–5 min', icon: <MessageCircle className="w-4 h-4" />, section: 'Part 3 - Discussion' },
     ],
   },
 };
@@ -65,15 +67,23 @@ const SpeakingList = () => {
     navigate('/speaking/ielts-p1', selectedTopic ? { state: { selectedTopic } } : undefined);
   };
 
+  const openIeltsPractice = (taskKey: string, selectedTopic?: string) => {
+    if (taskKey === 'p1') {
+      openIeltsPart1Lobby(selectedTopic);
+      return;
+    }
+    if (taskKey === 'p2') {
+      navigate('/speaking/ielts/part-2');
+      return;
+    }
+    if (taskKey === 'p3') {
+      navigate('/speaking/ielts/part-3');
+    }
+  };
+
   useEffect(() => {
     setActiveTaskKey(SPEAKING_TASKS[activeExam].tasks[0].key);
   }, [activeExam]);
-
-  useEffect(() => {
-    if (activeExam === 'IELTS') {
-      navigate('/speaking/ielts-p1', { replace: true });
-    }
-  }, [activeExam, navigate]);
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -91,7 +101,95 @@ const SpeakingList = () => {
     });
   }, { scope: containerRef, dependencies: [practices] });
 
-  if (activeExam === 'IELTS') return null;
+  if (activeExam === 'IELTS') {
+    const ieltsParts = [
+      {
+        key: 'p1',
+        title: 'IELTS Speaking Part 1',
+        subtitle: 'Introduction and Interview',
+        description: 'Answer short questions about familiar topics. Choose topics inside the Part 1 practice lobby.',
+        duration: '4-5 minutes',
+        icon: <UserRound className="w-5 h-5" />,
+        action: () => navigate('/speaking/ielts-p1'),
+      },
+      {
+        key: 'p2',
+        title: 'IELTS Speaking Part 2',
+        subtitle: 'Long Turn',
+        description: 'Prepare for 60 seconds, speak from a cue card, then answer short rounding-off questions.',
+        duration: '3-4 minutes',
+        icon: <Mic2 className="w-5 h-5" />,
+        action: () => navigate('/speaking/ielts/part-2'),
+      },
+      {
+        key: 'p3',
+        title: 'IELTS Speaking Part 3',
+        subtitle: 'Discussion',
+        description: 'Practise broader, more abstract questions linked to common IELTS Speaking themes.',
+        duration: '4-5 minutes',
+        icon: <MessageCircle className="w-5 h-5" />,
+        action: () => navigate('/speaking/ielts/part-3'),
+      },
+    ];
+
+    return (
+      <div ref={containerRef} className="animate-in fade-in duration-300">
+        <div className="gs-sp-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">IELTS Speaking</h1>
+            <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">
+              Practice the IELTS Speaking test by part. Part 1 topics are managed inside the Part 1 lobby, so this page stays focused on the three-part structure.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/speaking/ielts')}
+            className="hidden sm:flex items-center justify-center gap-2 shrink-0 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
+          >
+            <MessageCircle className="w-4 h-4" /> IELTS Overview
+          </button>
+        </div>
+
+        <div className="gs-sp-filters flex items-center gap-3 mb-7">
+          <span className="inline-flex items-center gap-2 px-3.5 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-semibold">
+            <Target className="w-4 h-4" /> IELTS
+            <span className="text-indigo-400 dark:text-indigo-400/80 font-medium hidden md:inline">Academic & General</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/settings')}
+            className="text-sm text-slate-400 dark:text-slate-500 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1.5"
+          >
+            <Settings className="w-3.5 h-3.5" /> Change in Settings
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
+          {ieltsParts.map((part) => (
+            <button
+              key={part.key}
+              onClick={part.action}
+              className="group text-left glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full min-h-[260px]"
+            >
+              <div className="flex items-start justify-between mb-5">
+                <span className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                  {part.icon}
+                </span>
+                <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 text-[11px] px-2 py-1 rounded-md font-semibold flex items-center gap-1.5">
+                  <Timer className="w-3.5 h-3.5" /> {part.duration}
+                </span>
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{part.subtitle}</p>
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">{part.title}</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">{part.description}</p>
+              <span className="mt-auto w-full flex items-center justify-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white py-3 rounded-xl font-semibold transition-colors">
+                <Play className="w-4 h-4 fill-current" /> Start Practice
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
@@ -134,10 +232,6 @@ const SpeakingList = () => {
                     navigate('/speaking/picture');
                     return;
                   }
-                  if (t.key === 'p1') {
-                    openIeltsPart1Lobby();
-                    return;
-                  }
                   setActiveTaskKey(t.key);
                 }}
                 className={cn(
@@ -176,6 +270,10 @@ const SpeakingList = () => {
                   openIeltsPart1Lobby(practice.title);
                   return;
                 }
+                if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
+                  openIeltsPractice(activeTaskKey, practice.title);
+                  return;
+                }
                 const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
                 const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
                 navigate(route, { state });
@@ -185,6 +283,10 @@ const SpeakingList = () => {
                   event.preventDefault();
                   if (activeTaskKey === 'p1') {
                     openIeltsPart1Lobby(practice.title);
+                    return;
+                  }
+                  if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
+                    openIeltsPractice(activeTaskKey, practice.title);
                     return;
                   }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
@@ -224,6 +326,10 @@ const SpeakingList = () => {
                   event.stopPropagation();
                   if (activeTaskKey === 'p1') {
                     openIeltsPart1Lobby(practice.title);
+                    return;
+                  }
+                  if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
+                    openIeltsPractice(activeTaskKey, practice.title);
                     return;
                   }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };

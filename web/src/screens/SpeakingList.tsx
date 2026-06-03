@@ -69,6 +69,12 @@ const SpeakingList = () => {
     setActiveTaskKey(SPEAKING_TASKS[activeExam].tasks[0].key);
   }, [activeExam]);
 
+  useEffect(() => {
+    if (activeExam === 'IELTS') {
+      navigate('/speaking/ielts-p1', { replace: true });
+    }
+  }, [activeExam, navigate]);
+
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     gsap.from('.gs-sp-header', { y: 28, autoAlpha: 0, duration: 0.55, ease: 'power3.out' });
@@ -84,6 +90,8 @@ const SpeakingList = () => {
       duration: 0.45, ease: 'back.out(1.4)',
     });
   }, { scope: containerRef, dependencies: [practices] });
+
+  if (activeExam === 'IELTS') return null;
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">

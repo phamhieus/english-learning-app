@@ -131,7 +131,7 @@ const IeltsSpeakingP1Lobby = () => {
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <button
-          onClick={() => navigate('/speaking')}
+          onClick={() => navigate('/')}
           className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-sm font-medium"
         >
           ← Back

@@ -61,6 +61,10 @@ const SpeakingList = () => {
     [activeExam, activeTask.section]
   );
 
+  const openIeltsPart1Lobby = (selectedTopic?: string) => {
+    navigate('/speaking/ielts-p1', selectedTopic ? { state: { selectedTopic } } : undefined);
+  };
+
   useEffect(() => {
     setActiveTaskKey(SPEAKING_TASKS[activeExam].tasks[0].key);
   }, [activeExam]);
@@ -123,7 +127,7 @@ const SpeakingList = () => {
                     return;
                   }
                   if (t.key === 'p1') {
-                    navigate('/speaking/ielts-p1');
+                    openIeltsPart1Lobby();
                     return;
                   }
                   setActiveTaskKey(t.key);
@@ -161,7 +165,7 @@ const SpeakingList = () => {
               tabIndex={0}
               onClick={() => {
                 if (activeTaskKey === 'p1') {
-                  navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                  openIeltsPart1Lobby(practice.title);
                   return;
                 }
                 const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
@@ -172,7 +176,7 @@ const SpeakingList = () => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
                   if (activeTaskKey === 'p1') {
-                    navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                    openIeltsPart1Lobby(practice.title);
                     return;
                   }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
@@ -211,7 +215,7 @@ const SpeakingList = () => {
                 onClick={(event) => {
                   event.stopPropagation();
                   if (activeTaskKey === 'p1') {
-                    navigate('/speaking/ielts-p1', { state: { selectedTopic: practice.title } });
+                    openIeltsPart1Lobby(practice.title);
                     return;
                   }
                   const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };

@@ -417,6 +417,10 @@ No markdown wrappers.`;
 
 // ── IELTS Speaking Part 1 ────────────────────────────────────────────────────
 
+/** Round a number to the nearest 0.5 (IELTS band rounding). */
+export const roundToNearestHalf = (value: number): number =>
+  Math.round(value * 2) / 2;
+
 export interface IeltsP1AnswerInput {
   questionId: string;
   question: string;
@@ -425,12 +429,31 @@ export interface IeltsP1AnswerInput {
   durationSeconds: number;
 }
 
+export interface IeltsP1DetectedIssue {
+  type: 'fluency' | 'vocabulary' | 'grammar' | 'pronunciation' | 'relevance' | 'structure' | 'coverage';
+  originalText?: string;
+  correctedText?: string;
+  message: string;
+}
+
+export interface IeltsP1PronunciationWord {
+  word: string;
+  issue?: string;
+}
+
+export interface IeltsP1CoachingInsight {
+  key: string;
+  label: string;
+  value?: string | number | boolean | null;
+  message?: string;
+}
+
 export interface IeltsP1CriterionResult {
-  estimatedBand: number;
+  estimatedBand: number | null;
   strengths: string[];
   issues: string[];
   usefulAlternatives?: string[];
-  improvementTip: string;
+  improvementTip?: string;
 }
 
 export interface IeltsP1QuestionResult {
@@ -439,11 +462,11 @@ export interface IeltsP1QuestionResult {
   topicName: string;
   transcript: string;
   durationSeconds: number;
-  quickScore: number;
-  detectedIssues: string[];
+  quickScore: number | null;
+  detectedIssues: IeltsP1DetectedIssue[];
   correctedTranscript: string;
   improvedAnswer: string;
-  pronunciationWords: string[];
+  pronunciationWords: IeltsP1PronunciationWord[];
 }
 
 export interface IeltsP1SessionResult {
@@ -452,13 +475,15 @@ export interface IeltsP1SessionResult {
   durationSeconds: number;
   topicCount: number;
   questionCount: number;
-  estimatedBand: number;
+  estimatedBand: number | null;
+  disclaimer: string;
   criteria: {
     fluencyCoherence: IeltsP1CriterionResult;
     lexicalResource: IeltsP1CriterionResult;
     grammaticalRangeAccuracy: IeltsP1CriterionResult;
     pronunciation: IeltsP1CriterionResult;
   };
+  coachingInsights: IeltsP1CoachingInsight[];
   questionResults: IeltsP1QuestionResult[];
   keyStrengths: string[];
   priorityImprovements: string[];
@@ -479,43 +504,51 @@ export const evaluateIeltsP1Session = async (
   const topicNames = [...new Set(answers.map((a) => a.topicName))];
 
   const systemInstruction = `You are an expert IELTS Speaking examiner evaluating a Part 1 practice session.
-Score on the official 4 criteria: Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.
-Each criterion uses the 0–9 IELTS band scale (with .5 increments).
-estimatedBand = average of the 4 criterion bands, rounded to nearest .5.
+Score on the 4 official criteria: Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.
+Each criterion band: 0–9 in 0.5 increments.
+estimatedBand = roundToNearestHalf((fc + lr + gra + p) / 4). Return null for any criterion where insufficient data exists.
 
-Return STRICT JSON matching this schema — no markdown wrappers:
+Return STRICT JSON — no markdown wrappers, no trailing commas:
 {
   "sessionTitle": "IELTS Speaking Part 1 — Practice Session",
-  "estimatedBand": number,
+  "estimatedBand": number | null,
+  "disclaimer": "This is an AI-generated estimate for practice purposes. It is not an official IELTS score.",
   "keyStrengths": ["string"],
   "priorityImprovements": ["string"],
   "criteria": {
     "fluencyCoherence": {
-      "estimatedBand": number,
+      "estimatedBand": number | null,
       "strengths": ["string"],
       "issues": ["string"],
       "improvementTip": "string"
     },
     "lexicalResource": {
-      "estimatedBand": number,
+      "estimatedBand": number | null,
       "strengths": ["string"],
       "issues": ["string"],
       "usefulAlternatives": ["string"],
       "improvementTip": "string"
     },
     "grammaticalRangeAccuracy": {
-      "estimatedBand": number,
+      "estimatedBand": number | null,
       "strengths": ["string"],
       "issues": ["string"],
       "improvementTip": "string"
     },
     "pronunciation": {
-      "estimatedBand": number,
+      "estimatedBand": number | null,
       "strengths": ["string"],
       "issues": ["string"],
       "improvementTip": "string"
     }
   },
+  "coachingInsights": [
+    { "key": "answer_relevance",     "label": "Answer Relevance",     "value": "good|needs_work|poor", "message": "string" },
+    { "key": "answer_development",   "label": "Answer Development",   "value": "good|needs_work|poor", "message": "string" },
+    { "key": "long_pauses",          "label": "Long Pauses",          "value": number (count),         "message": "string" },
+    { "key": "repeated_vocabulary",  "label": "Repeated Vocabulary",  "value": ["word1","word2"],      "message": "string" },
+    { "key": "grammar_accuracy",     "label": "Grammar Accuracy",     "value": "good|needs_work|poor", "message": "string" }
+  ],
   "questionResults": [
     {
       "questionId": "string",
@@ -523,11 +556,15 @@ Return STRICT JSON matching this schema — no markdown wrappers:
       "topicName": "string",
       "transcript": "string",
       "durationSeconds": number,
-      "quickScore": number (0-9 band estimate for this single answer),
-      "detectedIssues": ["string (brief issue label)"],
-      "correctedTranscript": "string (fix grammar/word-choice but keep the candidate's meaning)",
-      "improvedAnswer": "string (a natural, band 7 reference answer for this question)",
-      "pronunciationWords": ["string (words the candidate should practise pronouncing)"]
+      "quickScore": number | null,
+      "detectedIssues": [
+        { "type": "fluency|vocabulary|grammar|pronunciation|relevance|structure|coverage", "originalText": "string?", "correctedText": "string?", "message": "string" }
+      ],
+      "correctedTranscript": "string (fix grammar/word-choice, keep meaning)",
+      "improvedAnswer": "string (natural band-7 reference answer)",
+      "pronunciationWords": [
+        { "word": "string", "issue": "string?" }
+      ]
     }
   ]
 }
@@ -541,26 +578,59 @@ Band guidelines:
 - 4: Limited. Basic vocabulary and grammar; frequent breakdowns.
 - Below 4: Very limited or no speech detected.
 
-Important: if a transcript is empty or "(no speech detected)", give that answer a quickScore of 0–2 and note it in detectedIssues.
-Result disclaimer: this is an AI estimate for practice. It is not an official IELTS score.`;
+If a transcript is empty or "(no speech detected)": quickScore = null, add a "relevance" detectedIssue.
+Never fabricate a score when data is insufficient — use null.`;
 
   const userContent = `Session duration: ${durationSeconds}s\nTopics: ${topicNames.join(', ')}\nQuestion count: ${answers.length}\n\n${qBlock}\n\nReturn the full JSON evaluation.`;
 
   try {
     const raw = await callAI(settings, systemInstruction, userContent);
     const parsed: IeltsP1SessionResult = JSON.parse(raw);
-    // Attach original answer fields to each question result so the UI has full data
-    parsed.questionResults = parsed.questionResults.map((qr, i) => ({
+
+    // Enforce rounding on all bands (AI may return un-rounded values)
+    const roundBand = (b: number | null) => b != null ? roundToNearestHalf(b) : null;
+    if (parsed.estimatedBand != null) parsed.estimatedBand = roundBand(parsed.estimatedBand);
+    for (const key of ['fluencyCoherence', 'lexicalResource', 'grammaticalRangeAccuracy', 'pronunciation'] as const) {
+      if (parsed.criteria[key]) {
+        parsed.criteria[key].estimatedBand = roundBand(parsed.criteria[key].estimatedBand);
+      }
+    }
+
+    // Re-compute estimatedBand from criteria (authoritative formula) if all criteria present
+    const bands = [
+      parsed.criteria.fluencyCoherence?.estimatedBand,
+      parsed.criteria.lexicalResource?.estimatedBand,
+      parsed.criteria.grammaticalRangeAccuracy?.estimatedBand,
+      parsed.criteria.pronunciation?.estimatedBand,
+    ];
+    if (bands.every((b): b is number => b != null)) {
+      parsed.estimatedBand = roundToNearestHalf(
+        (bands[0] + bands[1] + bands[2] + bands[3]) / 4,
+      );
+    } else {
+      parsed.estimatedBand = null;
+    }
+
+    // Guarantee disclaimer is always present
+    parsed.disclaimer =
+      'This is an AI-generated estimate for practice purposes. It is not an official IELTS score.';
+
+    // Attach original answer fields (AI may echo stale values)
+    parsed.questionResults = (parsed.questionResults ?? []).map((qr, i) => ({
       ...qr,
       questionId: answers[i]?.questionId ?? qr.questionId,
       topicName: answers[i]?.topicName ?? qr.topicName,
       transcript: answers[i]?.transcript ?? qr.transcript,
       durationSeconds: answers[i]?.durationSeconds ?? qr.durationSeconds,
+      detectedIssues: qr.detectedIssues ?? [],
+      pronunciationWords: qr.pronunciationWords ?? [],
     }));
+
     parsed.durationSeconds = durationSeconds;
     parsed.topicCount = topicNames.length;
     parsed.questionCount = answers.length;
-    parsed.mode = 'practice_session';
+    parsed.coachingInsights = parsed.coachingInsights ?? [];
+
     return parsed;
   } catch (e) {
     console.error('Failed to parse IELTS P1 session result:', e);

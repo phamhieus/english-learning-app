@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import { Mic, ChevronRight, Clock, Volume2 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
@@ -24,19 +24,19 @@ interface QueueItem {
 
 function buildQueue(topics: IeltsSpeakingTopic[], questionCount: number, mode: IeltsSpeakingMode): QueueItem[] {
   if (mode === 'random') {
-    return topics.slice(0, 8).map((t) => ({
-      topicName: t.name,
-      questionId: t.questions[0].id,
-      questionText: t.questions[0].text,
-    }));
+    return topics.slice(0, 8).map((t) => {
+      const shuffled = [...t.questions].sort(() => Math.random() - 0.5);
+      return { topicName: t.name, questionId: shuffled[0].id, questionText: shuffled[0].text };
+    });
   }
-  return topics.flatMap((t) =>
-    t.questions.slice(0, questionCount).map((q) => ({
+  return topics.flatMap((t) => {
+    const shuffled = [...t.questions].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, questionCount).map((q) => ({
       topicName: t.name,
       questionId: q.id,
       questionText: q.text,
-    })),
-  );
+    }));
+  });
 }
 
 const SILENCE_THRESHOLD_MS = 2800;
@@ -45,6 +45,7 @@ const MIN_WORDS_BEFORE_SILENCE_DETECT = 3;
 const IeltsSpeakingP1Session = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const navType = useNavigationType();
   const input = location.state as SessionInput | null;
 
   // ── Build question queue ──────────────────────────────────────────────────
@@ -73,9 +74,11 @@ const IeltsSpeakingP1Session = () => {
 
   const currentItem = queue.current[idxRef.current];
 
-  // ── Redirect if no input ──────────────────────────────────────────────────
+  // ── Redirect if no input or user navigated here via browser history ───────
   useEffect(() => {
-    if (!input || queue.current.length === 0) navigate('/speaking/ielts-p1');
+    if (!input || queue.current.length === 0 || navType === 'POP') {
+      navigate('/speaking/ielts-p1', { replace: true });
+    }
   }, []);
 
   // ── Helpers ───────────────────────────────────────────────────────────────

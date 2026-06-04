@@ -26,25 +26,25 @@ const MODES: ModeConfig[] = [
   {
     key: 'full_mock_test',
     label: 'Full Mock Test',
-    description: 'Simulates Part 1 with 2 topics and ~8 questions in 4–5 minutes. No hints shown.',
+    description: 'Simulates Part 1 with 2 topics and 10 questions in 5–7 minutes. No hints shown.',
     icon: <ClipboardList className="w-5 h-5" />,
-    questionsHint: '2 topics · 8 questions · ~4–5 min',
+    questionsHint: '2 topics · 10 questions · ~5–7 min',
     isMock: true,
   },
   {
     key: 'practice_by_topic',
     label: 'Practice by Topic',
-    description: 'Choose one topic and answer 4 questions at your own pace.',
+    description: 'Choose one topic and answer 6 questions at your own pace.',
     icon: <BookOpen className="w-5 h-5" />,
-    questionsHint: '1 topic · 4 questions',
+    questionsHint: '1 topic · 6 questions',
     isMock: false,
   },
   {
     key: 'quick_practice',
     label: 'Quick Practice',
-    description: 'Answer 3 questions from a random topic. Good for a warm-up.',
+    description: 'Answer 4 questions from a random topic. Good for a warm-up.',
     icon: <Zap className="w-5 h-5" />,
-    questionsHint: '1 topic · 3 questions',
+    questionsHint: '1 topic · 4 questions',
     isMock: false,
   },
   {
@@ -94,7 +94,7 @@ const IeltsSpeakingP1Lobby = () => {
     switch (activeMode) {
       case 'full_mock_test': {
         topics = getRandomTopics(2);
-        questionCount = 4;
+        questionCount = 5;
         isMockMode = true;
         break;
       }
@@ -103,13 +103,13 @@ const IeltsSpeakingP1Lobby = () => {
           ? IELTS_P1_TOPICS.filter((t) => selectedTopicIds.includes(t.id))
           : [getRandomTopics(1)[0]];
         topics = picked;
-        questionCount = 4;
+        questionCount = 6;
         isMockMode = false;
         break;
       }
       case 'quick_practice': {
         topics = getRandomTopics(1);
-        questionCount = 3;
+        questionCount = 4;
         isMockMode = false;
         break;
       }

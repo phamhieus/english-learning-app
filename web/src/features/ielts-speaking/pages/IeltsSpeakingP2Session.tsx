@@ -77,6 +77,26 @@ const IeltsSpeakingP2Session = () => {
     return () => clearInterval(timer);
   }, [selectedId, phase]);
 
+  // Reset session state whenever the user picks a different cue card.
+  // Without this, phase/roundingIndex from the previous card bleed into the
+  // new session and cause mismatched (apparently random) questions.
+  useEffect(() => {
+    if (!selectedId) return;
+    speech.stop();
+    reader.stop();
+    speech.reset();
+    setPhase('prep');
+    setPrepLeft(PREP_SECONDS);
+    setSpeakingSeconds(0);
+    setNotes('');
+    setRoundingIndex(0);
+    setLongTurn(null);
+    setRoundingAnswers([]);
+    longTurnRef.current = null;
+    sessionStartRef.current = Date.now();
+    answerStartRef.current = Date.now();
+  }, [selectedId]);
+
   useEffect(() => () => {
     speech.stop();
     reader.stop();

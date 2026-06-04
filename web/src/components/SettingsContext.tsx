@@ -59,12 +59,16 @@ function readAudioSettings(): UserAudioSettings {
 }
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  // Migrate existing apiKey to geminiKey if needed
-  const legacyKey = localStorage.getItem('apiKey') || '';
-  
   const [aiProvider, setAiProvider] = useState<AIProvider>((localStorage.getItem('aiProvider') as AIProvider) || 'gemini');
   const [primaryExam, setPrimaryExam] = useState<PrimaryExam>((localStorage.getItem('primaryExam') as PrimaryExam) || 'IELTS');
-  const [geminiKey, setGeminiKey] = useState(localStorage.getItem('geminiKey') || legacyKey);
+  const [geminiKey, setGeminiKey] = useState(() => {
+    const stored = localStorage.getItem('geminiKey');
+    if (stored !== null) return stored;
+    // One-time migration from legacy 'apiKey'
+    const legacy = localStorage.getItem('apiKey') || '';
+    if (legacy) localStorage.removeItem('apiKey');
+    return legacy;
+  });
   const [openAiKey, setOpenAiKey] = useState(localStorage.getItem('openAiKey') || '');
   const [deepseekKey, setDeepseekKey] = useState(localStorage.getItem('deepseekKey') || '');
   const [textModel, setTextModel] = useState(localStorage.getItem('textModel') || 'gemini-2.0-flash');

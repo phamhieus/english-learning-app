@@ -110,7 +110,7 @@ const FeedbackView = () => {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder={defaultSubject}
-                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors text-sm"
+                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
@@ -123,7 +123,7 @@ const FeedbackView = () => {
                   ? 'Which screen did the bug occur on? What steps triggered it?'
                   : 'What would you like Lingua to improve? The more specific, the better.'
               }
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 outline-none text-[15px] leading-relaxed resize-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors"
+              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 outline-none text-[15px] leading-relaxed resize-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
 
             <label className="block text-sm font-semibold mt-6 mb-2 text-slate-700 dark:text-slate-200">
@@ -136,7 +136,7 @@ const FeedbackView = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your-email-account@example.com — so we can follow up"
-                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors"
+                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 

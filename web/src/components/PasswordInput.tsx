@@ -9,9 +9,8 @@ import { cn } from './classNames';
 export type PasswordInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>;
 
 const baseInput =
-  'w-full rounded-xl px-4 py-3 pr-12 font-mono outline-none transition-all ' +
-  'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 ' +
-  'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20';
+  'w-full rounded-xl px-4 py-3 pr-12 font-mono outline-none ' +
+  'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700';
 
 export const PasswordInput = ({ className, ...props }: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);

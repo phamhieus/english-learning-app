@@ -43,10 +43,9 @@ const WritingEditor = () => {
       ? ['Write at least 150 words', 'Clear overview sentence', 'Group and compare key data', 'No personal opinion']
       : ['Meet the word target', 'Clear organization', 'Relevant details', 'Accurate grammar and vocabulary'];
 
-  // When revising, the previous attempt is passed back so the learner edits it.
-  const initialText = (location.state?.initialText as string) || '';
-  const [text, setText] = useState(initialText);
-  const [wordCount, setWordCount] = useState(initialText.trim().split(/\s+/).filter(Boolean).length);
+  // Revising returns to the same task with a blank editor — the old answer is cleared.
+  const [text, setText] = useState('');
+  const [wordCount, setWordCount] = useState(0);
   const [timer, setTimer] = useState(isChartTask ? 1200 : isPictureWriting ? 480 : 600);
   const [isEvaluating, setIsEvaluating] = useState(false);
 

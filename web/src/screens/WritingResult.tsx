@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight, BookOpen, Info } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { WritingFeedback } from '../services/ai';
-import { DiffViewer } from '../components/DiffViewer';
+import { CorrectionHighlighter } from '../features/writing/CorrectionHighlighter';
 import type { Practice } from '../services/storage';
 import { useSettings } from '../components/useSettings';
 import { cn } from '../components/classNames';
@@ -200,7 +200,7 @@ const WritingResult = () => {
           </div>
           
           <div className="text-base sm:text-lg leading-loose font-medium text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-            <DiffViewer original={originalText} modified={result.improvedText} />
+            <CorrectionHighlighter text={originalText} corrections={result.corrections} />
           </div>
 
           <div className="mt-auto pt-6 border-t border-[var(--border)]">
@@ -252,7 +252,7 @@ const WritingResult = () => {
       <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
         <button
           onClick={() => navigate('/writing/editor', {
-            state: { practice, taskKey, taskLabel, exam: activeExam, initialText: originalText },
+            state: { practice, taskKey, taskLabel, exam: activeExam },
           })}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md hover:shadow-lg transition-all"
         >

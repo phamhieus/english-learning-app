@@ -221,7 +221,7 @@ const SpeakingList = () => {
           </button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible no-scrollbar">
           {conf.tasks.map((t) => {
             const on = activeTaskKey === t.key;
             return (

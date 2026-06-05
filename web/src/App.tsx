@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import { SettingsProvider } from './components/SettingsContext';
 import { ToastProvider } from './components/ToastContext';
@@ -18,6 +18,7 @@ import WritingResult from './screens/WritingResult';
 import HistoryView from './screens/HistoryView';
 import LearningProgressPage from './features/learning-progress/pages/LearningProgressPage';
 import SettingsView from './screens/SettingsView';
+import FeedbackView from './screens/FeedbackView';
 import ShadowingList from './screens/ShadowingList';
 import ShadowingPracticePage from './features/shadowing/components/ShadowingPracticePage';
 import VirtualConversation from './screens/VirtualConversation';
@@ -79,6 +80,8 @@ function App() {
                   <Route path="/progress" element={<LearningProgressPage />} />
                   <Route path="/history" element={<HistoryView />} />
                   <Route path="/settings" element={<SettingsView />} />
+                  <Route path="/feedback" element={<FeedbackView />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Layout>
             </HashRouter>

@@ -2,10 +2,13 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import { OptimizedImage } from '../components/OptimizedImage';
+import { thumbnailUrl, preloadImage } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { getExamTopics } from '../services/localData';
+import { samplePictures } from '../features/picture-description/data/sample-images';
 import type { Practice } from '../services/storage';
 
 type Exam = 'TOEIC' | 'IELTS';
@@ -58,15 +61,20 @@ const WritingList = () => {
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
   const practices: Practice[] = useMemo(() => {
-    const writingTopics = getExamTopics(activeExam, 'Writing', activeTask.section);
-    if (activeExam === 'TOEIC' && activeTask.key === 'pic' && writingTopics.length === 0) {
-      return getExamTopics('TOEIC', 'Speaking', 'Describe a Picture').map((practice) => ({
-        ...practice,
+    // Describe a Picture (TOEIC Writing) reuses the same curated photo set as
+    // the Speaking module, so both flows share fast, optimised images.
+    if (activeExam === 'TOEIC' && activeTask.key === 'pic') {
+      return samplePictures.map((picture) => ({
+        id: picture.id,
+        title: picture.title,
+        shortTitle: picture.title,
         type: 'Picture Description · Writing',
+        level: picture.level,
         duration: '8 mins',
+        image: picture.imageUrl,
       }));
     }
-    return writingTopics;
+    return getExamTopics(activeExam, 'Writing', activeTask.section);
   }, [activeExam, activeTask.key, activeTask.section]);
 
   useEffect(() => {
@@ -111,7 +119,7 @@ const WritingList = () => {
           </button>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible no-scrollbar">
           {conf.tasks.map((t) => {
             const on = activeTaskKey === t.key;
             return (
@@ -150,14 +158,29 @@ const WritingList = () => {
               role="button"
               tabIndex={0}
               onClick={() => navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } })}
+              onMouseEnter={() => practice.image && preloadImage(practice.image)}
+              onFocus={() => practice.image && preloadImage(practice.image)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
                   navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
                 }
               }}
-              className="gs-wr-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+              className="gs-wr-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
             >
+              {/* Picture preview — small thumbnail only, lazily loaded */}
+              {practice.image && (
+                <div className="relative -mx-5 -mt-5 sm:-mx-6 sm:-mt-6 mb-5 aspect-video overflow-hidden">
+                  <OptimizedImage
+                    src={thumbnailUrl(practice.image)}
+                    alt={practice.title}
+                    width={320}
+                    height={180}
+                    className="h-full w-full"
+                  />
+                </div>
+              )}
+
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
                   <ExamPill exam={activeExam} />

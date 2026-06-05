@@ -9,7 +9,7 @@ import type {
   WordResult,
 } from '../types/shadowing.types';
 import { mockShadowingLesson } from '../data/mockShadowingData';
-import type { AppSettings } from '../../../components/settings-context';
+import { hasApiKey, type AppSettings } from '../../../components/settings-context';
 import { evaluateShadowing } from '../../../services/ai';
 
 function generateId(prefix: string): string {
@@ -238,11 +238,7 @@ function buildLocalFeedback(stats: {
 }
 
 function hasValidApiKey(settings?: AppSettings): boolean {
-  if (!settings) return false;
-  if (settings.aiProvider === 'gemini') return !!settings.geminiKey;
-  if (settings.aiProvider === 'openai') return !!settings.openAiKey;
-  if (settings.aiProvider === 'deepseek') return !!settings.deepseekKey;
-  return false;
+  return settings ? hasApiKey(settings) : false;
 }
 
 export const shadowingApi = {

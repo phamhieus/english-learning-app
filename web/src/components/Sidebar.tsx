@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Mic2, Edit3, Activity, Settings, Repeat2, Flame, Target } from 'lucide-react';
+import { LayoutDashboard, Mic2, Edit3, Activity, Settings, Repeat2, Flame, Target, MessageSquareHeart } from 'lucide-react';
 import { cn } from './classNames';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useUserStats } from '../services/useUserStats';
@@ -11,6 +11,7 @@ const navItems = [
   { name: 'Shadowing',    icon: Repeat2,         path: '/shadowing' },
   { name: 'Learning Progress', icon: Activity,   path: '/progress' },
   { name: 'Settings',     icon: Settings,        path: '/settings' },
+  { name: 'Feedback',     icon: MessageSquareHeart, path: '/feedback' },
 ];
 
 // The most specific (longest) matching path wins, so /shadowing/virtual-conversation

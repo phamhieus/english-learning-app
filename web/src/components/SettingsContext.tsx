@@ -71,6 +71,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   });
   const [openAiKey, setOpenAiKey] = useState(localStorage.getItem('openAiKey') || '');
   const [deepseekKey, setDeepseekKey] = useState(localStorage.getItem('deepseekKey') || '');
+  const [grokKey, setGrokKey] = useState(localStorage.getItem('grokKey') || '');
+  const [qwenKey, setQwenKey] = useState(localStorage.getItem('qwenKey') || '');
+  const [moonshotKey, setMoonshotKey] = useState(localStorage.getItem('moonshotKey') || '');
+  const [zhipuKey, setZhipuKey] = useState(localStorage.getItem('zhipuKey') || '');
   const [textModel, setTextModel] = useState(localStorage.getItem('textModel') || 'gemini-2.0-flash');
   const [userAudioSettings, setAudioSettings] = useState<UserAudioSettings>(readAudioSettings);
 
@@ -80,8 +84,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('geminiKey', geminiKey);
     localStorage.setItem('openAiKey', openAiKey);
     localStorage.setItem('deepseekKey', deepseekKey);
+    localStorage.setItem('grokKey', grokKey);
+    localStorage.setItem('qwenKey', qwenKey);
+    localStorage.setItem('moonshotKey', moonshotKey);
+    localStorage.setItem('zhipuKey', zhipuKey);
     localStorage.setItem('textModel', textModel);
-  }, [aiProvider, primaryExam, geminiKey, openAiKey, deepseekKey, textModel]);
+  }, [aiProvider, primaryExam, geminiKey, openAiKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
 
   useEffect(() => {
     localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify(userAudioSettings));
@@ -102,6 +110,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       geminiKey, setGeminiKey,
       openAiKey, setOpenAiKey,
       deepseekKey, setDeepseekKey,
+      grokKey, setGrokKey,
+      qwenKey, setQwenKey,
+      moonshotKey, setMoonshotKey,
+      zhipuKey, setZhipuKey,
       textModel, setTextModel,
       userAudioSettings, setUserAudioSettings
     }}>

@@ -14,6 +14,8 @@ export interface PictureDescriptionPractice {
   id: number;
   title: string;
   imageUrl: string;
+  /** Optional small preview; when absent it is derived from `imageUrl`. */
+  thumbnailUrl?: string;
   level: string;
   duration: string;
   category: string;

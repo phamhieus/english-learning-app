@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { Image, Clock, Sparkles, RefreshCw, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import { OptimizedImage } from '../components/OptimizedImage';
+import { thumbnailUrl, preloadImage } from '../components/imageUrl';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useSettings } from '../components/useSettings';
@@ -19,7 +21,7 @@ const FilterChip = ({ label, active, onClick }: { label: string; active: boolean
   <button
     onClick={onClick}
     className={cn(
-      'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
+      'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shrink-0 whitespace-nowrap',
       active
         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -29,6 +31,9 @@ const FilterChip = ({ label, active, onClick }: { label: string; active: boolean
   </button>
 );
 
+// AI picture generation is hidden for now — flip to re-enable the toolbar button.
+const SHOW_AI_GENERATE = false;
+
 const PictureDescriptionList = () => {
   const navigate = useNavigate();
   const settings = useSettings();
@@ -37,8 +42,11 @@ const PictureDescriptionList = () => {
   const [activeLevel, setActiveLevel] = useState('All');
   const [practices, setPractices] = useState<PictureDescriptionPractice[]>(samplePictures);
   const [loading, setLoading] = useState(false);
-  const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Warm the full-size image the moment a card shows intent to be opened,
+  // so the practice screen can paint it instantly (cache hit).
+  const prefetchFull = (practice: PictureDescriptionPractice) => preloadImage(practice.imageUrl);
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -88,24 +96,26 @@ const PictureDescriptionList = () => {
             Look at the photo, prepare for 45 seconds, then describe it for 30 seconds.
           </p>
         </div>
-        <button
-          onClick={handleGenerateAI}
-          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-        >
-          <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
-          {loading ? 'Generating...' : 'Generate with AI'}
-        </button>
+        {SHOW_AI_GENERATE && (
+          <button
+            onClick={handleGenerateAI}
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+          >
+            <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
+            {loading ? 'Generating...' : 'Generate with AI'}
+          </button>
+        )}
       </div>
 
       {/* Filters */}
       <div className="gs-pd-filters space-y-4 mb-8">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible no-scrollbar">
           <FilterChip label="All scenes" active={activeCategory === 'All'} onClick={() => setActiveCategory('All')} />
           {PICTURE_CATEGORIES.map((c) => (
             <FilterChip key={c} label={c} active={activeCategory === c} onClick={() => setActiveCategory(c)} />
           ))}
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible no-scrollbar">
           <FilterChip label="Any difficulty" active={activeLevel === 'All'} onClick={() => setActiveLevel('All')} />
           {PICTURE_LEVELS.map((l) => (
             <FilterChip key={l} label={l} active={activeLevel === l} onClick={() => setActiveLevel(l)} />
@@ -128,6 +138,8 @@ const PictureDescriptionList = () => {
               role="button"
               tabIndex={0}
               onClick={() => navigate('/speaking/picture/practice', { state: { practice } })}
+              onMouseEnter={() => prefetchFull(practice)}
+              onFocus={() => prefetchFull(practice)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
@@ -136,20 +148,15 @@ const PictureDescriptionList = () => {
               }}
               className="gs-pd-card glass-card rounded-2xl shadow group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 flex flex-col overflow-hidden cursor-pointer"
             >
-              {/* Image */}
-              <div className="relative aspect-video bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                {imgErrors.has(practice.id) ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Image className="w-12 h-12 text-slate-300 dark:text-slate-600" />
-                  </div>
-                ) : (
-                  <img
-                    src={practice.imageUrl}
-                    alt={practice.title}
-                    className="w-full h-full object-contain"
-                    onError={() => setImgErrors((prev) => new Set(prev).add(practice.id))}
-                  />
-                )}
+              {/* Image — list cards only ever load the small thumbnail, lazily. */}
+              <div className="relative aspect-video overflow-hidden">
+                <OptimizedImage
+                  src={practice.thumbnailUrl ?? thumbnailUrl(practice.imageUrl)}
+                  alt={practice.title}
+                  width={320}
+                  height={180}
+                  className="h-full w-full"
+                />
                 <span
                   className={cn(
                     'absolute top-3 left-3 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider',

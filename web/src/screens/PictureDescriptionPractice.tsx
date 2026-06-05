@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Mic, RotateCcw, Check, Activity, Image, ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import { OptimizedImage } from '../components/OptimizedImage';
+import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import { evaluatePictureDescription } from '../services/ai';
 import { addHistory } from '../services/storage';
@@ -28,7 +30,6 @@ const PictureDescriptionPractice = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recognizedText, setRecognizedText] = useState('');
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [imgError, setImgError] = useState(false);
   const [didAutoRead, setDidAutoRead] = useState(false);
   const recognitionRef = React.useRef<SpeechRecognition | null>(null);
   const promptText = `Describe everything you see in this picture. ${practice.title}`;
@@ -152,18 +153,21 @@ const PictureDescriptionPractice = () => {
       {/* Picture */}
       <div className="mb-6 shrink-0">
         <div className="relative rounded-3xl overflow-hidden shadow-lg bg-slate-100 dark:bg-slate-800">
-          {imgError || !practice.imageUrl ? (
+          {practice.imageUrl ? (
+            <OptimizedImage
+              src={practice.imageUrl}
+              thumbnailSrc={thumbnailUrl(practice.imageUrl)}
+              alt={practice.title}
+              width={800}
+              height={500}
+              priority
+              className="w-full max-h-[26rem]"
+            />
+          ) : (
             <div className="w-full aspect-video max-h-[26rem] flex flex-col items-center justify-center gap-3">
               <Image className="w-16 h-16 text-slate-300 dark:text-slate-600" />
               <p className="text-slate-400 text-sm">Image not available</p>
             </div>
-          ) : (
-            <img
-              src={practice.imageUrl}
-              alt={practice.title}
-              className="w-full aspect-video max-h-[26rem] object-contain"
-              onError={() => setImgError(true)}
-            />
           )}
         </div>
         <div className="mt-3 flex flex-col items-center gap-3">

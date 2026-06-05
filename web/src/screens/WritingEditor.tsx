@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Send, Clock, Type, Check, Sparkles, Circle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
+import { OptimizedImage } from '../components/OptimizedImage';
+import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import { evaluateWriting } from '../services/ai';
 import { addHistory } from '../services/storage';
@@ -41,8 +43,10 @@ const WritingEditor = () => {
       ? ['Write at least 150 words', 'Clear overview sentence', 'Group and compare key data', 'No personal opinion']
       : ['Meet the word target', 'Clear organization', 'Relevant details', 'Accurate grammar and vocabulary'];
 
-  const [text, setText] = useState('');
-  const [wordCount, setWordCount] = useState(0);
+  // When revising, the previous attempt is passed back so the learner edits it.
+  const initialText = (location.state?.initialText as string) || '';
+  const [text, setText] = useState(initialText);
+  const [wordCount, setWordCount] = useState(initialText.trim().split(/\s+/).filter(Boolean).length);
   const [timer, setTimer] = useState(isChartTask ? 1200 : isPictureWriting ? 480 : 600);
   const [isEvaluating, setIsEvaluating] = useState(false);
 
@@ -112,13 +116,15 @@ const WritingEditor = () => {
 
           {isPictureWriting && (
             <div className="relative rounded-3xl overflow-hidden shadow-lg bg-slate-100 dark:bg-slate-800 mb-4">
-              <img
+              <OptimizedImage
                 src={promptImage}
+                thumbnailSrc={thumbnailUrl(promptImage)}
                 alt={practice.title}
-                className="w-full aspect-[16/11] object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = `https://picsum.photos/seed/${practice.id}/800/520`;
-                }}
+                width={800}
+                height={500}
+                priority
+                fallbackSrc={`https://picsum.photos/seed/${practice.id}/800/500`}
+                className="w-full"
               />
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/75 to-transparent">
                 <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">Write about</p>

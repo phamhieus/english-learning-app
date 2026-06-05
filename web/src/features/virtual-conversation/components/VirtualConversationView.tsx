@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { AlertTriangle, MessageSquare } from "lucide-react";
 import { cn } from "../../../components/classNames";
 import { useSettings } from "../../../components/useSettings";
+import { hasApiKey as hasProviderKey } from "../../../components/settings-context";
 import { useVirtualConversation } from "../hooks/useVirtualConversation";
 import { ConversationTimeline } from "./ConversationTimeline";
 import { MicStatusPanel } from "./MicStatusPanel";
@@ -54,12 +55,7 @@ function ApiKeyMissing() {
 export function VirtualConversationView({ scenario }: VirtualConversationViewProps) {
   const settings = useSettings();
 
-  const hasApiKey = useMemo(() => {
-    if (settings.aiProvider === "gemini") return !!settings.geminiKey;
-    if (settings.aiProvider === "openai") return !!settings.openAiKey;
-    if (settings.aiProvider === "deepseek") return !!settings.deepseekKey;
-    return false;
-  }, [settings]);
+  const hasApiKey = useMemo(() => hasProviderKey(settings), [settings]);
 
   const {
     conversationState,

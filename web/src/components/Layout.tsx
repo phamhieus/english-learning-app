@@ -4,6 +4,7 @@ import { Key, Home, Mic2, Repeat2, Edit3, Menu } from 'lucide-react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from './classNames';
 import { useSettings } from './useSettings';
+import { hasApiKey, PROVIDER_LABEL } from './settings-context';
 
 // Primary mobile destinations; full nav lives behind the "More" drawer.
 const MOBILE_TABS = [
@@ -14,15 +15,13 @@ const MOBILE_TABS = [
 ] as const;
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { aiProvider, geminiKey, openAiKey, deepseekKey } = useSettings();
+  const settings = useSettings();
+  const { aiProvider } = settings;
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const hasKey =
-    (aiProvider === 'gemini' && geminiKey) ||
-    (aiProvider === 'openai' && openAiKey) ||
-    (aiProvider === 'deepseek' && deepseekKey);
+  const hasKey = hasApiKey(settings);
 
   // Shadowing lets users choose local video shadowing before they need a cloud AI key.
   const keyExempt =
@@ -39,7 +38,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <h2 className="text-2xl font-bold mb-3">API Key Required</h2>
           <p className="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-            Please enter your {aiProvider === 'gemini' ? 'Google Gemini' : aiProvider === 'openai' ? 'OpenAI' : 'DeepSeek'} API key in the settings to start using the AI English Coach.
+            Please enter your {PROVIDER_LABEL[aiProvider]} API key in the settings to start using the AI English Coach.
           </p>
           <button
             onClick={() => navigate('/settings')}

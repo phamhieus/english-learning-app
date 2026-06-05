@@ -25,6 +25,84 @@ import { Select } from '../components/Select';
 import { PasswordInput } from '../components/PasswordInput';
 import type { AIProvider, PrimaryExam, UserAudioSettings } from '../components/settings-context';
 
+// Providers shown in the Settings dropdown. Qwen / Moonshot / Zhipu are kept
+// wired up in the backend (ai.ts registry + key storage) but hidden from the UI.
+const PROVIDER_OPTIONS: { value: AIProvider; label: string }[] = [
+  { value: 'gemini', label: 'Google Gemini' },
+  { value: 'openai', label: 'OpenAI (ChatGPT)' },
+  { value: 'deepseek', label: 'DeepSeek' },
+  { value: 'grok', label: 'xAI (Grok)' },
+];
+
+// Sensible cheap/fast default selected when switching to a provider.
+const PROVIDER_DEFAULT_MODEL: Record<AIProvider, string> = {
+  gemini: 'gemini-2.5-flash',
+  openai: 'gpt-4o-mini',
+  deepseek: 'deepseek-chat',
+  grok: 'grok-3-mini',
+  qwen: 'qwen-plus',
+  moonshot: 'moonshot-v1-8k',
+  zhipu: 'glm-4-flash',
+};
+
+const MODELS_BY_PROVIDER: Record<AIProvider, { id: string; label: string }[]> = {
+  gemini: [
+    { id: 'gemini-2.5-pro', label: 'gemini-2.5-pro (latest)' },
+    { id: 'gemini-2.5-flash', label: 'gemini-2.5-flash' },
+    { id: 'gemini-2.5-flash-lite', label: 'gemini-2.5-flash-lite' },
+    { id: 'gemini-2.0-flash', label: 'gemini-2.0-flash' },
+    { id: 'gemini-2.0-flash-lite', label: 'gemini-2.0-flash-lite' },
+  ],
+  openai: [
+    { id: 'gpt-5', label: 'gpt-5 (latest)' },
+    { id: 'gpt-5-mini', label: 'gpt-5-mini' },
+    { id: 'gpt-4.1', label: 'gpt-4.1' },
+    { id: 'gpt-4.1-mini', label: 'gpt-4.1-mini' },
+    { id: 'o4-mini', label: 'o4-mini' },
+    { id: 'o3-mini', label: 'o3-mini' },
+    { id: 'gpt-4o', label: 'gpt-4o' },
+    { id: 'gpt-4o-mini', label: 'gpt-4o-mini' },
+  ],
+  deepseek: [
+    { id: 'deepseek-chat', label: 'deepseek-chat (V3 · latest)' },
+    { id: 'deepseek-reasoner', label: 'deepseek-reasoner (R1)' },
+  ],
+  grok: [
+    { id: 'grok-4', label: 'grok-4 (latest)' },
+    { id: 'grok-3', label: 'grok-3' },
+    { id: 'grok-3-mini', label: 'grok-3-mini' },
+    { id: 'grok-2-1212', label: 'grok-2' },
+  ],
+  qwen: [
+    { id: 'qwen-max', label: 'qwen-max (latest)' },
+    { id: 'qwen-plus', label: 'qwen-plus' },
+    { id: 'qwen-turbo', label: 'qwen-turbo' },
+    { id: 'qwen2.5-72b-instruct', label: 'qwen2.5-72b-instruct' },
+  ],
+  moonshot: [
+    { id: 'kimi-k2-0711-preview', label: 'kimi-k2 (latest)' },
+    { id: 'moonshot-v1-128k', label: 'moonshot-v1-128k' },
+    { id: 'moonshot-v1-32k', label: 'moonshot-v1-32k' },
+    { id: 'moonshot-v1-8k', label: 'moonshot-v1-8k' },
+  ],
+  zhipu: [
+    { id: 'glm-4.6', label: 'glm-4.6 (latest)' },
+    { id: 'glm-4.5', label: 'glm-4.5' },
+    { id: 'glm-4-plus', label: 'glm-4-plus' },
+    { id: 'glm-4-flash', label: 'glm-4-flash' },
+  ],
+};
+
+const KEY_META: Record<AIProvider, { label: string; link: string; placeholder: string }> = {
+  gemini: { label: 'Gemini API Key', link: 'https://aistudio.google.com/app/apikey', placeholder: 'AIzaSy...' },
+  openai: { label: 'OpenAI API Key', link: 'https://platform.openai.com/api-keys', placeholder: 'sk-...' },
+  deepseek: { label: 'DeepSeek API Key', link: 'https://platform.deepseek.com/api_keys', placeholder: 'sk-...' },
+  grok: { label: 'xAI (Grok) API Key', link: 'https://console.x.ai', placeholder: 'xai-...' },
+  qwen: { label: 'Qwen (DashScope) API Key', link: 'https://bailian.console.alibabacloud.com/', placeholder: 'sk-...' },
+  moonshot: { label: 'Moonshot (Kimi) API Key', link: 'https://platform.moonshot.cn/console/api-keys', placeholder: 'sk-...' },
+  zhipu: { label: 'Zhipu (GLM) API Key', link: 'https://open.bigmodel.cn/usercenter/apikeys', placeholder: '...' },
+};
+
 const SettingsView = () => {
   const toast = useToast();
   const { theme, setTheme } = useTheme();
@@ -34,9 +112,26 @@ const SettingsView = () => {
     geminiKey, setGeminiKey,
     openAiKey, setOpenAiKey,
     deepseekKey, setDeepseekKey,
+    grokKey, setGrokKey,
+    qwenKey, setQwenKey,
+    moonshotKey, setMoonshotKey,
+    zhipuKey, setZhipuKey,
     textModel, setTextModel,
     userAudioSettings, setUserAudioSettings
   } = useSettings();
+
+  // Active provider's API-key value + setter, resolved from the registry above.
+  const API_KEYS: Record<AIProvider, { value: string; set: (v: string) => void }> = {
+    gemini: { value: geminiKey, set: setGeminiKey },
+    openai: { value: openAiKey, set: setOpenAiKey },
+    deepseek: { value: deepseekKey, set: setDeepseekKey },
+    grok: { value: grokKey, set: setGrokKey },
+    qwen: { value: qwenKey, set: setQwenKey },
+    moonshot: { value: moonshotKey, set: setMoonshotKey },
+    zhipu: { value: zhipuKey, set: setZhipuKey },
+  };
+  const activeKey = API_KEYS[aiProvider];
+  const activeKeyMeta = KEY_META[aiProvider];
 
   const [isVoiceInitializing, setIsVoiceInitializing] = useState(false);
   const [isAudioOpen, setIsAudioOpen] = useState(false);
@@ -178,64 +273,28 @@ const SettingsView = () => {
                 onChange={(e) => {
                   const newProvider = e.target.value as AIProvider;
                   setAiProvider(newProvider);
-                  if (newProvider === 'gemini') setTextModel('gemini-2.0-flash');
-                  if (newProvider === 'openai') setTextModel('gpt-4o-mini');
-                  if (newProvider === 'deepseek') setTextModel('deepseek-v4-flash');
+                  setTextModel(PROVIDER_DEFAULT_MODEL[newProvider]);
                 }}
               >
-                <option value="gemini">Google Gemini</option>
-                <option value="openai">OpenAI (ChatGPT)</option>
-                <option value="deepseek">DeepSeek</option>
+                {PROVIDER_OPTIONS.map((p) => (
+                  <option key={p.value} value={p.value}>{p.label}</option>
+                ))}
               </Select>
             </div>
 
-            {aiProvider === 'gemini' && (
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
-                  Gemini API Key
-                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
-                    (Get your API key here)
-                  </a>
-                </label>
-                <PasswordInput
-                  placeholder="AIzaSy..."
-                  value={geminiKey}
-                  onChange={(e) => setGeminiKey(e.target.value)}
-                />
-              </div>
-            )}
-
-            {aiProvider === 'openai' && (
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
-                  OpenAI API Key
-                  <a href="https://platform.openai.com/api-keys" target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
-                    (Get your API key here)
-                  </a>
-                </label>
-                <PasswordInput
-                  placeholder="sk-..."
-                  value={openAiKey}
-                  onChange={(e) => setOpenAiKey(e.target.value)}
-                />
-              </div>
-            )}
-
-            {aiProvider === 'deepseek' && (
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
-                  DeepSeek API Key
-                  <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
-                    (Get your API key here)
-                  </a>
-                </label>
-                <PasswordInput
-                  placeholder="sk-..."
-                  value={deepseekKey}
-                  onChange={(e) => setDeepseekKey(e.target.value)}
-                />
-              </div>
-            )}
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                {activeKeyMeta.label}
+                <a href={activeKeyMeta.link} target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
+                  (Get your API key here)
+                </a>
+              </label>
+              <PasswordInput
+                placeholder={activeKeyMeta.placeholder}
+                value={activeKey.value}
+                onChange={(e) => activeKey.set(e.target.value)}
+              />
+            </div>
 
             <div>
               <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Default Text Model</label>
@@ -243,26 +302,9 @@ const SettingsView = () => {
                 value={textModel}
                 onChange={(e) => setTextModel(e.target.value)}
               >
-                {aiProvider === 'gemini' && (
-                  <>
-                    <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-                    <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-                    <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-                  </>
-                )}
-                {aiProvider === 'openai' && (
-                  <>
-                    <option value="gpt-4o">gpt-4o</option>
-                    <option value="gpt-4o-mini">gpt-4o-mini</option>
-                    <option value="o1-mini">o1-mini</option>
-                  </>
-                )}
-                {aiProvider === 'deepseek' && (
-                  <>
-                    <option value="deepseek-v4-flash">deepseek-v4-flash</option>
-                    <option value="deepseek-v4-pro">deepseek-v4-pro</option>
-                  </>
-                )}
+                {MODELS_BY_PROVIDER[aiProvider].map((m) => (
+                  <option key={m.id} value={m.id}>{m.label}</option>
+                ))}
               </Select>
             </div>
             

@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
-import type { AppSettings } from "../components/settings-context";
+import type { AppSettings, AIProvider } from "../components/settings-context";
 import type { Practice } from "./storage";
 
 export interface WritingFeedback {
@@ -34,15 +34,58 @@ interface PracticeListResponse {
 
 type GeminiChatSession = ReturnType<ReturnType<GoogleGenerativeAI['getGenerativeModel']>['startChat']>;
 
+// Every provider except Gemini speaks the OpenAI chat-completions protocol, so
+// they all run through the OpenAI SDK with a provider-specific baseURL + key.
+// Adding a new OpenAI-compatible provider is just one entry here.
+type OpenAICompatProvider = Exclude<AIProvider, 'gemini'>;
+
+const OPENAI_COMPAT: Record<OpenAICompatProvider, {
+  label: string;
+  keyField: keyof AppSettings;
+  baseURL?: string;
+  defaultModel: string;
+  prefixes: string[];
+}> = {
+  openai:   { label: 'OpenAI',          keyField: 'openAiKey',   defaultModel: 'gpt-4o-mini',  prefixes: ['gpt', 'o1', 'o3', 'o4', 'chatgpt'] },
+  deepseek: { label: 'DeepSeek',        keyField: 'deepseekKey', baseURL: 'https://api.deepseek.com/v1',                  defaultModel: 'deepseek-chat',  prefixes: ['deepseek'] },
+  grok:     { label: 'xAI (Grok)',      keyField: 'grokKey',     baseURL: 'https://api.x.ai/v1',                          defaultModel: 'grok-3-mini',    prefixes: ['grok'] },
+  qwen:     { label: 'Qwen',            keyField: 'qwenKey',     baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1', defaultModel: 'qwen-plus', prefixes: ['qwen', 'qwq'] },
+  moonshot: { label: 'Moonshot (Kimi)', keyField: 'moonshotKey', baseURL: 'https://api.moonshot.cn/v1',                   defaultModel: 'moonshot-v1-8k', prefixes: ['moonshot', 'kimi'] },
+  zhipu:    { label: 'Zhipu (GLM)',     keyField: 'zhipuKey',    baseURL: 'https://open.bigmodel.cn/api/paas/v4',         defaultModel: 'glm-4-flash',    prefixes: ['glm'] },
+};
+
 const getOpenAIClient = (settings: AppSettings) => {
-  if (settings.aiProvider === 'openai') {
-    if (!settings.openAiKey) throw new Error("OpenAI API Key is missing");
-    return new OpenAI({ apiKey: settings.openAiKey, dangerouslyAllowBrowser: true });
-  } else if (settings.aiProvider === 'deepseek') {
-    if (!settings.deepseekKey) throw new Error("DeepSeek API Key is missing");
-    return new OpenAI({ apiKey: settings.deepseekKey, baseURL: 'https://api.deepseek.com/v1', dangerouslyAllowBrowser: true });
-  }
-  throw new Error("Invalid OpenAI provider");
+  const cfg = OPENAI_COMPAT[settings.aiProvider as OpenAICompatProvider];
+  if (!cfg) throw new Error("Invalid OpenAI-compatible provider");
+  const key = (settings[cfg.keyField] as string) || '';
+  if (!key) throw new Error(`${cfg.label} API Key is missing`);
+  return new OpenAI({ apiKey: key, baseURL: cfg.baseURL, dangerouslyAllowBrowser: true });
+};
+
+// Pick a valid model id for the active provider, falling back to its default
+// if the stored model belongs to a different provider (e.g. after switching).
+const resolveOpenAIModel = (settings: AppSettings): string => {
+  const cfg = OPENAI_COMPAT[settings.aiProvider as OpenAICompatProvider];
+  if (!cfg) return settings.textModel || 'gpt-4o-mini';
+  const m = settings.textModel;
+  return m && cfg.prefixes.some((p) => m.startsWith(p)) ? m : cfg.defaultModel;
+};
+
+// Reasoning-style models reject the `json_object` response_format (and o1-mini
+// also rejects a system role). For those we ask for JSON via the prompt only.
+const modelSupportsJsonMode = (model: string): boolean => {
+  const m = model.toLowerCase();
+  if (m.includes('reasoner')) return false; // deepseek-reasoner (R1)
+  if (m === 'o1-mini' || m === 'o1-preview') return false;
+  return true;
+};
+
+// Newer/reasoning models often wrap JSON in ```json fences even in JSON tasks —
+// strip them so JSON.parse downstream stays happy across every provider.
+const stripJsonFences = (text: string): string => {
+  const t = text.trim();
+  const fenced = t.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  return (fenced ? fenced[1] : t).trim();
 };
 
 const callAI = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean = true): Promise<string> => {
@@ -66,30 +109,23 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
     return result.response.text();
   } else {
     const openai = getOpenAIClient(settings);
-    
-    let model = settings.textModel;
-    if (settings.aiProvider === 'openai' && !model.startsWith('gpt') && !model.startsWith('o1')) {
-      model = 'gpt-4o-mini';
-    } else if (settings.aiProvider === 'deepseek' && !model.startsWith('deepseek')) {
-      model = 'deepseek-v4-flash';
-    } else if (!model) {
-      model = settings.aiProvider === 'openai' ? 'gpt-4o-mini' : 'deepseek-v4-flash';
-    }
 
+    const model = resolveOpenAIModel(settings);
     const options: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
-      model: model,
+      model,
       messages: [
         { role: 'system', content: systemInstruction },
         { role: 'user', content: userContent }
       ]
     };
-    if (isJson) {
+    if (isJson && modelSupportsJsonMode(model)) {
       options.response_format = { type: 'json_object' };
     }
 
     const response = await openai.chat.completions.create(options);
-    
-    return response.choices[0].message.content || (isJson ? '{}' : '');
+
+    const content = response.choices[0].message.content || (isJson ? '{}' : '');
+    return isJson ? stripJsonFences(content) : content;
   }
 };
 
@@ -928,20 +964,11 @@ export class UnifiedChatSession {
       return result.response.text();
     } else {
       const openai = getOpenAIClient(this.settings);
-      
-      let model = this.settings.textModel;
-      if (this.settings.aiProvider === 'openai' && !model.startsWith('gpt') && !model.startsWith('o1')) {
-        model = 'gpt-4o-mini';
-      } else if (this.settings.aiProvider === 'deepseek' && !model.startsWith('deepseek')) {
-        model = 'deepseek-v4-flash';
-      } else if (!model) {
-        model = this.settings.aiProvider === 'openai' ? 'gpt-4o-mini' : 'deepseek-v4-flash';
-      }
 
       this.history.push({ role: 'user', content: text });
-      
+
       const response = await openai.chat.completions.create({
-        model: model,
+        model: resolveOpenAIModel(this.settings),
         messages: [
           { role: 'system', content: this.systemInstruction },
           ...this.history

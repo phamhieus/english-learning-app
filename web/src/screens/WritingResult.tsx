@@ -1,11 +1,31 @@
 import React from 'react';
-import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight, BookOpen } from 'lucide-react';
+import { CheckCircle, AlertCircle, RefreshCw, Copy, ArrowRight, BookOpen, Info } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { WritingFeedback } from '../services/ai';
 import { DiffViewer } from '../components/DiffViewer';
 import type { Practice } from '../services/storage';
 import { useSettings } from '../components/useSettings';
+import { cn } from '../components/classNames';
 import ChartPrompt, { detectChartType, TREND_VOCAB, CHART_TYPE_LABELS } from '../features/writing/IELTSChart';
+
+// Small exam badge — mirrors the one used in WritingList, kept local to this screen.
+const ExamPill = ({ exam }: { exam: 'TOEIC' | 'IELTS' }) => (
+  <span className={cn(
+    'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider',
+    exam === 'TOEIC' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400'
+  )}>
+    {exam}
+  </span>
+);
+
+// IELTS official band descriptors — shown as an examiner note under the feedback.
+const ieltsDescriptor = (band: number): string => {
+  if (band >= 8) return 'Very good user — fully operational command with only occasional unsystematic inaccuracies.';
+  if (band >= 7) return 'Good user — handles complex language well, with occasional inaccuracies.';
+  if (band >= 6) return 'Competent user — generally effective command despite some inaccuracies.';
+  if (band >= 5) return 'Modest user — partial command, coping with overall meaning in most situations.';
+  return 'Limited user — basic competence is limited to familiar situations.';
+};
 
 const WritingResult = () => {
   const navigate = useNavigate();
@@ -48,9 +68,29 @@ const WritingResult = () => {
     return <div className="p-8 text-center text-slate-500">No result found. Please submit a practice first.</div>;
   }
 
+  // Header subtitle + dynamic copy that adapts to the exam/task.
+  const taskLabel = activeExam === 'TOEIC'
+    ? 'Writing'
+    : taskKey === 't2'
+    ? 'Task 2 · Essay'
+    : taskKey === 't1g'
+    ? 'Task 1 · General'
+    : 'Task 1 · Academic';
+
+  const bandNum = parseFloat(result.bandScore);
+  const isIelts = activeExam === 'IELTS' && !Number.isNaN(bandNum);
+  const targetBand = isIelts ? Math.min(9, Math.floor(bandNum) + 1) : null;
+  const pushHeading = targetBand !== null ? `Push to Band ${targetBand}` : 'How to Improve';
+  const modelTitle = targetBand !== null ? `Band ${targetBand} Model Answer` : 'Model Answer';
+  const descriptor = isIelts ? ieltsDescriptor(bandNum) : null;
+
   return (
     <div className="animate-in slide-in-from-bottom-8 duration-500 pb-10">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">AI Feedback</h1>
+      <div className="flex items-center gap-2 mb-2">
+        <ExamPill exam={activeExam} />
+        <span className="text-sm font-semibold text-slate-500">Writing · {taskLabel}</span>
+      </div>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">AI Examiner Feedback</h1>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
@@ -81,15 +121,20 @@ const WritingResult = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="glass-card rounded-2xl p-6 bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-900/30">
           <h3 className="text-sm font-bold text-indigo-700 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-            <CheckCircle className="w-4 h-4" /> Overall Feedback
+            <CheckCircle className="w-4 h-4" /> Examiner Feedback
           </h3>
-          <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">
+          <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm mb-3">
             {result.overallFeedback || "Great effort! Review the specific corrections below to see how to improve."}
           </p>
+          {descriptor && (
+            <div className="flex items-start gap-2 text-xs text-indigo-900 dark:text-indigo-200 bg-white/60 dark:bg-white/5 rounded-lg p-2.5 border border-indigo-100 dark:border-indigo-900/30">
+              <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {descriptor}
+            </div>
+          )}
         </div>
         <div className="glass-card rounded-2xl p-6 bg-orange-50/50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30">
           <h3 className="text-sm font-bold text-orange-700 dark:text-orange-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" /> How to Improve
+            <AlertCircle className="w-4 h-4" /> {pushHeading}
           </h3>
           <ul className="text-slate-700 dark:text-slate-300 text-sm space-y-1.5 list-disc list-inside">
             {result.improvementTips && result.improvementTips.length > 0 ? (
@@ -148,9 +193,9 @@ const WritingResult = () => {
               Your Writing <span className="bg-slate-100 dark:bg-slate-800 text-xs px-2 py-1 rounded">{originalText?.trim().split(/\s+/).length || 0} words</span>
             </h2>
             <div className="flex gap-3">
-               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> Added</div>
-               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Replaced</div>
-               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> Deleted</div>
+               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-green-500"></span> Stronger</div>
+               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Upgrade</div>
+               <div className="flex items-center gap-1.5 text-xs font-medium"><span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> Cut</div>
             </div>
           </div>
           
@@ -159,7 +204,7 @@ const WritingResult = () => {
           </div>
 
           <div className="mt-auto pt-6 border-t border-[var(--border)]">
-             <h3 className="font-bold text-sm mb-3">Detected Issues:</h3>
+             <h3 className="font-bold text-sm mb-3">Suggested edits:</h3>
              <ul className="space-y-2">
                {result.corrections && result.corrections.length > 0 ? result.corrections.map((c, i) => (
                  <li key={i} className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
@@ -185,7 +230,7 @@ const WritingResult = () => {
           
           <div className="flex justify-between items-center mb-4 relative z-10">
             <h2 className="text-xl font-bold flex items-center gap-2 text-green-700 dark:text-green-400">
-              <CheckCircle className="w-5 h-5" /> Improved Version
+              <CheckCircle className="w-5 h-5" /> {modelTitle}
             </h2>
             <button className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">
               <Copy className="w-5 h-5" />
@@ -206,7 +251,9 @@ const WritingResult = () => {
 
       <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
         <button
-          onClick={() => navigate('/writing/editor')}
+          onClick={() => navigate('/writing/editor', {
+            state: { practice, taskKey, taskLabel, exam: activeExam, initialText: originalText },
+          })}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-md hover:shadow-lg transition-all"
         >
           <RefreshCw className="w-5 h-5" /> Revise Again
@@ -215,7 +262,7 @@ const WritingResult = () => {
           onClick={() => navigate('/writing')}
           className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-xl hover:scale-105 transition-all"
         >
-          Next Lesson <ArrowRight className="w-5 h-5" />
+          Next Task <ArrowRight className="w-5 h-5" />
         </button>
       </div>
 

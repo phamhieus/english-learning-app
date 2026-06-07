@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Send, Clock, Type, Check, Sparkles, Circle } from 'lucide-react';
+import { Send, Clock, Type, Check, Sparkles, Circle, Maximize2, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { OptimizedImage } from '../components/OptimizedImage';
@@ -11,6 +11,19 @@ import { useToast } from '../components/useToast';
 import ChartPrompt from '../features/writing/IELTSChart';
 
 const pictureVocab = ['foreground', 'background', 'people', 'objects', 'atmosphere'];
+const colorWords = ['black', 'white', 'blue', 'red', 'green', 'yellow', 'orange', 'grey', 'gray', 'brown', 'bright', 'dark'];
+const atmosphereWords = ['busy', 'calm', 'quiet', 'crowded', 'professional', 'relaxed', 'formal', 'friendly'];
+const commonMisspellings = ['becuase', 'definately', 'enviroment', 'goverment', 'imporant', 'recieve', 'seperate', 'wich', 'writting'];
+
+const hasAnyWord = (value: string, words: string[]) => words.some((word) => new RegExp(`\\b${word}\\b`, 'i').test(value));
+
+const sentenceCount = (value: string) =>
+  value
+    .split(/[.!?]+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean).length;
+
+const firstSentence = (value: string) => value.split(/[.!?]+/)[0]?.trim() || '';
 
 const WritingEditor = () => {
   const navigate = useNavigate();
@@ -37,22 +50,80 @@ const WritingEditor = () => {
     (isPictureWriting
       ? `https://loremflickr.com/800/520/${encodeURIComponent(practice.title.split(' ').slice(0, 3).join(','))}?lock=${practice.id}`
       : '');
-  const requirements = isPictureWriting
-    ? ['Open with a one-line overview', 'Describe foreground and background', 'Use specific visual vocabulary', 'Mention colours or atmosphere']
-    : isChartTask
-      ? ['Write at least 150 words', 'Clear overview sentence', 'Group and compare key data', 'No personal opinion']
-      : ['Meet the word target', 'Clear organization', 'Relevant details', 'Accurate grammar and vocabulary'];
-
   // Revising returns to the same task with a blank editor — the old answer is cleared.
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [timer, setTimer] = useState(isChartTask ? 1200 : isPictureWriting ? 480 : 600);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [isChartExpanded, setIsChartExpanded] = useState(false);
+  const sentenceTotal = sentenceCount(text);
+  const openingSentence = firstSentence(text);
+  const hasParagraphs = text.trim().split(/\n\s*\n/).filter(Boolean).length >= 2;
+  const hasConnectors = /\b(firstly|secondly|however|therefore|moreover|in addition|for example|overall|in conclusion|on the other hand)\b/i.test(text);
+  const hasCommonSpellingIssue = hasAnyWord(text, commonMisspellings);
+  const checklistItems = isPictureWriting
+    ? [
+        {
+          label: 'Open with a one-line overview',
+          done: /\b(picture|photo|image|scene)\b/i.test(openingSentence) && sentenceTotal >= 1,
+        },
+        {
+          label: 'Describe foreground and background',
+          done: /\b(foreground|front)\b/i.test(text) && /\b(background|behind|back)\b/i.test(text),
+        },
+        {
+          label: 'Use specific visual vocabulary',
+          done: hasAnyWord(text, pictureVocab) || hasAnyWord(text, colorWords),
+        },
+        {
+          label: 'Mention colours or atmosphere',
+          done: hasAnyWord(text, colorWords) || hasAnyWord(text, atmosphereWords),
+        },
+      ]
+    : isChartTask
+      ? [
+          {
+            label: 'Write at least 150 words',
+            done: wordCount >= minWords,
+          },
+          {
+            label: 'Clear overview sentence',
+            done: /\b(overall|in general|it is clear|it can be seen|the main trend)\b/i.test(text),
+          },
+          {
+            label: 'Group and compare key data',
+            done: /\b(compared|whereas|while|higher|lower|increase|decrease|rose|fell|largest|smallest|similar|difference)\b/i.test(text),
+          },
+          {
+            label: 'No personal opinion',
+            done: text.trim().length > 0 && !/\b(i think|i believe|in my opinion|personally|my view)\b/i.test(text),
+          },
+        ]
+      : [
+          {
+            label: 'Meet the word target',
+            done: wordCount >= minWords,
+          },
+          {
+            label: 'Clear organization',
+            done: sentenceTotal >= 3 && (hasParagraphs || hasConnectors),
+          },
+          {
+            label: 'Relevant details',
+            done: wordCount >= Math.ceil(minWords * 0.6) && sentenceTotal >= 3,
+          },
+          {
+            label: 'Accurate grammar and vocabulary',
+            done: wordCount >= 30 && !hasCommonSpellingIssue,
+          },
+        ];
 
   useEffect(() => {
+    if (isEvaluating) return;
+
     const t = setInterval(() => setTimer((p) => (p > 0 ? p - 1 : 0)), 1000);
     return () => clearInterval(t);
-  }, []);
+  }, [isEvaluating]);
 
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
@@ -134,7 +205,31 @@ const WritingEditor = () => {
 
           {isChartTask && (
             <div className="mb-4">
-              <ChartPrompt title={practice.title} />
+              <div className="flex justify-end mb-2">
+                <button
+                  type="button"
+                  onClick={() => setIsChartExpanded(true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-orange-200 hover:text-orange-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-orange-900/70 dark:hover:text-orange-300"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                  Enlarge
+                </button>
+              </div>
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setIsChartExpanded(true)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setIsChartExpanded(true);
+                  }
+                }}
+                className="block w-full rounded-lg text-left transition hover:ring-2 hover:ring-orange-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+                aria-label="Enlarge chart"
+              >
+                <ChartPrompt title={practice.title} />
+              </div>
             </div>
           )}
 
@@ -158,10 +253,10 @@ const WritingEditor = () => {
 
           <h3 className="font-bold mb-3">Checklist</h3>
           <ul className="space-y-3 mb-6">
-            {requirements.map((item, index) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
-                {index < 2 ? <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" /> : <Circle className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />}
-                {item}
+            {checklistItems.map((item) => (
+              <li key={item.label} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                {item.done ? <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" /> : <Circle className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />}
+                {item.label}
               </li>
             ))}
           </ul>
@@ -183,6 +278,7 @@ const WritingEditor = () => {
             value={text}
             onChange={handleChange}
             autoFocus
+            spellCheck={false}
           />
 
           <div className="hidden lg:flex p-4 border-t border-[var(--border)] bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur shrink-0 items-center justify-between gap-3">
@@ -235,6 +331,37 @@ const WritingEditor = () => {
           )}
         </button>
       </div>
+
+      {isChartTask && isChartExpanded && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-3 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Expanded chart"
+          onClick={() => setIsChartExpanded(false)}
+        >
+          <div
+            className="w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-950"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-end border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => setIsChartExpanded(false)}
+                className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white"
+                aria-label="Close expanded chart"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="max-h-[82vh] overflow-auto bg-slate-100 p-3 sm:p-6 dark:bg-slate-900">
+              <div className="mx-auto w-full min-w-[640px] max-w-4xl">
+                <ChartPrompt title={practice.title} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

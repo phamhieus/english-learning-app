@@ -21,10 +21,10 @@ const FB_FACEBOOK = 'https://www.facebook.com/phamhieu.dev/';
 type FeedbackType = 'idea' | 'bug' | 'praise' | 'other';
 
 const types: { key: FeedbackType; label: string; icon: typeof Lightbulb; accent: 'indigo' | 'red' | 'pink' | 'slate' }[] = [
-  { key: 'idea', label: 'Ý tưởng / Đề xuất', icon: Lightbulb, accent: 'indigo' },
-  { key: 'bug', label: 'Báo lỗi', icon: Bug, accent: 'red' },
-  { key: 'praise', label: 'Khen ngợi', icon: Heart, accent: 'pink' },
-  { key: 'other', label: 'Khác', icon: MessageCircle, accent: 'slate' },
+  { key: 'idea', label: 'Idea / Suggestion', icon: Lightbulb, accent: 'indigo' },
+  { key: 'bug', label: 'Bug Report', icon: Bug, accent: 'red' },
+  { key: 'praise', label: 'Praise', icon: Heart, accent: 'pink' },
+  { key: 'other', label: 'Other', icon: MessageCircle, accent: 'slate' },
 ];
 
 const accentOnClass: Record<string, string> = {
@@ -38,25 +38,26 @@ const FeedbackView = () => {
   const [type, setType] = useState<FeedbackType>('idea');
   const [msg, setMsg] = useState('');
   const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
 
   const activeType = types.find((t) => t.key === type) || types[0];
 
-  // Pre-compose the mailto + telegram payloads from the form state.
-  const subject = `[Lingua · Góp ý] ${activeType.label}`;
+  const defaultSubject = `[Lingua · Feedback] ${activeType.label}`;
+  const effectiveSubject = subject.trim() || defaultSubject;
   const body = useMemo(() => {
     const lines = [
-      msg || '(Nội dung góp ý của bạn…)',
+      msg || '(Your feedback here…)',
       '',
       '—',
-      `Loại: ${activeType.label}`,
-      email ? `Phản hồi tới: ${email}` : null,
-      'Gửi từ Lingua · AI Native',
+      `Type: ${activeType.label}`,
+      email ? `Reply to: ${email}` : null,
+      'Sent from Lingua · AI Native',
     ].filter(Boolean);
     return lines.join('\n');
   }, [msg, email, activeType.label]);
 
-  const mailHref = `mailto:${FB_TEAM_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  const tgHref = `${FB_TELEGRAM}?text=${encodeURIComponent(`${subject}\n\n${body}`)}`;
+  const mailHref = `mailto:${FB_TEAM_EMAIL}?subject=${encodeURIComponent(effectiveSubject)}&body=${encodeURIComponent(body)}`;
+  const tgHref = `${FB_TELEGRAM}?text=${encodeURIComponent(`${effectiveSubject}\n\n${body}`)}`;
   const fbHref = FB_FACEBOOK;
 
   return (
@@ -68,9 +69,9 @@ const FeedbackView = () => {
             <MessageSquareHeart className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold mb-1.5">Thư góp ý</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-1.5">Send Feedback</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-xl">
-              Lingua được làm tốt hơn mỗi ngày nhờ bạn. Chia sẻ ý tưởng, báo lỗi hay vài lời động viên — chúng tôi đọc tất cả.
+              Lingua gets better every day because of you. Share ideas, report bugs, or just say something kind — we read everything.
             </p>
           </div>
         </div>
@@ -78,7 +79,7 @@ const FeedbackView = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
           {/* Compose */}
           <div className="lg:col-span-2 glass-card rounded-3xl p-5 sm:p-8">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Nội dung góp ý</h2>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Your Feedback</h2>
 
             <div className="flex flex-wrap gap-2 mb-6">
               {types.map((t) => {
@@ -100,20 +101,33 @@ const FeedbackView = () => {
               })}
             </div>
 
+            <div className="mb-4">
+              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-200">
+                Subject <span className="text-slate-400 font-normal">(auto-filled if left blank)</span>
+              </label>
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder={defaultSubject}
+                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500"
+              />
+            </div>
+
             <textarea
               value={msg}
               onChange={(e) => setMsg(e.target.value)}
               rows={6}
               placeholder={
                 type === 'bug'
-                  ? 'Bạn gặp lỗi ở màn hình nào? Thao tác thế nào thì lỗi xuất hiện?'
-                  : 'Bạn muốn Lingua cải thiện điều gì? Càng cụ thể, chúng tôi càng dễ thực hiện.'
+                  ? 'Which screen did the bug occur on? What steps triggered it?'
+                  : 'What would you like Lingua to improve? The more specific, the better.'
               }
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 outline-none text-[15px] leading-relaxed resize-none focus:border-indigo-300 dark:focus:border-indigo-500 transition-colors"
+              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 outline-none text-[15px] leading-relaxed resize-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
 
             <label className="block text-sm font-semibold mt-6 mb-2 text-slate-700 dark:text-slate-200">
-              Email của bạn <span className="text-slate-400 font-normal">(không bắt buộc)</span>
+              Your email <span className="text-slate-400 font-normal">(optional)</span>
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -121,8 +135,8 @@ const FeedbackView = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ban@email.com — để chúng tôi phản hồi lại"
-                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3 outline-none focus:border-indigo-300 dark:focus:border-indigo-500 transition-colors"
+                placeholder="your-email-account@example.com — so we can follow up"
+                className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl pl-11 pr-4 py-3 outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
             </div>
 
@@ -132,7 +146,7 @@ const FeedbackView = () => {
                 href={mailHref}
                 className="flex items-center justify-center gap-2.5 bg-indigo-600 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition-colors"
               >
-                <Mail className="w-5 h-5" /> Gửi qua Email
+                <Mail className="w-5 h-5" /> Send via Email
               </a>
               <div className="grid grid-cols-2 gap-3">
                 <a
@@ -154,14 +168,14 @@ const FeedbackView = () => {
               </div>
             </div>
             <p className="text-xs text-slate-400 mt-3 text-center">
-              Chọn một kênh — nội dung bạn vừa viết sẽ được điền sẵn (Email &amp; Telegram).
+              Pick a channel — your message will be pre-filled (Email &amp; Telegram).
             </p>
           </div>
 
           {/* Direct channels */}
           <div className="space-y-5">
             <div className="glass-card rounded-3xl p-6">
-              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Liên hệ trực tiếp</h2>
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Direct Contact</h2>
 
               <a href={mailHref} className="flex items-center gap-4 p-3 -mx-1 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group">
                 <div className="w-11 h-11 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
@@ -204,9 +218,9 @@ const FeedbackView = () => {
             <div className="rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-500 p-6 text-white relative overflow-hidden">
               <div className="absolute -right-5 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl" />
               <Clock className="w-6 h-6 text-indigo-100 mb-3 relative" />
-              <p className="font-bold text-lg leading-tight relative">Phản hồi trong 24 giờ</p>
+              <p className="font-bold text-lg leading-tight relative">Reply within 24 hours</p>
               <p className="text-sm text-indigo-100 mt-1.5 relative leading-relaxed">
-                Đội ngũ nhỏ nhưng đọc từng tin nhắn. Góp ý hay nhất sẽ được đưa vào bản cập nhật tới.
+                Small team, but we read every message. The best suggestions make it into the next update.
               </p>
             </div>
           </div>

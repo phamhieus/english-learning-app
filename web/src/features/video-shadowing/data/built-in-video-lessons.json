@@ -1,214 +1,4482 @@
 [
   {
-    "id": "voa-lets-learn-ordering-coffee",
-    "title": "Ordering Coffee",
-    "description": "Learn how to order drinks naturally in a coffee shop — polite questions, how to place an order, and staff responses.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-ordering-coffee",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 192000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-controly1950",
+    "title": "Control Your Emotions",
+    "description": "Well-balanced emotions help to create a well-rounded personality, especially in teenagers.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "ControlY1950",
+    "sourcePageUrl": "https://archive.org/details/ControlY1950",
+    "videoUrl": "https://archive.org/download/ControlY1950/ControlY1950_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/ControlY1950",
+    "transcriptUrl": "https://archive.org/download/ControlY1950/ControlY1950.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 781000,
+    "level": "B1",
+    "topic": "Personal Development",
+    "accent": "US",
+    "grad": "teal",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Control Your Emotions",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "Hi! Welcome to the coffee shop." },
-      { "startMs": 4000, "endMs": 9000, "text": "What can I get for you today?" },
-      { "startMs": 9000, "endMs": 14000, "text": "I'd like a medium latte, please." },
-      { "startMs": 14000, "endMs": 19000, "text": "Sure. Would you like anything else?" },
-      { "startMs": 19000, "endMs": 24000, "text": "Yes, a blueberry muffin as well." }
+      {
+        "startMs": 0,
+        "endMs": 32000,
+        "text": "Music To work, it was man's greatest enemy."
+      },
+      {
+        "startMs": 34000,
+        "endMs": 37001,
+        "text": "In much the same way, your emotions can be your own greatest enemy."
+      },
+      {
+        "startMs": 38001,
+        "endMs": 45001,
+        "text": "Or under control, your emotions can make you healthier and happier, and improve the lives of people around you."
+      },
+      {
+        "startMs": 47000,
+        "endMs": 58000,
+        "text": "I think of fire in connection with emotions, because when you become stirred up, when your emotions control your actions, it affects not only yourself, but the"
+      },
+      {
+        "startMs": 58000,
+        "endMs": 60000,
+        "text": "people around you."
+      },
+      {
+        "startMs": 60001,
+        "endMs": 67000,
+        "text": "Psychologists find that control of emotions can be gained by understanding the stimulus response pattern."
+      },
+      {
+        "startMs": 68000,
+        "endMs": 73000,
+        "text": "When you have certain experiences, you respond with various emotions."
+      },
+      {
+        "startMs": 74001,
+        "endMs": 82001,
+        "text": "Stimulus response, just as this sort of stimulus, produces this sort of involuntary muscular response."
+      },
+      {
+        "startMs": 84000,
+        "endMs": 92001,
+        "text": "Well, that's a rather simplified suggestion of a complex mental process, but you get the idea. Cause, effect."
+      },
+      {
+        "startMs": 95001,
+        "endMs": 100000,
+        "text": "Nature endows us at birth with three general patterns of emotional response."
+      },
+      {
+        "startMs": 101001,
+        "endMs": 108001,
+        "text": "Rage is the response to the primary stimulus of 40, something interfering with"
+      },
+      {
+        "startMs": 108001,
+        "endMs": 111001,
+        "text": "our behavior or actions."
+      },
+      {
+        "startMs": 113000,
+        "endMs": 117001,
+        "text": "Fear is the response to loud noises or loss of support."
+      },
+      {
+        "startMs": 120001,
+        "endMs": 129000,
+        "text": "And the emotional response to love is usually the result of a show of affection or favors."
+      },
+      {
+        "startMs": 131001,
+        "endMs": 135000,
+        "text": "And these seem to be the emotions with which we start life."
+      },
+      {
+        "startMs": 136001,
+        "endMs": 145001,
+        "text": "Then as we grow up, many everyday things and social situations become associated with these primary stimuli, partly by a process called conditioning."
+      },
+      {
+        "startMs": 146001,
+        "endMs": 150001,
+        "text": "And so many things and people cause us to respond emotionally."
+      },
+      {
+        "startMs": 151000,
+        "endMs": 156000,
+        "text": "And in general, that's good, for there are many factors involved in a personality."
+      },
+      {
+        "startMs": 157001,
+        "endMs": 166001,
+        "text": "And a balance of emotions is important to a well-rounded personality."
+      },
+      {
+        "startMs": 168000,
+        "endMs": 175000,
+        "text": "But emotions out of control, well, let's take a look at a slice of"
+      },
+      {
+        "startMs": 175000,
+        "endMs": 181000,
+        "text": "everyday life to understand how some stimuli can bring about various emotional responses."
+      },
+      {
+        "startMs": 181001,
+        "endMs": 185001,
+        "text": "What might happen to you, or to me, or to Jeffrey Moore?"
+      },
+      {
+        "startMs": 187000,
+        "endMs": 190001,
+        "text": "Jeff is an ordinary and healthy and well-balanced young fellow."
+      },
+      {
+        "startMs": 191000,
+        "endMs": 193000,
+        "text": "He usually gets along well with people."
+      },
+      {
+        "startMs": 194000,
+        "endMs": 199001,
+        "text": "And on this particular Friday afternoon, Jeff and his pals are discussing a big triple date tonight."
+      },
+      {
+        "startMs": 200000,
+        "endMs": 201001,
+        "text": "My dad's gonna let me have that card tonight."
+      },
+      {
+        "startMs": 202000,
+        "endMs": 204001,
+        "text": "Oh, that's super. That sounds swell, Jeff."
+      },
+      {
+        "startMs": 205000,
+        "endMs": 209000,
+        "text": "Well, I don't know if I'll be able to go on. I've got quite a headache."
+      },
+      {
+        "startMs": 210000,
+        "endMs": 211000,
+        "text": "[...] headache, huh?"
+      },
+      {
+        "startMs": 211000,
+        "endMs": 211001,
+        "text": "Yeah."
+      },
+      {
+        "startMs": 212001,
+        "endMs": 215001,
+        "text": "Well, how about letting Jeff, the old soda jerk, fix you up a snappy salsa?"
+      },
+      {
+        "startMs": 216000,
+        "endMs": 216001,
+        "text": "[...]"
+      },
+      {
+        "startMs": 219000,
+        "endMs": 224000,
+        "text": "Hey, watch out, you're going somewhere."
+      },
+      {
+        "startMs": 225000,
+        "endMs": 228000,
+        "text": "Ha! Some jerk!"
+      },
+      {
+        "startMs": 229000,
+        "endMs": 232000,
+        "text": "Okay, bub, I saw the whole Y stunt."
+      },
+      {
+        "startMs": 232000,
+        "endMs": 235000,
+        "text": "Now, just suppose you clean it up."
+      },
+      {
+        "startMs": 236001,
+        "endMs": 239000,
+        "text": "Go on, wise guy, clean it up."
+      },
+      {
+        "startMs": 239000,
+        "endMs": 241000,
+        "text": "Yeah, it's right out of the water there."
+      },
+      {
+        "startMs": 243001,
+        "endMs": 244001,
+        "text": "Look at the wash movement."
+      },
+      {
+        "startMs": 245000,
+        "endMs": 246001,
+        "text": "Wise guys, huh?"
+      },
+      {
+        "startMs": 247001,
+        "endMs": 249000,
+        "text": "Well, suppose I don't pick you up tonight."
+      },
+      {
+        "startMs": 250000,
+        "endMs": 253000,
+        "text": "I got a darn good notion to let you guys walk to the party."
+      },
+      {
+        "startMs": 254000,
+        "endMs": 255000,
+        "text": "What's that into here?"
+      },
+      {
+        "startMs": 256001,
+        "endMs": 257000,
+        "text": "Gee, I don't know."
+      },
+      {
+        "startMs": 259001,
+        "endMs": 261000,
+        "text": "Why is Jeff angry?"
+      },
+      {
+        "startMs": 261000,
+        "endMs": 266001,
+        "text": "What's the stimulus that brings on this sudden emotional response of anger or mild rage?"
+      },
+      {
+        "startMs": 269000,
+        "endMs": 274000,
+        "text": "Well, it might be that Jeff feels thwarted as he fails in the fancy trick to impress his pals."
+      },
+      {
+        "startMs": 274001,
+        "endMs": 276001,
+        "text": "So he gets mad at his pals."
+      },
+      {
+        "startMs": 279000,
+        "endMs": 281000,
+        "text": "And now it's later than he thought."
+      },
+      {
+        "startMs": 281001,
+        "endMs": 284001,
+        "text": "He tries a shortcut, hurrying to get home."
+      },
+      {
+        "startMs": 289001,
+        "endMs": 293001,
+        "text": "Brades, Scott, whom the will left that there? What a time to water the lawn."
+      },
+      {
+        "startMs": 294001,
+        "endMs": 298000,
+        "text": "Shortcuts often lead to trouble, and thus loss of emotional control."
+      },
+      {
+        "startMs": 299000,
+        "endMs": 301000,
+        "text": "You've heard, haste makes waste."
+      },
+      {
+        "startMs": 302001,
+        "endMs": 306000,
+        "text": "Jeff is frustrated by the sprinkler, but he asked for it."
+      },
+      {
+        "startMs": 308000,
+        "endMs": 311001,
+        "text": "Of course, Jeff's going to get the car ready for the party tonight."
+      },
+      {
+        "startMs": 311001,
+        "endMs": 314001,
+        "text": "He wouldn't really miss a chance to impress the gang."
+      },
+      {
+        "startMs": 325000,
+        "endMs": 328000,
+        "text": "But, hmm, starter won't work."
+      },
+      {
+        "startMs": 331000,
+        "endMs": 335000,
+        "text": "Again, his behavior is thwarted, and a habit is being developed."
+      },
+      {
+        "startMs": 336000,
+        "endMs": 339000,
+        "text": "A habit of allowing such things to annoy him."
+      },
+      {
+        "startMs": 344001,
+        "endMs": 346001,
+        "text": "Jeff's losing control of himself."
+      },
+      {
+        "startMs": 347001,
+        "endMs": 351000,
+        "text": "His thinking is becoming muddled, and he's careless in his actions."
+      },
+      {
+        "startMs": 352000,
+        "endMs": 354000,
+        "text": "The madder he gets, the worse it becomes."
+      },
+      {
+        "startMs": 355001,
+        "endMs": 359001,
+        "text": "Did you ever hear anyone say, I was so mad I couldn't see straight?"
+      },
+      {
+        "startMs": 361000,
+        "endMs": 363001,
+        "text": "Severe emotional stress often decreases efficiency."
+      },
+      {
+        "startMs": 365000,
+        "endMs": 366000,
+        "text": "See what I mean?"
+      },
+      {
+        "startMs": 367000,
+        "endMs": 369000,
+        "text": "And of course, it's the fault of the wrench."
+      },
+      {
+        "startMs": 369000,
+        "endMs": 373001,
+        "text": "This is called projection. He's projecting the blame to the wrench."
+      },
+      {
+        "startMs": 376000,
+        "endMs": 379000,
+        "text": "Well, we've seen Jeff lose control of himself in rage."
+      },
+      {
+        "startMs": 379001,
+        "endMs": 381001,
+        "text": "Let's see how the rest of the family is doing."
+      },
+      {
+        "startMs": 383001,
+        "endMs": 389001,
+        "text": "Mother! Mother! Oh, it's wonderful!"
+      },
+      {
+        "startMs": 390000,
+        "endMs": 391001,
+        "text": "I love the new dress you made!"
+      },
+      {
+        "startMs": 391001,
+        "endMs": 393000,
+        "text": "Oh, thank you, Joan, dear."
+      },
+      {
+        "startMs": 393001,
+        "endMs": 397001,
+        "text": "See how the new dress tends to stimulate Joan's love for Mother?"
+      },
+      {
+        "startMs": 398000,
+        "endMs": 400001,
+        "text": "This makes both Mother and Joan happier."
+      },
+      {
+        "startMs": 401001,
+        "endMs": 403000,
+        "text": "But how does it affect Jeff?"
+      },
+      {
+        "startMs": 404001,
+        "endMs": 407000,
+        "text": "And how does his anger affect the others?"
+      },
+      {
+        "startMs": 408000,
+        "endMs": 412000,
+        "text": "Oh, you're the sweetest, bestest mother a girl ever had."
+      },
+      {
+        "startMs": 413001,
+        "endMs": 416000,
+        "text": "I'm glad you like the dress, Joan."
+      },
+      {
+        "startMs": 417000,
+        "endMs": 423000,
+        "text": "Oh, I'm so happy! I could be a model, or a cover girl!"
+      },
+      {
+        "startMs": 424000,
+        "endMs": 426001,
+        "text": "Hey, what's gotten into that crazy kid sister?"
+      },
+      {
+        "startMs": 426001,
+        "endMs": 429000,
+        "text": "Oh, Jeff, don't be that way!"
+      },
+      {
+        "startMs": 430001,
+        "endMs": 434001,
+        "text": "Notice how Mother seems to become angry herself because of Jeff's anger."
+      },
+      {
+        "startMs": 435001,
+        "endMs": 445000,
+        "text": "Perhaps she shouldn't, but anger is a violent emotion, and we often see an induction of behavior, or spread of emotion to other persons, almost"
+      },
+      {
+        "startMs": 445000,
+        "endMs": 446001,
+        "text": "like a contagious disease."
+      },
+      {
+        "startMs": 450000,
+        "endMs": 450001,
+        "text": "Hi, Rach."
+      },
+      {
+        "startMs": 452001,
+        "endMs": 454001,
+        "text": "Hello, Jeff."
+      },
+      {
+        "startMs": 458000,
+        "endMs": 459000,
+        "text": "Say, what have you got?"
+      },
+      {
+        "startMs": 460001,
+        "endMs": 461001,
+        "text": "Well, that's my letter."
+      },
+      {
+        "startMs": 462001,
+        "endMs": 463001,
+        "text": "Give me that."
+      },
+      {
+        "startMs": 463001,
+        "endMs": 464001,
+        "text": "[...] like me!"
+      },
+      {
+        "startMs": 465001,
+        "endMs": 469000,
+        "text": "Why, you dirty little sneak! You gonna give me that letter?"
+      },
+      {
+        "startMs": 470000,
+        "endMs": 470001,
+        "text": "Ain't gonna give it to me?"
+      },
+      {
+        "startMs": 474000,
+        "endMs": 477001,
+        "text": "Okay, kid. I'll show you."
+      },
+      {
+        "startMs": 479000,
+        "endMs": 480000,
+        "text": "[...]"
+      },
+      {
+        "startMs": 481000,
+        "endMs": 483000,
+        "text": "You dirty sneakin' brother! You gonna give me my letter?"
+      },
+      {
+        "startMs": 483000,
+        "endMs": 483001,
+        "text": "Stop it!"
+      },
+      {
+        "startMs": 483001,
+        "endMs": 485000,
+        "text": "Will you give me that letter?"
+      },
+      {
+        "startMs": 485000,
+        "endMs": 487000,
+        "text": "I'll teach you not to open my meal."
+      },
+      {
+        "startMs": 487000,
+        "endMs": 489000,
+        "text": "I did not drop it! Stop it!"
+      },
+      {
+        "startMs": 490001,
+        "endMs": 492000,
+        "text": "Drop that coke hammer."
+      },
+      {
+        "startMs": 494001,
+        "endMs": 501001,
+        "text": "Sometimes rage, fear, and love are aroused together"
+      },
+      {
+        "startMs": 501001,
+        "endMs": 503001,
+        "text": "at the same time."
+      },
+      {
+        "startMs": 504001,
+        "endMs": 511001,
+        "text": "Mother's love of her children and her fear for Roger's safety were mixed with"
+      },
+      {
+        "startMs": 511001,
+        "endMs": 516000,
+        "text": "anger, almost rage, at both boys for the part they played in the flare-up."
+      },
+      {
+        "startMs": 517001,
+        "endMs": 527001,
+        "text": "Of course, Jeffery's family didn't realize that he had been exposed to one irritating situation after another, an accumulation of stimuli which brought"
+      },
+      {
+        "startMs": 527001,
+        "endMs": 530000,
+        "text": "about an abnormally strong response."
+      },
+      {
+        "startMs": 531001,
+        "endMs": 536001,
+        "text": "And what did this do to Jeff, this sort of uncontrolled emotional outburst?"
+      },
+      {
+        "startMs": 537000,
+        "endMs": 542000,
+        "text": "Well, he regrets some of the things he said, but he can't unsay them."
+      },
+      {
+        "startMs": 543001,
+        "endMs": 544000,
+        "text": "He's tired."
+      },
+      {
+        "startMs": 545001,
+        "endMs": 555000,
+        "text": "That feeling of fatigue may spoil a good time on his date tonight, and if this sort of flare-up is repeated often, it might lead to a"
+      },
+      {
+        "startMs": 555000,
+        "endMs": 556001,
+        "text": "permanently warped personality."
+      },
+      {
+        "startMs": 558001,
+        "endMs": 560001,
+        "text": "What could Jeff do to keep better control?"
+      },
+      {
+        "startMs": 561001,
+        "endMs": 573001,
+        "text": "Well, we say he could, one, eliminate the stimulus, two, modify the stimulus, or three, modify the response."
+      },
+      {
+        "startMs": 575000,
+        "endMs": 580000,
+        "text": "With these three ideas in mind, let's examine Jeff's episode again."
+      },
+      {
+        "startMs": 581000,
+        "endMs": 591000,
+        "text": "To control his emotions, Jeff eliminates the stimulus, the failure to impress his pals, by trying such fancy tricks only when he can do them successfully."
+      },
+      {
+        "startMs": 595000,
+        "endMs": 597000,
+        "text": "But sometimes the trick fails."
+      },
+      {
+        "startMs": 597001,
+        "endMs": 600000,
+        "text": "There are many times when you can't eliminate the stimulus."
+      },
+      {
+        "startMs": 601000,
+        "endMs": 603000,
+        "text": "Try to modify the stimulus."
+      },
+      {
+        "startMs": 605000,
+        "endMs": 612000,
+        "text": "Standing off and looking at himself, Jeff realizes that a slip like that won't really hurt his standing with the gang."
+      },
+      {
+        "startMs": 612001,
+        "endMs": 620000,
+        "text": "Taking it all lightly as a good sport, Jeff impresses the gang a lot more than if he gets angry over such a little thing."
+      },
+      {
+        "startMs": 622000,
+        "endMs": 627000,
+        "text": "It helps to recognize and understand the emotional patterns."
+      },
+      {
+        "startMs": 627001,
+        "endMs": 631000,
+        "text": "Then it's easier to eliminate or modify the stimulus."
+      },
+      {
+        "startMs": 632001,
+        "endMs": 636000,
+        "text": "And there is another even more valuable way to control your emotions."
+      },
+      {
+        "startMs": 637000,
+        "endMs": 638000,
+        "text": "Modify the response."
+      },
+      {
+        "startMs": 638001,
+        "endMs": 642001,
+        "text": "Rather than get in the habit of getting angry, Jeff can substitute."
+      },
+      {
+        "startMs": 643001,
+        "endMs": 647000,
+        "text": "He can modify his response by seeing the humor in the situation."
+      },
+      {
+        "startMs": 647001,
+        "endMs": 650000,
+        "text": "What good does it do to get angry about this?"
+      },
+      {
+        "startMs": 651001,
+        "endMs": 655000,
+        "text": "When Jeff's in the habit of controlling his emotions, his thinking is straighter."
+      },
+      {
+        "startMs": 657001,
+        "endMs": 660001,
+        "text": "Push the button. No stutter. Let's see."
+      },
+      {
+        "startMs": 661001,
+        "endMs": 662001,
+        "text": "Pull the light switch."
+      },
+      {
+        "startMs": 665001,
+        "endMs": 669000,
+        "text": "Hmm. No light. That means something."
+      },
+      {
+        "startMs": 670000,
+        "endMs": 671000,
+        "text": "Reason it up."
+      },
+      {
+        "startMs": 673000,
+        "endMs": 674000,
+        "text": "No horn either."
+      },
+      {
+        "startMs": 675000,
+        "endMs": 677000,
+        "text": "So, must be a dead battery."
+      },
+      {
+        "startMs": 678001,
+        "endMs": 682000,
+        "text": "That's straight thinking. Unmuddled by emotional disturbances."
+      },
+      {
+        "startMs": 684000,
+        "endMs": 688000,
+        "text": "And it's a simple thing to call the garage or someone for a push and a recharge."
+      },
+      {
+        "startMs": 688001,
+        "endMs": 693000,
+        "text": "No need to fly off the handle and take it out on the things and the people around."
+      },
+      {
+        "startMs": 695001,
+        "endMs": 702001,
+        "text": "When he tries to understand his emotions and those of people around him, Jeff has"
+      },
+      {
+        "startMs": 702001,
+        "endMs": 706001,
+        "text": "less trouble controlling himself, and he and those around him are happier."
+      },
+      {
+        "startMs": 710001,
+        "endMs": 717001,
+        "text": "The more he exercises control of his emotional behavior, the easier"
+      },
+      {
+        "startMs": 717001,
+        "endMs": 721000,
+        "text": "it becomes to meet the next situation without losing control."
+      },
+      {
+        "startMs": 722000,
+        "endMs": 724000,
+        "text": "Well, how about it? Either the plane or the letter."
+      },
+      {
+        "startMs": 725001,
+        "endMs": 730001,
+        "text": "And so it goes. A happier time all around when emotions are under control."
+      },
+      {
+        "startMs": 732001,
+        "endMs": 738001,
+        "text": "Hey, Rod. How about you help me get the car pushed out of the garage so we can get it started and fixed up for tonight?"
+      },
+      {
+        "startMs": 739001,
+        "endMs": 744000,
+        "text": "You know, once the car's running, I can drop you off the movies tonight before I go out."
+      },
+      {
+        "startMs": 745000,
+        "endMs": 756000,
+        "text": "Yes, by a better understanding of the emotional patterns of everyday life, and by knowing how you respond to various stimuli, you can develop better control by"
+      },
+      {
+        "startMs": 756000,
+        "endMs": 763000,
+        "text": "eliminating the stimulus, or by modifying the stimulus, or by modifying the response."
+      },
+      {
+        "startMs": 765001,
+        "endMs": 769000,
+        "text": "You can control the fire of your emotions."
+      },
+      {
+        "startMs": 769001,
+        "endMs": 775000,
+        "text": "You can balance your emotions and use them so that your personality becomes more pleasant."
+      },
+      {
+        "startMs": 776001,
+        "endMs": 781000,
+        "text": "And you and those around you are a great deal happier and healthier."
+      }
     ]
   },
   {
-    "id": "voa-lets-learn-asking-directions",
-    "title": "Asking for Directions",
-    "description": "How to ask for directions politely and understand basic instructions while walking in the city.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-asking-directions",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 165000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "blue",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-askmedon1961",
+    "title": "Ask Me, Don't Tell Me",
+    "description": "San Francisco teenage gangs and the unfriendly world they inhabit.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "AskMeDon1961",
+    "sourcePageUrl": "https://archive.org/details/AskMeDon1961",
+    "videoUrl": "https://archive.org/download/AskMeDon1961/AskMeDon1961_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/AskMeDon1961",
+    "transcriptUrl": "https://archive.org/download/AskMeDon1961/AskMeDon1961.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 1316000,
+    "level": "B1",
+    "topic": "Communication",
+    "accent": "US",
+    "grad": "emerald",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Ask Me, Don't Tell Me",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4500, "text": "Excuse me, how do I get to the station?" },
-      { "startMs": 4500, "endMs": 9000, "text": "Go straight and turn left at the corner." },
-      { "startMs": 9000, "endMs": 13500, "text": "It's about a five-minute walk from here." }
+      {
+        "startMs": 11000,
+        "endMs": 13000,
+        "text": "The Golden San Francisco."
+      },
+      {
+        "startMs": 14001,
+        "endMs": 20000,
+        "text": "I know, I live there, on the tower, seagull, pigeons, but I like it."
+      },
+      {
+        "startMs": 20001,
+        "endMs": 23000,
+        "text": "Yeah, we dig it the most."
+      },
+      {
+        "startMs": 24001,
+        "endMs": 28000,
+        "text": "On the tower, I can see everything, once in a while I spat."
+      },
+      {
+        "startMs": 31000,
+        "endMs": 38001,
+        "text": "I see the shoes, they think they're the toughest, but not the bosses."
+      },
+      {
+        "startMs": 39000,
+        "endMs": 42000,
+        "text": "But I don't blame them, nothing to do."
+      },
+      {
+        "startMs": 43000,
+        "endMs": 48001,
+        "text": "I had something like that on my corner, I had shimmy shimmy coco co2."
+      },
+      {
+        "startMs": 49001,
+        "endMs": 56000,
+        "text": "The mole, you can always tell, flat feet, ace on every corner."
+      },
+      {
+        "startMs": 56001,
+        "endMs": 61001,
+        "text": "Don't look too hard fellas, they got guns, you got a thousand fellas, the king."
+      },
+      {
+        "startMs": 63000,
+        "endMs": 70000,
+        "text": "And this tough sheen, it's the bosses, because the spy written, from some honor,"
+      },
+      {
+        "startMs": 70001,
+        "endMs": 74000,
+        "text": "at night, you can always tell that's the lonely ones."
+      },
+      {
+        "startMs": 78001,
+        "endMs": 84001,
+        "text": "Betcha, some parts of mission, could always tell, a thousand in every corner."
+      },
+      {
+        "startMs": 85001,
+        "endMs": 89001,
+        "text": "If hair was a crime, they'd be right on deck for a chestnut."
+      },
+      {
+        "startMs": 93000,
+        "endMs": 99000,
+        "text": "Look out old man, look out old man, Mike is on the scene, hat first."
+      },
+      {
+        "startMs": 99001,
+        "endMs": 102000,
+        "text": "Fight up fellas, didn't cause me anything."
+      },
+      {
+        "startMs": 103000,
+        "endMs": 104001,
+        "text": "Fire fingers and a quick getaway."
+      },
+      {
+        "startMs": 105001,
+        "endMs": 110000,
+        "text": "Some store softwares, reach a boogie."
+      },
+      {
+        "startMs": 112000,
+        "endMs": 116000,
+        "text": "Yeah, everybody's on the scene."
+      },
+      {
+        "startMs": 144000,
+        "endMs": 147001,
+        "text": "I am Stanley Moss, attorney general of the state of California."
+      },
+      {
+        "startMs": 148001,
+        "endMs": 157000,
+        "text": "There is no one cause for juvenile delinquency, and therefore there is no one cure for juvenile delinquency."
+      },
+      {
+        "startMs": 158000,
+        "endMs": 165001,
+        "text": "The elements that go to make up a fine young person in our society are generally threefold."
+      },
+      {
+        "startMs": 166000,
+        "endMs": 174000,
+        "text": "First, loving parents, secondly, intelligent teachers, and thirdly, a wholesome environment in which to grow up."
+      },
+      {
+        "startMs": 175000,
+        "endMs": 185000,
+        "text": "But all too many of our young people today lack one, two, or even all three of these elements, and therefore we have what we call juvenile delinquency."
+      },
+      {
+        "startMs": 185000,
+        "endMs": 190000,
+        "text": "The community then has an obligation to provide those missing elements."
+      },
+      {
+        "startMs": 190001,
+        "endMs": 199000,
+        "text": "When I speak of the community, I mean society generally, officially, and also private organizations which work in this field."
+      },
+      {
+        "startMs": 200000,
+        "endMs": 210001,
+        "text": "Any private organization that gives to youngsters the opportunity to do something useful and constructive gives them a chance then of belonging, of participating,"
+      },
+      {
+        "startMs": 211000,
+        "endMs": 216000,
+        "text": "of winning the approval and approbation of their elders and of their contemporaries."
+      },
+      {
+        "startMs": 216001,
+        "endMs": 224001,
+        "text": "Any such organization in our society today is doing a most useful and constructive thing, both for the young people and for"
+      },
+      {
+        "startMs": 224001,
+        "endMs": 226000,
+        "text": "the community in which they live."
+      },
+      {
+        "startMs": 256000,
+        "endMs": 263001,
+        "text": "[...] Well, yeah, what time is it? 12 o 'clock. What's the phone [...] there for?"
+      },
+      {
+        "startMs": 265000,
+        "endMs": 266001,
+        "text": "No, there's nothing to do today."
+      },
+      {
+        "startMs": 268000,
+        "endMs": 270000,
+        "text": "Look, man, why don't you meet me down at Hunch about five o'clock?"
+      },
+      {
+        "startMs": 271000,
+        "endMs": 272000,
+        "text": "Okay, bye."
+      },
+      {
+        "startMs": 294000,
+        "endMs": 296001,
+        "text": "She's going to buy us chicken and jag."
+      },
+      {
+        "startMs": 298000,
+        "endMs": 309000,
+        "text": "Tell your mama,"
+      },
+      {
+        "startMs": 309001,
+        "endMs": 313000,
+        "text": "tell your pa, I'm going to send you back to our care [...]"
+      },
+      {
+        "startMs": 316000,
+        "endMs": 319001,
+        "text": "Well, well, well, back to the old plantation."
+      },
+      {
+        "startMs": 322000,
+        "endMs": 325000,
+        "text": "Shucking and jagging, ain't that sweet."
+      },
+      {
+        "startMs": 328000,
+        "endMs": 329001,
+        "text": "We'll show you how it's done."
+      },
+      {
+        "startMs": 332000,
+        "endMs": 336000,
+        "text": "Always, ain't that cold."
+      },
+      {
+        "startMs": 338001,
+        "endMs": 342001,
+        "text": "We'll give you a little sample. You look like Elvis before he went in the service."
+      },
+      {
+        "startMs": 344000,
+        "endMs": 346001,
+        "text": "Those are a couple of my good friends. They're swears."
+      },
+      {
+        "startMs": 347001,
+        "endMs": 350001,
+        "text": "Looks like the fight of Patterson Inglemark, but it's not."
+      },
+      {
+        "startMs": 352000,
+        "endMs": 360001,
+        "text": "Left to the right, left to the jaw, right to the chin, feet to the chest, knife in his back, brass knuckle on his head."
+      },
+      {
+        "startMs": 361000,
+        "endMs": 364001,
+        "text": "Someone is on the ground, someone is on the ground. I think it's the referee."
+      },
+      {
+        "startMs": 365001,
+        "endMs": 367001,
+        "text": "No, it's not. It's an officer."
+      },
+      {
+        "startMs": 369001,
+        "endMs": 371001,
+        "text": "Don't get panicked, ladies. Don't get panicked, ladies."
+      },
+      {
+        "startMs": 372000,
+        "endMs": 376000,
+        "text": "Nothing will happen. It's only in farm."
+      },
+      {
+        "startMs": 380000,
+        "endMs": 383001,
+        "text": "Look out, keep it clean, keep it clean within a gene. No feaks."
+      },
+      {
+        "startMs": 399000,
+        "endMs": 400000,
+        "text": "[...]"
+      },
+      {
+        "startMs": 400000,
+        "endMs": 404000,
+        "text": "What? No job. But don't worry. I know what they'll tell you."
+      },
+      {
+        "startMs": 404001,
+        "endMs": 406001,
+        "text": "You're too young. You're inexperienced."
+      },
+      {
+        "startMs": 408000,
+        "endMs": 410001,
+        "text": "You're not in the union. We can't bond you. You've been in trouble."
+      },
+      {
+        "startMs": 411000,
+        "endMs": 413001,
+        "text": "You're not a graduate. We can't use you."
+      },
+      {
+        "startMs": 415001,
+        "endMs": 417000,
+        "text": "But don't worry. Don't worry."
+      },
+      {
+        "startMs": 418000,
+        "endMs": 421000,
+        "text": "Old lady will lose her Christmas money. Purse will be snatched."
+      },
+      {
+        "startMs": 421001,
+        "endMs": 425000,
+        "text": "Someone man will be knocked down. And everybody will want no wax."
+      },
+      {
+        "startMs": 429001,
+        "endMs": 434001,
+        "text": "People, but if they don't see you fight, it's hearsay."
+      },
+      {
+        "startMs": 435000,
+        "endMs": 439000,
+        "text": "That's what they believe, because you're in a club and you're wearing a club jacket."
+      },
+      {
+        "startMs": 439000,
+        "endMs": 442000,
+        "text": "So you're a thug right away to the public then."
+      },
+      {
+        "startMs": 443000,
+        "endMs": 450000,
+        "text": "But some people realize that by being in a club, it can"
+      },
+      {
+        "startMs": 450000,
+        "endMs": 453000,
+        "text": "be a good thing and a club can be a bad thing."
+      },
+      {
+        "startMs": 454000,
+        "endMs": 457001,
+        "text": "But you have to start off with the right thing to end up right."
+      },
+      {
+        "startMs": 459000,
+        "endMs": 464000,
+        "text": "When Karl May started Youth for Service, he realized he could work through the leaders of the jacket clubs."
+      },
+      {
+        "startMs": 464001,
+        "endMs": 467000,
+        "text": "At first, I went out and looked up these boys on the street."
+      },
+      {
+        "startMs": 467000,
+        "endMs": 473000,
+        "text": "This is John Byrd, president of the Warlords, a very important club in San Francisco."
+      },
+      {
+        "startMs": 474001,
+        "endMs": 476000,
+        "text": "I just put it up to them. Would they help?"
+      },
+      {
+        "startMs": 477000,
+        "endMs": 480001,
+        "text": "I told them we needed them, and it worked because it was the truth."
+      },
+      {
+        "startMs": 483001,
+        "endMs": 493001,
+        "text": "Hello, gentlemen. I'm Karl May. I'm with the organization."
+      },
+      {
+        "startMs": 494000,
+        "endMs": 495000,
+        "text": "You ever heard of Youth for Service?"
+      },
+      {
+        "startMs": 495001,
+        "endMs": 501000,
+        "text": "This is the organization with all the clubs in it, the Warlords and the Sheets and the Turbans and the Timers and the Aces and the Ravens."
+      },
+      {
+        "startMs": 502000,
+        "endMs": 506000,
+        "text": "Is this the council that has all the clubs off the given?"
+      },
+      {
+        "startMs": 506001,
+        "endMs": 509000,
+        "text": "Yeah, that's it. We'd like to have you guys in."
+      },
+      {
+        "startMs": 510001,
+        "endMs": 520001,
+        "text": "One of the reasons that we started the council and started Youth for Service is to help out people, old people, sick people, handicapped people, go in there and"
+      },
+      {
+        "startMs": 520001,
+        "endMs": 525000,
+        "text": "do painting jobs for them, or come to work and clean up their places when they need help."
+      },
+      {
+        "startMs": 526000,
+        "endMs": 533000,
+        "text": "And we've got a family now that needs some help, and we want to"
+      },
+      {
+        "startMs": 533000,
+        "endMs": 535000,
+        "text": "go there next week, next Saturday."
+      },
+      {
+        "startMs": 535001,
+        "endMs": 536001,
+        "text": "So what do you say?"
+      },
+      {
+        "startMs": 539001,
+        "endMs": 544000,
+        "text": "Will you guys go?"
+      },
+      {
+        "startMs": 548000,
+        "endMs": 549000,
+        "text": "[...]"
+      },
+      {
+        "startMs": 549000,
+        "endMs": 551000,
+        "text": "Oh, it's over on Patero Hill."
+      },
+      {
+        "startMs": 554000,
+        "endMs": 557000,
+        "text": "Well, I'll tell you. We'll pick you up in the morning."
+      },
+      {
+        "startMs": 559001,
+        "endMs": 564001,
+        "text": "This is the Youth for Service work project."
+      },
+      {
+        "startMs": 565000,
+        "endMs": 569000,
+        "text": "These boys are working for nothing, doing something for somebody else who needs help."
+      },
+      {
+        "startMs": 570000,
+        "endMs": 571000,
+        "text": "Why are they doing it?"
+      },
+      {
+        "startMs": 572000,
+        "endMs": 576001,
+        "text": "The answer is that these boys are no different than the rest of us."
+      },
+      {
+        "startMs": 577000,
+        "endMs": 578001,
+        "text": "They need to be needed."
+      },
+      {
+        "startMs": 579001,
+        "endMs": 585000,
+        "text": "They may have had less chance than most of us to relate constructively to the community."
+      },
+      {
+        "startMs": 586000,
+        "endMs": 590000,
+        "text": "They need the opportunity to work for status and recognition."
+      },
+      {
+        "startMs": 591001,
+        "endMs": 594000,
+        "text": "In Youth for Service, we take them as they come."
+      },
+      {
+        "startMs": 594001,
+        "endMs": 599000,
+        "text": "We do not judge them for anything they may have done or failed to do in the past."
+      },
+      {
+        "startMs": 600000,
+        "endMs": 606000,
+        "text": "We do not excommunicate them if they fail to live up to our standards of work or conduct."
+      },
+      {
+        "startMs": 607000,
+        "endMs": 611001,
+        "text": "What we do is accept them as individuals and put them to work."
+      },
+      {
+        "startMs": 612001,
+        "endMs": 616001,
+        "text": "We ask them for help, and who can resist that?"
+      },
+      {
+        "startMs": 636000,
+        "endMs": 659000,
+        "text": "[...]"
+      },
+      {
+        "startMs": 662000,
+        "endMs": 669000,
+        "text": "Youth for Service is not a training program for future employment, but it does give the opportunity to learn something of new skills."
+      },
+      {
+        "startMs": 669001,
+        "endMs": 673001,
+        "text": "Work projects are referred from many sources, chiefly from social agencies."
+      },
+      {
+        "startMs": 674000,
+        "endMs": 680001,
+        "text": "The departments of Public Health and Public Welfare, the Visiting Nurses Association, the Family Service Society, and others."
+      },
+      {
+        "startMs": 681000,
+        "endMs": 689001,
+        "text": "The entire Youth for Service program has been made possible through generous help from church groups, businessmen, school and civic authorities, and private"
+      },
+      {
+        "startMs": 689001,
+        "endMs": 691000,
+        "text": "as well as public agencies."
+      },
+      {
+        "startMs": 693001,
+        "endMs": 707000,
+        "text": "The youth for service program [...]"
+      },
+      {
+        "startMs": 707000,
+        "endMs": 713001,
+        "text": "The boys of Youth for Service have helped many elderly and handicapped people with home chores and repairs they cannot manage themselves."
+      },
+      {
+        "startMs": 714001,
+        "endMs": 727001,
+        "text": "When this project started, I figured that if what I believed is true, then people who have known bitterness and despair and frustration will have every"
+      },
+      {
+        "startMs": 727001,
+        "endMs": 735001,
+        "text": "bit as much human understanding as the most enlightened people, the supposedly enlightened people that there were around."
+      },
+      {
+        "startMs": 759001,
+        "endMs": 760001,
+        "text": "The youth for service project is a [...]"
+      },
+      {
+        "startMs": 760001,
+        "endMs": 764000,
+        "text": "Many Spanish speaking people live here in Alvizo near San Jose."
+      },
+      {
+        "startMs": 765000,
+        "endMs": 769000,
+        "text": "A Youth for Service project helped finish a classroom in the church to be used for English classes."
+      },
+      {
+        "startMs": 770000,
+        "endMs": 779000,
+        "text": "Sure, the boys mess up on a lot of things when they're on their own, but they get something done, and what they do is their achievement."
+      },
+      {
+        "startMs": 780000,
+        "endMs": 782001,
+        "text": "They can learn from it and be proud of it."
+      },
+      {
+        "startMs": 784000,
+        "endMs": 792000,
+        "text": "Adult control or adult guidance really means the imposition of authority, and that would kill the whole idea."
+      },
+      {
+        "startMs": 793000,
+        "endMs": 798000,
+        "text": "The boys know that this is their program and that it's in their hands, not ours."
+      },
+      {
+        "startMs": 799001,
+        "endMs": 800001,
+        "text": "They respond to that."
+      },
+      {
+        "startMs": 802000,
+        "endMs": 807001,
+        "text": "You know, you can ask a person to do something, and you'll see a difference in the work, because if you ask me to do it, I'll do a better job."
+      },
+      {
+        "startMs": 808000,
+        "endMs": 813000,
+        "text": "I'll do anything if somebody asks me, but if you say do this, do that, if you don't do it, well, you better do it."
+      },
+      {
+        "startMs": 813001,
+        "endMs": 817001,
+        "text": "Well, I just won't do it, and I want to see what somebody's going to do if I don't do it."
+      },
+      {
+        "startMs": 848001,
+        "endMs": 859000,
+        "text": "The boys of Youth for Service give of their strength and time and skill, and the community gives too, and both get back more than they give, a sense of sharing,"
+      },
+      {
+        "startMs": 859000,
+        "endMs": 866001,
+        "text": "and the boys get something they greatly need, tangible evidence of community confidence in them, expressed in terms of good materials and"
+      },
+      {
+        "startMs": 866001,
+        "endMs": 868001,
+        "text": "efficient and valuable equipment."
+      },
+      {
+        "startMs": 872000,
+        "endMs": 880001,
+        "text": "And a good lunch on the job is a pretty well understood form of morals support also."
+      },
+      {
+        "startMs": 884000,
+        "endMs": 885001,
+        "text": "The word is recognition."
+      },
+      {
+        "startMs": 886001,
+        "endMs": 889000,
+        "text": "The boys of Youth for Service work hard without pay."
+      },
+      {
+        "startMs": 889001,
+        "endMs": 895000,
+        "text": "Most of them have very little themselves, yet they volunteer repeatedly to help other people in need."
+      },
+      {
+        "startMs": 895001,
+        "endMs": 899001,
+        "text": "Recognition and community support become very important to maintain morale."
+      },
+      {
+        "startMs": 900000,
+        "endMs": 906001,
+        "text": "A little publicity for work well done is small payment by the community for services generously given."
+      },
+      {
+        "startMs": 907000,
+        "endMs": 911000,
+        "text": "A party was organized to celebrate the first hundred work projects completed."
+      },
+      {
+        "startMs": 911000,
+        "endMs": 918000,
+        "text": "In spite of some initial opposition concerning law and order, the party"
+      },
+      {
+        "startMs": 918000,
+        "endMs": 925001,
+        "text": "did go off quite smoothly after all, enjoyed by several hundred Youth for Service participants and their dates."
+      },
+      {
+        "startMs": 935001,
+        "endMs": 941000,
+        "text": "Only one slight mishap was reported. A policeman somehow lost his badge."
+      },
+      {
+        "startMs": 966001,
+        "endMs": 975000,
+        "text": "A council of Youth Clubs from all parts of the city developed directly from the contacts made on work projects."
+      },
+      {
+        "startMs": 976000,
+        "endMs": 985001,
+        "text": "The boys themselves decided they wanted a common meeting ground where they could adjust differences between the clubs before they blew up into rumbles."
+      },
+      {
+        "startMs": 986000,
+        "endMs": 993000,
+        "text": "They also wanted to promote social affairs and special projects on a citywide basis."
+      },
+      {
+        "startMs": 994001,
+        "endMs": 999001,
+        "text": "Both prestige and security were involved in belonging to the organization."
+      },
+      {
+        "startMs": 1001000,
+        "endMs": 1010001,
+        "text": "One of the first council projects developed in support of the National Youth March for Integrated Schools, held in Washington, D.C. in April 1959."
+      },
+      {
+        "startMs": 1011001,
+        "endMs": 1018001,
+        "text": "The boys in Youth for Service know that integration is not just the struggle of American Negroes for equality, but it's linked with the fight against"
+      },
+      {
+        "startMs": 1018001,
+        "endMs": 1021001,
+        "text": "discrimination of all newly arrived minority groups."
+      },
+      {
+        "startMs": 1021001,
+        "endMs": 1028001,
+        "text": "A hundred years ago, the Irish made up less than one-third of the population of New York, but they were charged with over two-thirds of the arrests."
+      },
+      {
+        "startMs": 1029000,
+        "endMs": 1035001,
+        "text": "There were newcomers then. Today, the Puerto Ricans, the Mexicans, the Pacific and Oriental peoples are the newcomers."
+      },
+      {
+        "startMs": 1035001,
+        "endMs": 1044001,
+        "text": "The Youth for Service council raised the money to send a delegate to Washington, the only one sent by a San Francisco youth organization, and he carried petitions"
+      },
+      {
+        "startMs": 1044001,
+        "endMs": 1048001,
+        "text": "gathered by many other groups as well, with over 6,000 signatures."
+      },
+      {
+        "startMs": 1061000,
+        "endMs": 1066000,
+        "text": "And still in America, some people are treated like newcomers in their own native country."
+      },
+      {
+        "startMs": 1066000,
+        "endMs": 1067001,
+        "text": "We call them Indians."
+      },
+      {
+        "startMs": 1068000,
+        "endMs": 1075001,
+        "text": "This is the Laytonville Rancheria of the Pomo Indian tribe in the Redwood forests, a hundred miles north of San Francisco."
+      },
+      {
+        "startMs": 1075001,
+        "endMs": 1084001,
+        "text": "One of the largest Youth for Service projects was the building of a bridge across a riverbed on this reservation to give the Indians access to a large section of"
+      },
+      {
+        "startMs": 1084001,
+        "endMs": 1087001,
+        "text": "their land previously cut off during the rainy season."
+      },
+      {
+        "startMs": 1174001,
+        "endMs": 1178000,
+        "text": "A lot of people get confused about this Youth for Service thing."
+      },
+      {
+        "startMs": 1179000,
+        "endMs": 1182000,
+        "text": "They tend to lump people into categories or groups."
+      },
+      {
+        "startMs": 1183001,
+        "endMs": 1191000,
+        "text": "There are people who think of Youth for Service as a youth-serving agency, purely in terms of juvenile delinquency prevention."
+      },
+      {
+        "startMs": 1193000,
+        "endMs": 1196000,
+        "text": "Well, if it works that way, that's fine."
+      },
+      {
+        "startMs": 1197000,
+        "endMs": 1201000,
+        "text": "But that's not our primary focus. That's not what we're here for."
+      },
+      {
+        "startMs": 1202000,
+        "endMs": 1206000,
+        "text": "Accepting individuals, that's what makes the whole thing meaningful."
+      },
+      {
+        "startMs": 1207000,
+        "endMs": 1218001,
+        "text": "When it comes right down to it, we have no political acts to grind, no religious acts to grind, no social acts, or anything except that we are trying to"
+      },
+      {
+        "startMs": 1218001,
+        "endMs": 1220001,
+        "text": "reconcile differences between people."
+      },
+      {
+        "startMs": 1221001,
+        "endMs": 1228001,
+        "text": "And that's what this whole project is about, reconciling differences, as well as doing something useful."
+      },
+      {
+        "startMs": 1260000,
+        "endMs": 1270000,
+        "text": "We have a choice in dealing with these boys of continuing the old community policy of suspicion, surveillance, rejection, and with the usual results."
+      },
+      {
+        "startMs": 1270000,
+        "endMs": 1279000,
+        "text": "Or we can take a new look at them and our own attitudes, and start to assume our just obligation as citizens in helping them achieve recognition and"
+      },
+      {
+        "startMs": 1279000,
+        "endMs": 1280001,
+        "text": "responsibility in the community."
+      },
+      {
+        "startMs": 1281001,
+        "endMs": 1284001,
+        "text": "Youth for Service offers one way to work toward this end."
+      },
+      {
+        "startMs": 1302000,
+        "endMs": 1305000,
+        "text": "Well, the bridge is built, Youth for Service."
+      },
+      {
+        "startMs": 1306000,
+        "endMs": 1310001,
+        "text": "Nobody, least of all the friends, thinks this program is a cure oil for anything."
+      },
+      {
+        "startMs": 1311000,
+        "endMs": 1316000,
+        "text": "If it does mean something, it'll be what the boys make it mean with our help."
+      }
     ]
   },
   {
-    "id": "voa-how-to-pronounce-schedule",
-    "title": "How to Pronounce \"Schedule\"",
-    "description": "Compare two common pronunciations of the word \"schedule\" and their natural usage.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-schedule",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 68000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "violet",
-    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-goodeati1951",
+    "title": "Good Eating Habits",
+    "description": "Drama focusing on gluttony and \"hidden hunger,\" where well-nourished people eat poorly and malnourish themselves.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "GoodEati1951",
+    "sourcePageUrl": "https://archive.org/details/GoodEati1951",
+    "videoUrl": "https://archive.org/download/GoodEati1951/GoodEati1951_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/GoodEati1951",
+    "transcriptUrl": "https://archive.org/download/GoodEati1951/GoodEati1951.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 584000,
+    "level": "A2",
+    "topic": "Health & Habits",
+    "accent": "US",
+    "grad": "cyan",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Good Eating Habits",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "Today we look at the word schedule." },
-      { "startMs": 4000, "endMs": 8000, "text": "Americans usually say sked-jool." }
+      {
+        "startMs": 14000,
+        "endMs": 20000,
+        "text": "It's fun to eat supper with your family, especially when there is good food on the table."
+      },
+      {
+        "startMs": 21000,
+        "endMs": 22001,
+        "text": "Fong healthy bodies."
+      },
+      {
+        "startMs": 23001,
+        "endMs": 25000,
+        "text": "They are good foods to eat."
+      },
+      {
+        "startMs": 27000,
+        "endMs": 30000,
+        "text": "Father is certainly enjoying his supper."
+      },
+      {
+        "startMs": 33000,
+        "endMs": 34000,
+        "text": "So is Carol."
+      },
+      {
+        "startMs": 36001,
+        "endMs": 37001,
+        "text": "So is Mother."
+      },
+      {
+        "startMs": 40000,
+        "endMs": 41001,
+        "text": "Just look at that plate."
+      },
+      {
+        "startMs": 44001,
+        "endMs": 47001,
+        "text": "Aren't you feeling well, Bill? Aren't you hungry?"
+      },
+      {
+        "startMs": 49000,
+        "endMs": 50001,
+        "text": "What can be the matter?"
+      },
+      {
+        "startMs": 54000,
+        "endMs": 57001,
+        "text": "After supper, it's fun to play a while before bed."
+      },
+      {
+        "startMs": 59000,
+        "endMs": 62000,
+        "text": "But there's still something wrong, isn't there, Bill?"
+      },
+      {
+        "startMs": 63001,
+        "endMs": 66000,
+        "text": "In a moment, you'll know what it is."
+      },
+      {
+        "startMs": 68001,
+        "endMs": 80000,
+        "text": "Yes, Bill, you're getting a stomach ache."
+      },
+      {
+        "startMs": 83000,
+        "endMs": 86001,
+        "text": "There it is again. Poor Bill."
+      },
+      {
+        "startMs": 89001,
+        "endMs": 94000,
+        "text": "What now? We'll soon know because here comes Mother."
+      },
+      {
+        "startMs": 96001,
+        "endMs": 99001,
+        "text": "Mother can tell right away that Bill isn't feeling well."
+      },
+      {
+        "startMs": 101001,
+        "endMs": 104000,
+        "text": "So what happens next?"
+      },
+      {
+        "startMs": 105000,
+        "endMs": 108001,
+        "text": "Yes, Bill's put to bed to get some rest."
+      },
+      {
+        "startMs": 111000,
+        "endMs": 113001,
+        "text": "Now, why does Bill have a stomach ache?"
+      },
+      {
+        "startMs": 114001,
+        "endMs": 117000,
+        "text": "He didn't eat anything bad today, did he?"
+      },
+      {
+        "startMs": 119001,
+        "endMs": 124000,
+        "text": "Well, perhaps it wasn't what he ate, but the way he ate it."
+      },
+      {
+        "startMs": 125000,
+        "endMs": 127001,
+        "text": "Why, even this morning, Mother was a little worried."
+      },
+      {
+        "startMs": 128001,
+        "endMs": 133001,
+        "text": "Let's go back to this morning and see how Bill's stomach ache might have happened."
+      },
+      {
+        "startMs": 135000,
+        "endMs": 138000,
+        "text": "Bill wasn't at breakfast on time this morning."
+      },
+      {
+        "startMs": 139000,
+        "endMs": 142001,
+        "text": "You see, he didn't get up when Father first called him."
+      },
+      {
+        "startMs": 143000,
+        "endMs": 148001,
+        "text": "Oh, Bill got to the table, and he ate his breakfast, or rather part of it."
+      },
+      {
+        "startMs": 149000,
+        "endMs": 152000,
+        "text": "Orange juice, one big gulp of it."
+      },
+      {
+        "startMs": 153000,
+        "endMs": 155001,
+        "text": "Milk for the cereal. Splash it on."
+      },
+      {
+        "startMs": 155001,
+        "endMs": 162001,
+        "text": "No time to waste. Gobble down the cereal, a couple of big spoonfuls, one right after the other."
+      },
+      {
+        "startMs": 163001,
+        "endMs": 165000,
+        "text": "But leave most of it."
+      },
+      {
+        "startMs": 166000,
+        "endMs": 170000,
+        "text": "Now for the eggs. More good, healthful food."
+      },
+      {
+        "startMs": 170001,
+        "endMs": 172001,
+        "text": "But what about Bill's eating habits?"
+      },
+      {
+        "startMs": 173001,
+        "endMs": 177001,
+        "text": "Into his mouth went some egg. Right away, a big bite of toast."
+      },
+      {
+        "startMs": 178001,
+        "endMs": 182000,
+        "text": "And there was some bacon, so he stuffed in part of that."
+      },
+      {
+        "startMs": 184000,
+        "endMs": 189001,
+        "text": "And then, just one big splash of milk."
+      },
+      {
+        "startMs": 191000,
+        "endMs": 193000,
+        "text": "And Bill was off to school."
+      },
+      {
+        "startMs": 195000,
+        "endMs": 199001,
+        "text": "Well, he caught up with his family, and he beat them through breakfast."
+      },
+      {
+        "startMs": 200000,
+        "endMs": 205000,
+        "text": "But he ate so fast. And do you think he ate enough?"
+      },
+      {
+        "startMs": 208001,
+        "endMs": 211001,
+        "text": "At lunchtime, Bill had some fine sandwiches."
+      },
+      {
+        "startMs": 212001,
+        "endMs": 214001,
+        "text": "He also had money to buy soup."
+      },
+      {
+        "startMs": 216000,
+        "endMs": 218001,
+        "text": "But he didn't want to stand in line for soup."
+      },
+      {
+        "startMs": 219000,
+        "endMs": 221000,
+        "text": "He was in a hurry to go out and play."
+      },
+      {
+        "startMs": 222001,
+        "endMs": 226000,
+        "text": "So, how did Bill eat his lunch? Watch."
+      },
+      {
+        "startMs": 240000,
+        "endMs": 242001,
+        "text": "After school, of course, Bill was hungry."
+      },
+      {
+        "startMs": 243000,
+        "endMs": 245001,
+        "text": "He was hungry, and he had some money."
+      },
+      {
+        "startMs": 246000,
+        "endMs": 251001,
+        "text": "So, but did Bill leave his pop and candy only half eaten?"
+      },
+      {
+        "startMs": 252001,
+        "endMs": 257000,
+        "text": "No, sir. He emptied that pop bottle as fast as he could."
+      },
+      {
+        "startMs": 258000,
+        "endMs": 260000,
+        "text": "He gobbled down all his candy."
+      },
+      {
+        "startMs": 263000,
+        "endMs": 267000,
+        "text": "And, as if that wasn't enough, he ate some cookies, too."
+      },
+      {
+        "startMs": 268000,
+        "endMs": 270001,
+        "text": "Then Bill didn't feel hungry anymore."
+      },
+      {
+        "startMs": 271000,
+        "endMs": 274000,
+        "text": "No, sir. For once, he had eaten too much."
+      },
+      {
+        "startMs": 276001,
+        "endMs": 280000,
+        "text": "At supper time, Bill still felt full."
+      },
+      {
+        "startMs": 281000,
+        "endMs": 285000,
+        "text": "So, he didn't hurry with his supper. He just poked at it."
+      },
+      {
+        "startMs": 286001,
+        "endMs": 288000,
+        "text": "He was tired."
+      },
+      {
+        "startMs": 290000,
+        "endMs": 292001,
+        "text": "And he just didn't have any appetite."
+      },
+      {
+        "startMs": 294001,
+        "endMs": 297001,
+        "text": "Bill didn't know it, but he was already beginning to be sick."
+      },
+      {
+        "startMs": 301000,
+        "endMs": 305000,
+        "text": "Well, Bill, now you know what might have caused your stomach ache."
+      },
+      {
+        "startMs": 305001,
+        "endMs": 307001,
+        "text": "Why you feel so bad."
+      },
+      {
+        "startMs": 309000,
+        "endMs": 312000,
+        "text": "Why you'll have to stay in bed until you feel better."
+      },
+      {
+        "startMs": 313001,
+        "endMs": 316001,
+        "text": "You see, you hurried so all day long."
+      },
+      {
+        "startMs": 317000,
+        "endMs": 321001,
+        "text": "You rushed through your meals and didn't eat enough good food."
+      },
+      {
+        "startMs": 323000,
+        "endMs": 326000,
+        "text": "And then, in the afternoon, all those sweets."
+      },
+      {
+        "startMs": 329000,
+        "endMs": 335000,
+        "text": "They filled your stomach and didn't leave room for any of the foods you need."
+      },
+      {
+        "startMs": 337000,
+        "endMs": 341000,
+        "text": "In fact, Bill, you mistreated your stomach all day long."
+      },
+      {
+        "startMs": 341001,
+        "endMs": 343000,
+        "text": "No wonder you have a stomach ache."
+      },
+      {
+        "startMs": 348001,
+        "endMs": 351001,
+        "text": "How is it this morning, Bill? Feel better?"
+      },
+      {
+        "startMs": 353001,
+        "endMs": 356001,
+        "text": "Think you know now about good eating habits?"
+      },
+      {
+        "startMs": 362001,
+        "endMs": 364001,
+        "text": "Downstairs in time for breakfast."
+      },
+      {
+        "startMs": 366001,
+        "endMs": 369000,
+        "text": "Give yourself time to eat a good breakfast."
+      },
+      {
+        "startMs": 371001,
+        "endMs": 373001,
+        "text": "Let's see how well you can eat."
+      },
+      {
+        "startMs": 381001,
+        "endMs": 382001,
+        "text": "That's right."
+      },
+      {
+        "startMs": 383000,
+        "endMs": 385000,
+        "text": "Drink your juice a little at a time."
+      },
+      {
+        "startMs": 386001,
+        "endMs": 388000,
+        "text": "Doesn't it taste good?"
+      },
+      {
+        "startMs": 388001,
+        "endMs": 393001,
+        "text": "You just never took time before to find how good food can taste."
+      },
+      {
+        "startMs": 395000,
+        "endMs": 397000,
+        "text": "Mothers pleased and proud."
+      },
+      {
+        "startMs": 398000,
+        "endMs": 400000,
+        "text": "We're off to a good start this morning."
+      },
+      {
+        "startMs": 402000,
+        "endMs": 403000,
+        "text": "But will it last?"
+      },
+      {
+        "startMs": 404001,
+        "endMs": 408000,
+        "text": "Will you remember to eat the right way?"
+      },
+      {
+        "startMs": 421000,
+        "endMs": 424000,
+        "text": "Uh-oh. Almost washed your food down."
+      },
+      {
+        "startMs": 426000,
+        "endMs": 430000,
+        "text": "Before you take a drink, chew your food well and swallow it."
+      },
+      {
+        "startMs": 431001,
+        "endMs": 433001,
+        "text": "Now you're eating pretty well."
+      },
+      {
+        "startMs": 435001,
+        "endMs": 439000,
+        "text": "Will you do as well with the bacon and eggs and toast?"
+      },
+      {
+        "startMs": 442001,
+        "endMs": 445001,
+        "text": "Chew your toast thoroughly. That's the way."
+      },
+      {
+        "startMs": 447000,
+        "endMs": 451001,
+        "text": "Chew and chew. Doesn't it taste extra good that way?"
+      },
+      {
+        "startMs": 454001,
+        "endMs": 456000,
+        "text": "What about that bacon?"
+      },
+      {
+        "startMs": 458001,
+        "endMs": 462000,
+        "text": "Well, maybe there are better ways to cut it."
+      },
+      {
+        "startMs": 462001,
+        "endMs": 466000,
+        "text": "But when you eat it in small bits, you can chew it better."
+      },
+      {
+        "startMs": 467000,
+        "endMs": 471000,
+        "text": "It tastes so good you want to eat every bite."
+      },
+      {
+        "startMs": 472001,
+        "endMs": 475000,
+        "text": "Breakfast is more fun this way, isn't it?"
+      },
+      {
+        "startMs": 478000,
+        "endMs": 481001,
+        "text": "Well, Bill, plenty of time to get to school today."
+      },
+      {
+        "startMs": 482000,
+        "endMs": 485001,
+        "text": "And in class, studying seems easier."
+      },
+      {
+        "startMs": 487001,
+        "endMs": 489000,
+        "text": "What? 11 o'clock?"
+      },
+      {
+        "startMs": 490001,
+        "endMs": 493000,
+        "text": "Usually you're mighty hungry by this time."
+      },
+      {
+        "startMs": 493001,
+        "endMs": 496001,
+        "text": "Today. Today you feel fine."
+      },
+      {
+        "startMs": 499001,
+        "endMs": 503000,
+        "text": "Lunchtime is another time to practice good eating habits."
+      },
+      {
+        "startMs": 505000,
+        "endMs": 508000,
+        "text": "Eat slowly and chew thoroughly."
+      },
+      {
+        "startMs": 510001,
+        "endMs": 513000,
+        "text": "Finish all your food."
+      },
+      {
+        "startMs": 518001,
+        "endMs": 524001,
+        "text": "Later on, drink lots of water."
+      },
+      {
+        "startMs": 526001,
+        "endMs": 529001,
+        "text": "After school, that's the idea, Bill."
+      },
+      {
+        "startMs": 531000,
+        "endMs": 533001,
+        "text": "A good snack of crackers and milk at home."
+      },
+      {
+        "startMs": 534000,
+        "endMs": 538000,
+        "text": "That's the good kind of food if you're hungry after school."
+      },
+      {
+        "startMs": 541000,
+        "endMs": 544000,
+        "text": "And then, play. Hard play."
+      },
+      {
+        "startMs": 545000,
+        "endMs": 549000,
+        "text": "Plenty of pep now. Yesterday's stomach ache is forgotten."
+      },
+      {
+        "startMs": 553000,
+        "endMs": 558000,
+        "text": "At supper time, you're hungry again."
+      },
+      {
+        "startMs": 558001,
+        "endMs": 562000,
+        "text": "Everything tastes good, and you're eating well."
+      },
+      {
+        "startMs": 562000,
+        "endMs": 565000,
+        "text": "See what good eating habits can do for you?"
+      },
+      {
+        "startMs": 566000,
+        "endMs": 567001,
+        "text": "Looking for seconds."
+      },
+      {
+        "startMs": 573000,
+        "endMs": 575001,
+        "text": "After supper, you feel fine."
+      },
+      {
+        "startMs": 577000,
+        "endMs": 580000,
+        "text": "No stomach ache, not too tired, not hungry."
+      },
+      {
+        "startMs": 581000,
+        "endMs": 582000,
+        "text": "Just feeling fine."
+      },
+      {
+        "startMs": 583000,
+        "endMs": 584000,
+        "text": "And that's it."
+      }
     ]
   },
   {
-    "id": "voa-minute-break-the-ice",
-    "title": "Break the Ice",
-    "description": "Learn the idiom \"break the ice\" and how to use it in daily communication.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-break-the-ice",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 60000, "level": "B1", "topic": "Vocabulary", "accent": "US", "grad": "cyan",
-    "category": "English in a Minute", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-exercise1949",
+    "title": "Exercise and Health",
+    "description": "How exercise will make you healthy and popular.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "Exercise1949",
+    "sourcePageUrl": "https://archive.org/details/Exercise1949",
+    "videoUrl": "https://archive.org/download/Exercise1949/Exercise1949_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/Exercise1949",
+    "transcriptUrl": "https://archive.org/download/Exercise1949/Exercise1949.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 590000,
+    "level": "B1",
+    "topic": "Health & Fitness",
+    "accent": "US",
+    "grad": "rose",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Exercise and Health",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "Let's break the ice with a question." },
-      { "startMs": 4000, "endMs": 8000, "text": "It means to make people feel relaxed." }
+      {
+        "startMs": 2001,
+        "endMs": 14000,
+        "text": "Let's drop."
+      },
+      {
+        "startMs": 20000,
+        "endMs": 26000,
+        "text": "There."
+      },
+      {
+        "startMs": 26000,
+        "endMs": 28001,
+        "text": "There. That's real balance and poise."
+      },
+      {
+        "startMs": 30001,
+        "endMs": 40001,
+        "text": "The teamwork we're watching represents one of many ways to build balance and poise, along with skill, strength, and general physical fitness."
+      },
+      {
+        "startMs": 43001,
+        "endMs": 47000,
+        "text": "And there are other things to be gained from this sort of activity."
+      },
+      {
+        "startMs": 49000,
+        "endMs": 53000,
+        "text": "And to find out what they are, let's meet some of the members of this group."
+      },
+      {
+        "startMs": 55001,
+        "endMs": 61000,
+        "text": "This is Ernie Allen. Note the well-developed body. No surplus of soft fat."
+      },
+      {
+        "startMs": 62001,
+        "endMs": 66001,
+        "text": "Here's Hal Thompson. Notice his alertness, his bright interest."
+      },
+      {
+        "startMs": 67001,
+        "endMs": 72000,
+        "text": "And meet Jean Taylor. She's a living example of poise and confidence."
+      },
+      {
+        "startMs": 74000,
+        "endMs": 78001,
+        "text": "Anyone in the Acrobatics Club could tell us a story of how much he has gained from it."
+      },
+      {
+        "startMs": 79001,
+        "endMs": 82001,
+        "text": "But we'll concentrate on these three. Ernie."
+      },
+      {
+        "startMs": 85000,
+        "endMs": 87000,
+        "text": "And Jean."
+      },
+      {
+        "startMs": 91000,
+        "endMs": 91001,
+        "text": "And Hal."
+      },
+      {
+        "startMs": 94001,
+        "endMs": 99001,
+        "text": "First Ernie. A year or so ago, Ernie was in a run-down condition."
+      },
+      {
+        "startMs": 100001,
+        "endMs": 103001,
+        "text": "He always seemed to have a cold or sore throat."
+      },
+      {
+        "startMs": 105001,
+        "endMs": 109000,
+        "text": "Any sickness that was going around was bound to get Ernie."
+      },
+      {
+        "startMs": 110000,
+        "endMs": 112001,
+        "text": "And sometimes there were more serious illnesses."
+      },
+      {
+        "startMs": 116000,
+        "endMs": 122001,
+        "text": "Finally, as Ernie was recovering from this one, the doctor suggested a three-point program for health."
+      },
+      {
+        "startMs": 124000,
+        "endMs": 132001,
+        "text": "Sleep, regular rest, right eating, a sound, balanced diet, and exercise when Ernie felt stronger."
+      },
+      {
+        "startMs": 134001,
+        "endMs": 139001,
+        "text": "Ernie's instructor gave him the cues. Don't over-tire."
+      },
+      {
+        "startMs": 142000,
+        "endMs": 148001,
+        "text": "And while Ernie built himself up for the time when he could actually play basketball, he was learning the skills of the game."
+      },
+      {
+        "startMs": 149001,
+        "endMs": 155001,
+        "text": "As time passed and Ernie grew stronger, he increased his daily quota of activity."
+      },
+      {
+        "startMs": 156000,
+        "endMs": 158001,
+        "text": "And it's important that it be regular."
+      },
+      {
+        "startMs": 160001,
+        "endMs": 164000,
+        "text": "And Ernie tried some exercises to supplement his sports program."
+      },
+      {
+        "startMs": 165001,
+        "endMs": 168000,
+        "text": "Here's one to build up those abdominal muscles."
+      },
+      {
+        "startMs": 170000,
+        "endMs": 176001,
+        "text": "It wasn't long before Ernie began to feel the benefits of his regular exercise."
+      },
+      {
+        "startMs": 177001,
+        "endMs": 179001,
+        "text": "A little exercise every day."
+      },
+      {
+        "startMs": 180001,
+        "endMs": 184000,
+        "text": "Here's a trunk stretching exercise to strengthen the nut muscles."
+      },
+      {
+        "startMs": 186000,
+        "endMs": 187001,
+        "text": "See how the hips act as a pivot."
+      },
+      {
+        "startMs": 191001,
+        "endMs": 197001,
+        "text": "Ernie still has a cold now and then, but now that he's stronger, he can shake off illnesses more readily."
+      },
+      {
+        "startMs": 199001,
+        "endMs": 203000,
+        "text": "Ernie found that he could build good health and enjoy it."
+      },
+      {
+        "startMs": 204000,
+        "endMs": 207000,
+        "text": "And certainly everyone here has sound health."
+      },
+      {
+        "startMs": 208000,
+        "endMs": 210000,
+        "text": "Exercise builds good health."
+      },
+      {
+        "startMs": 211000,
+        "endMs": 214000,
+        "text": "What about Jean Taylor? What's her story?"
+      },
+      {
+        "startMs": 214001,
+        "endMs": 224001,
+        "text": "We've remarked on Jean's poise and self-confidence, but not so long ago, Jean felt lethargic and awkward. And feeling awkward."
+      },
+      {
+        "startMs": 225000,
+        "endMs": 227000,
+        "text": "Well, let's see what happens."
+      },
+      {
+        "startMs": 230001,
+        "endMs": 233000,
+        "text": "Yes, Jean was pretty shy."
+      },
+      {
+        "startMs": 234000,
+        "endMs": 237000,
+        "text": "Jean wondered if she could do something to make friends easier."
+      },
+      {
+        "startMs": 239000,
+        "endMs": 241000,
+        "text": "A couple of days later, she was still wondering."
+      },
+      {
+        "startMs": 243001,
+        "endMs": 246001,
+        "text": "And then she saw one way other people make friends."
+      },
+      {
+        "startMs": 248000,
+        "endMs": 250001,
+        "text": "That's right, engage in sports."
+      },
+      {
+        "startMs": 253001,
+        "endMs": 258000,
+        "text": "But no, Jean wouldn't dare. She'd be so clumsy and awkward."
+      },
+      {
+        "startMs": 259001,
+        "endMs": 263000,
+        "text": "But the point is, of course, that you have to learn how to play."
+      },
+      {
+        "startMs": 264001,
+        "endMs": 266001,
+        "text": "Jean thought she might try it."
+      },
+      {
+        "startMs": 267000,
+        "endMs": 271001,
+        "text": "Maybe once she learned the skills of the game, she would gain poise and self-confidence."
+      },
+      {
+        "startMs": 273000,
+        "endMs": 278000,
+        "text": "So Jean finally took the big first step and got started with some physical activity."
+      },
+      {
+        "startMs": 280001,
+        "endMs": 285001,
+        "text": "Besides badminton, Jean used simple exercises to build control of her muscles for better posture."
+      },
+      {
+        "startMs": 287000,
+        "endMs": 289001,
+        "text": "Here's a good exercise to develop poise and balance."
+      },
+      {
+        "startMs": 291000,
+        "endMs": 292000,
+        "text": "It's called a tourgité."
+      },
+      {
+        "startMs": 293001,
+        "endMs": 298001,
+        "text": "Over a period of days, try to increase the number of times you can do this before getting tired."
+      },
+      {
+        "startMs": 300000,
+        "endMs": 303000,
+        "text": "Jean's exercises improved her badminton and her poise."
+      },
+      {
+        "startMs": 305000,
+        "endMs": 309000,
+        "text": "She had started out wanting to meet a few people, to make friends."
+      },
+      {
+        "startMs": 313001,
+        "endMs": 319000,
+        "text": "So when Hal invited her to join the acrobatics club, don't think Jean wasn't pleased."
+      },
+      {
+        "startMs": 320001,
+        "endMs": 324000,
+        "text": "Yes, Jean made social contacts and friends."
+      },
+      {
+        "startMs": 325000,
+        "endMs": 327001,
+        "text": "That's another way exercise has helped."
+      },
+      {
+        "startMs": 329000,
+        "endMs": 332001,
+        "text": "Jean's a happier girl, as well as a healthier one."
+      },
+      {
+        "startMs": 334000,
+        "endMs": 337000,
+        "text": "Now, what got Hal started with the acrobatics club?"
+      },
+      {
+        "startMs": 337001,
+        "endMs": 342000,
+        "text": "He has plenty of social contacts, and he has enjoyed fairly good health."
+      },
+      {
+        "startMs": 343001,
+        "endMs": 345001,
+        "text": "So what was his need for physical activity?"
+      },
+      {
+        "startMs": 347000,
+        "endMs": 350000,
+        "text": "Not long ago, Hal was all work and no play."
+      },
+      {
+        "startMs": 351000,
+        "endMs": 357000,
+        "text": "He took his studies seriously, which is all right, except that he didn't give himself time for anything else."
+      },
+      {
+        "startMs": 359000,
+        "endMs": 361000,
+        "text": "Study, study, study."
+      },
+      {
+        "startMs": 362001,
+        "endMs": 366001,
+        "text": "And then, after school, a job, filing papers."
+      },
+      {
+        "startMs": 367001,
+        "endMs": 373000,
+        "text": "And that work is no more active than studying, so it's not surprising that Hal began to make mistakes."
+      },
+      {
+        "startMs": 374001,
+        "endMs": 379001,
+        "text": "He had a steady diet of thinking, and he had no release for nervous energy."
+      },
+      {
+        "startMs": 380000,
+        "endMs": 381001,
+        "text": "He became tense and irritable."
+      },
+      {
+        "startMs": 382001,
+        "endMs": 392000,
+        "text": "He needed some other activity as an outlet for his emotions, some activity more strenuous than shutting file drawers and holding books."
+      },
+      {
+        "startMs": 394000,
+        "endMs": 397001,
+        "text": "Hal had to find out for himself that he needed physical activity."
+      },
+      {
+        "startMs": 398001,
+        "endMs": 401000,
+        "text": "Then, one day, he found this passage."
+      },
+      {
+        "startMs": 402001,
+        "endMs": 406000,
+        "text": "Physical activity can provide excellent release for nervous tensions."
+      },
+      {
+        "startMs": 406001,
+        "endMs": 414000,
+        "text": "Exercise increases the rates of respiration and circulation, and serves as a stimulus, as well as a release for nervous tension."
+      },
+      {
+        "startMs": 414001,
+        "endMs": 419001,
+        "text": "The pleasing tiredness that follows exercise promotes complete relaxation."
+      },
+      {
+        "startMs": 421000,
+        "endMs": 423001,
+        "text": "Well, to Hal, that meant just one thing."
+      },
+      {
+        "startMs": 424000,
+        "endMs": 426000,
+        "text": "He determined to have a program of exercise."
+      },
+      {
+        "startMs": 428000,
+        "endMs": 435001,
+        "text": "So, after talking it over with his physical education instructor, he learned a few exercises that led him to an interest in tumbling."
+      },
+      {
+        "startMs": 437000,
+        "endMs": 441000,
+        "text": "Try this to stretch the muscle fibers and tendons at the back of your knees."
+      },
+      {
+        "startMs": 444001,
+        "endMs": 447001,
+        "text": "Go easy at first, until you feel a stiffness leaving."
+      },
+      {
+        "startMs": 452000,
+        "endMs": 457001,
+        "text": "Hal usually spends some time chaining to strengthen the muscles of his upper arms, shoulders, and back."
+      },
+      {
+        "startMs": 462000,
+        "endMs": 471001,
+        "text": "By taking time for some exercise every day, Hal finds an outlet for his nervous tension, and does even better work at his studies and on the job."
+      },
+      {
+        "startMs": 474000,
+        "endMs": 477000,
+        "text": "What of the others of this group? Why are they here?"
+      },
+      {
+        "startMs": 478001,
+        "endMs": 483000,
+        "text": "Probably their reasons are similar to Ernie's and Jean's and Hal's reasons."
+      },
+      {
+        "startMs": 486001,
+        "endMs": 493000,
+        "text": "Perhaps they want exercise to increase their strength and endurance, and to improve their balance and flexibility."
+      },
+      {
+        "startMs": 494001,
+        "endMs": 497001,
+        "text": "Perhaps they want to establish outlets for their emotional tensions."
+      },
+      {
+        "startMs": 499000,
+        "endMs": 503000,
+        "text": "Perhaps they want to gain poise and self-confidence and meet new friends."
+      },
+      {
+        "startMs": 507001,
+        "endMs": 514001,
+        "text": "Of course, tumbling is only one of the many ways to obtain exercise."
+      },
+      {
+        "startMs": 517001,
+        "endMs": 526000,
+        "text": "Athletic sports involve team play and team competition, and so are especially good ways of building health and releasing emotional tension."
+      },
+      {
+        "startMs": 528000,
+        "endMs": 533001,
+        "text": "These activities bring large groups of muscles into action, and train groups of muscles to work together."
+      },
+      {
+        "startMs": 536000,
+        "endMs": 541000,
+        "text": "And milder, less vigorous sports still have the advantage of outdoor activity."
+      },
+      {
+        "startMs": 542000,
+        "endMs": 550001,
+        "text": "And although not everyone can take part in team athletics, almost anyone can find some source of exercise with little or no equipment."
+      },
+      {
+        "startMs": 552000,
+        "endMs": 556000,
+        "text": "Talk it over with your physical education instructor or your doctor."
+      },
+      {
+        "startMs": 558000,
+        "endMs": 565000,
+        "text": "It's up to you to see that your body gets the activity it needs for better physical and mental health."
+      },
+      {
+        "startMs": 571000,
+        "endMs": 590000,
+        "text": "www.cst.eu.com"
+      }
     ]
   },
   {
-    "id": "voa-grammar-simple-past",
-    "title": "Simple Past",
-    "description": "Quick review of the simple past tense with regular and irregular verbs.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-simple-past",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 150000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "emerald",
-    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-sleepfor1950",
+    "title": "Sleep for Health",
+    "description": "Told from the viewpoint of a child, this film emphasizes that children should train themselves in good sleeping habits. In typical \"Goofus and Gallant\" style, it shows the advantages a well-rested kid has over his poor-sleeping classmate. D",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "Sleepfor1950",
+    "sourcePageUrl": "https://archive.org/details/Sleepfor1950",
+    "videoUrl": "https://archive.org/download/Sleepfor1950/Sleepfor1950_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/Sleepfor1950",
+    "transcriptUrl": "https://archive.org/download/Sleepfor1950/Sleepfor1950.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 633001,
+    "level": "A2",
+    "topic": "Health & Habits",
+    "accent": "US",
+    "grad": "blue",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Sleep for Health",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "Yesterday I walked to the park." },
-      { "startMs": 4000, "endMs": 8000, "text": "She went home after class." }
+      {
+        "startMs": 33000,
+        "endMs": 38001,
+        "text": "A new baby is an exciting addition to the family, but there are problems too."
+      },
+      {
+        "startMs": 39000,
+        "endMs": 47000,
+        "text": "He's always asleep. When's he ever going to be any fun? All he ever does is eat and sleep."
+      },
+      {
+        "startMs": 49001,
+        "endMs": 54001,
+        "text": "Yes, eat and sleep. And that's just about all you did too when you were a baby."
+      },
+      {
+        "startMs": 55000,
+        "endMs": 58001,
+        "text": "You had to depend on your mother for all the things that you needed."
+      },
+      {
+        "startMs": 59000,
+        "endMs": 62001,
+        "text": "She had to feed you, to bathe you, to put you down to sleep."
+      },
+      {
+        "startMs": 64001,
+        "endMs": 71000,
+        "text": "As you grow older, you learn to do more and more things for yourself."
+      },
+      {
+        "startMs": 72000,
+        "endMs": 75000,
+        "text": "Some of these things you do so often that they become habits."
+      },
+      {
+        "startMs": 76000,
+        "endMs": 81000,
+        "text": "Everybody has habits. Dad likes to read his newspaper every evening in this same chair."
+      },
+      {
+        "startMs": 81000,
+        "endMs": 86001,
+        "text": "It's one of his habits. Habits are things you do naturally without having to think about them."
+      },
+      {
+        "startMs": 87000,
+        "endMs": 92001,
+        "text": "Martha first had to think each step when she tied a bow knot. Now she can do it easily and quickly."
+      },
+      {
+        "startMs": 97001,
+        "endMs": 103000,
+        "text": "Regular habits make daily living much easier since they help us do things without having to think about them."
+      },
+      {
+        "startMs": 103001,
+        "endMs": 106001,
+        "text": "Some of the habits you learn now may stay with you all your life."
+      },
+      {
+        "startMs": 108000,
+        "endMs": 111000,
+        "text": "All right, children. It's time to get ready for bed."
+      },
+      {
+        "startMs": 111001,
+        "endMs": 113000,
+        "text": "I'm almost through with this chapter, Mother."
+      },
+      {
+        "startMs": 116000,
+        "endMs": 121000,
+        "text": "It's time for bed, Susie. You go right to sleep now."
+      },
+      {
+        "startMs": 122000,
+        "endMs": 126001,
+        "text": "Getting ready for bed at a regular time is one of the most important habits you can learn."
+      },
+      {
+        "startMs": 127000,
+        "endMs": 130001,
+        "text": "A quiet hour or two before bedtime is part of this habit."
+      },
+      {
+        "startMs": 131000,
+        "endMs": 134000,
+        "text": "It makes you feel relaxed and sleepy. Ready for bed."
+      },
+      {
+        "startMs": 153001,
+        "endMs": 156000,
+        "text": "Washing up is part of the going to bed habit."
+      },
+      {
+        "startMs": 156001,
+        "endMs": 160000,
+        "text": "Any regular routine before bedtime helps you feel sleepy."
+      },
+      {
+        "startMs": 161000,
+        "endMs": 163000,
+        "text": "Hanging up your clothes can be part of this routine."
+      },
+      {
+        "startMs": 163001,
+        "endMs": 166000,
+        "text": "They'll air out overnight and be neat for tomorrow."
+      },
+      {
+        "startMs": 169001,
+        "endMs": 172000,
+        "text": "Wearing the right kind of night clothes is important."
+      },
+      {
+        "startMs": 172001,
+        "endMs": 175001,
+        "text": "David's pajamas fit him loosely and don't bind him around the waist."
+      },
+      {
+        "startMs": 176001,
+        "endMs": 182001,
+        "text": "David likes to open his window when it isn't too cold for fresh air, but he's careful not to sleep in a draft."
+      },
+      {
+        "startMs": 184001,
+        "endMs": 186001,
+        "text": "Of course, Martha has her own habits."
+      },
+      {
+        "startMs": 187000,
+        "endMs": 191000,
+        "text": "Instead of opening her window, she gets fresh air by opening her door a bit."
+      },
+      {
+        "startMs": 192000,
+        "endMs": 195000,
+        "text": "Good night, David. Good night, sis."
+      },
+      {
+        "startMs": 196000,
+        "endMs": 199000,
+        "text": "David's bed is comfortable and the mattress isn't too soft."
+      },
+      {
+        "startMs": 199001,
+        "endMs": 202000,
+        "text": "The covers on his bed are warm without being heavy."
+      },
+      {
+        "startMs": 206001,
+        "endMs": 210001,
+        "text": "And so David's ready for bed at just about the usual time."
+      },
+      {
+        "startMs": 211000,
+        "endMs": 216001,
+        "text": "Of course, he sometimes stays up later, but that doesn't happen often enough to change his going to bed habits."
+      },
+      {
+        "startMs": 218000,
+        "endMs": 223000,
+        "text": "Now to sleep. Some people go right to sleep, others take longer."
+      },
+      {
+        "startMs": 223001,
+        "endMs": 228001,
+        "text": "Because David has regular sleeping habits, he usually drops off very quickly."
+      },
+      {
+        "startMs": 243000,
+        "endMs": 247001,
+        "text": "David has probably never stopped to think what a wonderful thing sleep is."
+      },
+      {
+        "startMs": 248000,
+        "endMs": 253001,
+        "text": "In sleep, the muscles of the body are relaxed. It's the most perfect way to relax that we have."
+      },
+      {
+        "startMs": 254001,
+        "endMs": 259001,
+        "text": "Our breathing is slower and deeper when we sleep. The body's temperature is lower."
+      },
+      {
+        "startMs": 260000,
+        "endMs": 264001,
+        "text": "Even the heart beats more slowly. The whole body is resting."
+      },
+      {
+        "startMs": 265001,
+        "endMs": 272000,
+        "text": "To rest all our muscles, we turn in our sleep. Some people turn often, others not so often, but we all do it."
+      },
+      {
+        "startMs": 272001,
+        "endMs": 275000,
+        "text": "It's a normal part of sound, healthy sleep."
+      },
+      {
+        "startMs": 276000,
+        "endMs": 280001,
+        "text": "Dreams are normal too. Often they're suggested by things around us while we sleep."
+      },
+      {
+        "startMs": 321001,
+        "endMs": 329001,
+        "text": "Dreams don't seem to make much sense, do they? That's because the brain is resting along with the body, so it's less alert when you sleep."
+      },
+      {
+        "startMs": 342000,
+        "endMs": 346001,
+        "text": "After a good night's sleep, you usually wake up easily and naturally."
+      },
+      {
+        "startMs": 356000,
+        "endMs": 361000,
+        "text": "The alarm hasn't rung yet. David finds that he usually wakes up before it goes off."
+      },
+      {
+        "startMs": 363000,
+        "endMs": 369001,
+        "text": "Of course, it takes him a little while to get fully awake. You're never at your best until at least an hour or two afterwards."
+      },
+      {
+        "startMs": 370000,
+        "endMs": 372001,
+        "text": "That's one reason why getting up early is so important."
+      },
+      {
+        "startMs": 379000,
+        "endMs": 384001,
+        "text": "There's plenty of time for breakfast too. Breakfast is an important meal that shouldn't be missed."
+      },
+      {
+        "startMs": 385000,
+        "endMs": 392000,
+        "text": "If you usually go to bed early enough, you usually wake up early too. You can start the day in a pleasant, unhurried way."
+      },
+      {
+        "startMs": 392001,
+        "endMs": 396001,
+        "text": "It's more fun for you that way and more fun for the rest of the family too."
+      },
+      {
+        "startMs": 397001,
+        "endMs": 401001,
+        "text": "David and Martha enjoy their mornings, and that helps them enjoy the whole day."
+      },
+      {
+        "startMs": 412001,
+        "endMs": 417000,
+        "text": "As the day goes on, you get more and more value from your regular sleeping habits."
+      },
+      {
+        "startMs": 417001,
+        "endMs": 422000,
+        "text": "Plenty of sleep helps you to be bright and alert to the very end of the day."
+      },
+      {
+        "startMs": 425000,
+        "endMs": 430000,
+        "text": "But what about bad sleeping habits? George just doesn't get enough sleep."
+      },
+      {
+        "startMs": 430001,
+        "endMs": 435000,
+        "text": "Now, in the afternoon, he's tired. It's hard for him to pay attention in class."
+      },
+      {
+        "startMs": 436001,
+        "endMs": 441001,
+        "text": "When the teacher calls on him, George just can't seem to remember things that he really ought to know."
+      },
+      {
+        "startMs": 442000,
+        "endMs": 447001,
+        "text": "George doesn't realize it, but his main trouble is bad sleeping habits. Last night, for instance..."
+      },
+      {
+        "startMs": 447001,
+        "endMs": 451000,
+        "text": "No, no, Muggsy. Don't rub me out. I didn't do it. Honest, I didn't."
+      },
+      {
+        "startMs": 451000,
+        "endMs": 453001,
+        "text": "No, Rat's gonna squeal on me. You know too much, Limpy."
+      },
+      {
+        "startMs": 454000,
+        "endMs": 456001,
+        "text": "You know I wouldn't sing, Muggsy. We've been past too long."
+      },
+      {
+        "startMs": 456001,
+        "endMs": 458001,
+        "text": "Slats saw you in the DA's office."
+      },
+      {
+        "startMs": 458001,
+        "endMs": 461001,
+        "text": "Sure, I was there, but they didn't get nothing out of me."
+      },
+      {
+        "startMs": 461001,
+        "endMs": 463000,
+        "text": "Then why was the coppers around here today?"
+      },
+      {
+        "startMs": 463001,
+        "endMs": 465001,
+        "text": "I don't know, Muggsy. I don't know."
+      },
+      {
+        "startMs": 465001,
+        "endMs": 468000,
+        "text": "Just squeal. That's why. You put the finger on me."
+      },
+      {
+        "startMs": 468000,
+        "endMs": 471000,
+        "text": "You can't do it, Muggsy. You can't. You can't."
+      },
+      {
+        "startMs": 471001,
+        "endMs": 482001,
+        "text": "Yes, George has bad sleeping habits."
+      },
+      {
+        "startMs": 483000,
+        "endMs": 487000,
+        "text": "And even when he finally does get into bed, he finds it hard to go to sleep."
+      },
+      {
+        "startMs": 488000,
+        "endMs": 492001,
+        "text": "That's because he hasn't formed the habit of going to sleep at a regular time each night."
+      },
+      {
+        "startMs": 496000,
+        "endMs": 500001,
+        "text": "And it's just as hard for him to wake up in the morning."
+      },
+      {
+        "startMs": 501001,
+        "endMs": 502001,
+        "text": "George! George!"
+      },
+      {
+        "startMs": 511000,
+        "endMs": 511001,
+        "text": "[...]"
+      },
+      {
+        "startMs": 511001,
+        "endMs": 513000,
+        "text": "Get up, George!"
+      },
+      {
+        "startMs": 516001,
+        "endMs": 520001,
+        "text": "He's still tired because he hasn't had enough sleep."
+      },
+      {
+        "startMs": 534001,
+        "endMs": 537000,
+        "text": "Hey, Mom! Where are my books?"
+      },
+      {
+        "startMs": 537000,
+        "endMs": 538000,
+        "text": "On the mantle, dear."
+      },
+      {
+        "startMs": 540000,
+        "endMs": 541001,
+        "text": "George, close the door."
+      },
+      {
+        "startMs": 545000,
+        "endMs": 550001,
+        "text": "The morning starts badly, and the whole day goes badly when you get too little sleep too often."
+      },
+      {
+        "startMs": 557000,
+        "endMs": 563000,
+        "text": "And even after class is over, you keep on paying the penalty for bad sleeping habits."
+      },
+      {
+        "startMs": 565000,
+        "endMs": 570001,
+        "text": "You don't have much fun when you're tired and low in energy."
+      },
+      {
+        "startMs": 571001,
+        "endMs": 573001,
+        "text": "Lack of sleep makes it hard for you to do your best."
+      },
+      {
+        "startMs": 574001,
+        "endMs": 578001,
+        "text": "You just can't seem to get into the game and have fun the way the other fellas do."
+      },
+      {
+        "startMs": 583001,
+        "endMs": 587000,
+        "text": "You're irritable and cross, hard to get along with."
+      },
+      {
+        "startMs": 589001,
+        "endMs": 595001,
+        "text": "People don't like you, and you don't like yourself when you're like that."
+      },
+      {
+        "startMs": 597000,
+        "endMs": 603001,
+        "text": "Probably neither David nor George realize how important their sleeping habits are to the way they enjoy their waking hours."
+      },
+      {
+        "startMs": 604000,
+        "endMs": 612001,
+        "text": "Going to bed at a regular time each night makes it easier for you to go right off to sleep instead of lying awake long into the night."
+      },
+      {
+        "startMs": 615001,
+        "endMs": 620000,
+        "text": "You wake up easily and naturally without having to be dragged out of bed."
+      },
+      {
+        "startMs": 622000,
+        "endMs": 626001,
+        "text": "And most important, your day starts right and stays right."
+      },
+      {
+        "startMs": 627000,
+        "endMs": 633001,
+        "text": "Both David and Martha have learned that good sleeping habits help you get the most out of everyday living."
+      }
     ]
   },
   {
-    "id": "voa-lets-learn-meeting-a-friend",
-    "title": "Meeting a Friend",
-    "description": "Greeting and conversation patterns when meeting friends in daily situations.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-meeting-a-friend",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 220000, "level": "A1", "topic": "Daily Conversation", "accent": "US", "grad": "indigo",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-joanavoi1947",
+    "title": "Joan Avoids a Cold",
+    "description": "How young children must behave to avoid transmitting germs to one another.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "JoanAvoi1947",
+    "sourcePageUrl": "https://archive.org/details/JoanAvoi1947",
+    "videoUrl": "https://archive.org/download/JoanAvoi1947/JoanAvoi1947_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/JoanAvoi1947",
+    "transcriptUrl": "https://archive.org/download/JoanAvoi1947/JoanAvoi1947.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 615001,
+    "level": "A2",
+    "topic": "Daily Life",
+    "accent": "US",
+    "grad": "amber",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Joan Avoids a Cold",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 3500, "text": "Hey! It's great to see you." },
-      { "startMs": 3500, "endMs": 7500, "text": "How have you been lately?" }
+      {
+        "startMs": 22000,
+        "endMs": 29000,
+        "text": "The guardians of our health, our doctors, nurses, teachers, teachers and parents are working together to keep us well."
+      },
+      {
+        "startMs": 29000,
+        "endMs": 35000,
+        "text": "All of them must know and agree on the health practices we need at home, in the neighborhood and at school."
+      },
+      {
+        "startMs": 36000,
+        "endMs": 38000,
+        "text": "This is Joan getting ready for school."
+      },
+      {
+        "startMs": 39000,
+        "endMs": 43001,
+        "text": "Joan learned at school that it's important to choose the right clothes on a cold day."
+      },
+      {
+        "startMs": 44001,
+        "endMs": 48000,
+        "text": "The temperature is 40, too cold for just a coat."
+      },
+      {
+        "startMs": 49001,
+        "endMs": 54000,
+        "text": "She will need her snow suit if she wishes to keep well for the Dutch festival."
+      },
+      {
+        "startMs": 55000,
+        "endMs": 57001,
+        "text": "And this is Jim, Joan's brother."
+      },
+      {
+        "startMs": 58001,
+        "endMs": 62000,
+        "text": "They choose wraps to keep all of their body warm."
+      },
+      {
+        "startMs": 67000,
+        "endMs": 69001,
+        "text": "Mother is the seed in Jim looking so well this morning."
+      },
+      {
+        "startMs": 70001,
+        "endMs": 75001,
+        "text": "Their color is good, their eyes alert, they're ready for work or play."
+      },
+      {
+        "startMs": 76001,
+        "endMs": 81001,
+        "text": "Mother needs to get another supply of paper handkerchiefs."
+      },
+      {
+        "startMs": 82001,
+        "endMs": 86000,
+        "text": "Jim's friend George is eating an apple as he waits for them."
+      },
+      {
+        "startMs": 88000,
+        "endMs": 90000,
+        "text": "That is a wise no thank you, Joan."
+      },
+      {
+        "startMs": 91000,
+        "endMs": 92000,
+        "text": "Never share another's food."
+      },
+      {
+        "startMs": 94000,
+        "endMs": 98000,
+        "text": "George has forgotten something, something that helps keep him clean."
+      },
+      {
+        "startMs": 99000,
+        "endMs": 102000,
+        "text": "It's lucky for George that Joan has an extra tissue to lend him."
+      },
+      {
+        "startMs": 104000,
+        "endMs": 112001,
+        "text": "Some children learn to jump or go around puddles, but George wades right into trouble because he forgot his galoshes."
+      },
+      {
+        "startMs": 115000,
+        "endMs": 117000,
+        "text": "This is Miss May, Joan's teacher."
+      },
+      {
+        "startMs": 118000,
+        "endMs": 119001,
+        "text": "George and Joan are glad to be in school."
+      },
+      {
+        "startMs": 120000,
+        "endMs": 122000,
+        "text": "The children are getting ready for their Dutch festival."
+      },
+      {
+        "startMs": 123000,
+        "endMs": 128000,
+        "text": "Tom has brought the thermometer in so that the children can guess what the weatherman doll should wear today."
+      },
+      {
+        "startMs": 128000,
+        "endMs": 131000,
+        "text": "A raincoat and umbrella? Oh no."
+      },
+      {
+        "startMs": 131001,
+        "endMs": 134000,
+        "text": "A snow suit and galoshes to keep him warm and dry."
+      },
+      {
+        "startMs": 134001,
+        "endMs": 138000,
+        "text": "It was hard to guess today, but Tom is a good guesser."
+      },
+      {
+        "startMs": 138000,
+        "endMs": 140000,
+        "text": "Or did Mother tell him what to wear?"
+      },
+      {
+        "startMs": 142000,
+        "endMs": 145000,
+        "text": "George, you forgot something more important than your handkerchief."
+      },
+      {
+        "startMs": 145001,
+        "endMs": 150000,
+        "text": "You forgot to cover your sneeze, and cold germs travel on your sneeze or cough, you know."
+      },
+      {
+        "startMs": 155000,
+        "endMs": 158001,
+        "text": "Why cold germs can fly farther than Miss May can blow the feather."
+      },
+      {
+        "startMs": 159001,
+        "endMs": 163001,
+        "text": "Cold germs can fly eight feet to another child's nose, hand, or food."
+      },
+      {
+        "startMs": 164001,
+        "endMs": 168001,
+        "text": "People who put fingers into their mouths make it easy for cold germs to come to them."
+      },
+      {
+        "startMs": 171000,
+        "endMs": 172001,
+        "text": "No, not that way, George."
+      },
+      {
+        "startMs": 173001,
+        "endMs": 177001,
+        "text": "Blow your nose gently without pressing the opening of the nostrils closed."
+      },
+      {
+        "startMs": 179000,
+        "endMs": 179001,
+        "text": "That's better."
+      },
+      {
+        "startMs": 181000,
+        "endMs": 184001,
+        "text": "Oh, and your feet are wet. It's easy to catch cold when your body is chilly."
+      },
+      {
+        "startMs": 185000,
+        "endMs": 187001,
+        "text": "You'd better go and see the school nurse. She'll help you."
+      },
+      {
+        "startMs": 189000,
+        "endMs": 191000,
+        "text": "The nurse is examining Mary after her cold."
+      },
+      {
+        "startMs": 191001,
+        "endMs": 198001,
+        "text": "Four days at home with the cold keeps others from catching it, and protects you from serious infections that follow colds."
+      },
+      {
+        "startMs": 199000,
+        "endMs": 201000,
+        "text": "Now, George, who sent you in here?"
+      },
+      {
+        "startMs": 202000,
+        "endMs": 204001,
+        "text": "Miss May said I might be catching a cold."
+      },
+      {
+        "startMs": 205000,
+        "endMs": 206001,
+        "text": "Well, what do you think?"
+      },
+      {
+        "startMs": 207001,
+        "endMs": 208001,
+        "text": "I'm hot and chilly."
+      },
+      {
+        "startMs": 209001,
+        "endMs": 213000,
+        "text": "Well, did you sleep pretty well last night, and did you feel like getting up this morning?"
+      },
+      {
+        "startMs": 213001,
+        "endMs": 215000,
+        "text": "Did your breakfast taste good?"
+      },
+      {
+        "startMs": 215001,
+        "endMs": 220001,
+        "text": "I hardly had the time to have my breakfast. I had an apple on the way."
+      },
+      {
+        "startMs": 223000,
+        "endMs": 224001,
+        "text": "Now, blow your nose, George."
+      },
+      {
+        "startMs": 226000,
+        "endMs": 229001,
+        "text": "Oh, not so hard, gently. No pressure on the opening."
+      },
+      {
+        "startMs": 231001,
+        "endMs": 232001,
+        "text": "Now, let's look at your throat."
+      },
+      {
+        "startMs": 238000,
+        "endMs": 241000,
+        "text": "All right, now you sit down, and I'll take her."
+      },
+      {
+        "startMs": 241001,
+        "endMs": 244001,
+        "text": "[...] loosen your lips and hold it under your tongue."
+      },
+      {
+        "startMs": 248001,
+        "endMs": 250001,
+        "text": "Oh, your feet are wet too, George."
+      },
+      {
+        "startMs": 254001,
+        "endMs": 256000,
+        "text": "The neck is three, two, one."
+      },
+      {
+        "startMs": 258000,
+        "endMs": 260000,
+        "text": "Hello, is it Mrs. Powell there?"
+      },
+      {
+        "startMs": 260001,
+        "endMs": 261000,
+        "text": "[...]"
+      },
+      {
+        "startMs": 261001,
+        "endMs": 263000,
+        "text": "Well, this is Miss Wright, Mrs. Powell."
+      },
+      {
+        "startMs": 264000,
+        "endMs": 266001,
+        "text": "George came in to see me a few moments ago with a cold."
+      },
+      {
+        "startMs": 268000,
+        "endMs": 271000,
+        "text": "Yes, his throat is quite red, and his feet are wet too."
+      },
+      {
+        "startMs": 272000,
+        "endMs": 274001,
+        "text": "I do think he'd be more comfortable at home in bed."
+      },
+      {
+        "startMs": 276000,
+        "endMs": 277000,
+        "text": "Well, just a minute, please."
+      },
+      {
+        "startMs": 281001,
+        "endMs": 284000,
+        "text": "Yes, his temperature is 998."
+      },
+      {
+        "startMs": 285001,
+        "endMs": 291000,
+        "text": "Well, it isn't best to consult your physician if it goes over 100, especially during the cold season."
+      },
+      {
+        "startMs": 292001,
+        "endMs": 294001,
+        "text": "Oh, that would be nice of you to call for him."
+      },
+      {
+        "startMs": 295000,
+        "endMs": 297000,
+        "text": "Yes, he'll be right here in my office."
+      },
+      {
+        "startMs": 297001,
+        "endMs": 299000,
+        "text": "Thank you so much. Goodbye."
+      },
+      {
+        "startMs": 302000,
+        "endMs": 304001,
+        "text": "Joan's mother visits school to plan a health program."
+      },
+      {
+        "startMs": 305001,
+        "endMs": 309000,
+        "text": "Joan must learn to take responsibility for keeping herself well."
+      },
+      {
+        "startMs": 309001,
+        "endMs": 315001,
+        "text": "This weather chart keeps Joan alert to weather changes as she marks snowy or rainy days."
+      },
+      {
+        "startMs": 318001,
+        "endMs": 323001,
+        "text": "Dressing this weather doll for outdoor weather helps Joan know what to wear herself."
+      },
+      {
+        "startMs": 324001,
+        "endMs": 330001,
+        "text": "It will be better for mother when Joan chooses wraps to shoot the temperature instead of arguing about what friends wear."
+      },
+      {
+        "startMs": 333001,
+        "endMs": 335001,
+        "text": "Mother and teacher check Joan's health habits."
+      },
+      {
+        "startMs": 336000,
+        "endMs": 339000,
+        "text": "They plan better health practices for home and school."
+      },
+      {
+        "startMs": 340000,
+        "endMs": 345000,
+        "text": "At school, Joan's committee keeps the washroom attractive with soap sponges, brushes, and signs."
+      },
+      {
+        "startMs": 345000,
+        "endMs": 350000,
+        "text": "Others keep the closets neat, with boxes for rubbers and hangers for clothes."
+      },
+      {
+        "startMs": 351000,
+        "endMs": 355000,
+        "text": "Another records the temperature and tells us when we need heat or fresh air."
+      },
+      {
+        "startMs": 358000,
+        "endMs": 362000,
+        "text": "One group keeps large drawing pencils scrubbed ready for use."
+      },
+      {
+        "startMs": 362001,
+        "endMs": 365001,
+        "text": "Those are jobs Joan and Jim could be learning to do at home, too."
+      },
+      {
+        "startMs": 366000,
+        "endMs": 368001,
+        "text": "On Saturdays, they'll have to help us plan what we're going to do."
+      },
+      {
+        "startMs": 369001,
+        "endMs": 371001,
+        "text": "I'm so glad to get this health record sheet."
+      },
+      {
+        "startMs": 372001,
+        "endMs": 377000,
+        "text": "Your check on Joan's habits at school will help me plan a corrective health program at home."
+      },
+      {
+        "startMs": 378000,
+        "endMs": 385001,
+        "text": "I'm going to find out what kind of health practices we use, and I must check on our equipment to see if we have the materials to carry on the school practices."
+      },
+      {
+        "startMs": 386001,
+        "endMs": 389000,
+        "text": "Thank you for some grand ideas, Miss May."
+      },
+      {
+        "startMs": 389000,
+        "endMs": 392000,
+        "text": "I'm going to visit school again some afternoon when I call for Joan."
+      },
+      {
+        "startMs": 392001,
+        "endMs": 393000,
+        "text": "May I?"
+      },
+      {
+        "startMs": 394001,
+        "endMs": 395001,
+        "text": "Do come often."
+      },
+      {
+        "startMs": 396000,
+        "endMs": 400001,
+        "text": "It is good for teachers and children to have parents visit school."
+      },
+      {
+        "startMs": 403001,
+        "endMs": 407001,
+        "text": "Next morning, Joan's mother is inspecting the health materials in her home."
+      },
+      {
+        "startMs": 408000,
+        "endMs": 411001,
+        "text": "Each one in the family needs a separate towel and washcloth."
+      },
+      {
+        "startMs": 412000,
+        "endMs": 416000,
+        "text": "Mother has one for Jim and another for Joan, each with his own name."
+      },
+      {
+        "startMs": 417001,
+        "endMs": 420000,
+        "text": "Joan's father made a box for her to stand on."
+      },
+      {
+        "startMs": 420000,
+        "endMs": 423001,
+        "text": "It's no fun washing if you have to stretch or can't see into the basin."
+      },
+      {
+        "startMs": 425000,
+        "endMs": 426000,
+        "text": "And here are new cups."
+      },
+      {
+        "startMs": 427000,
+        "endMs": 428001,
+        "text": "Each can have his own cup now."
+      },
+      {
+        "startMs": 429000,
+        "endMs": 430001,
+        "text": "It prevents catching another's cold."
+      },
+      {
+        "startMs": 431000,
+        "endMs": 433001,
+        "text": "A gym. Why are you so cross?"
+      },
+      {
+        "startMs": 436001,
+        "endMs": 439000,
+        "text": "Father has taught Joan to spit into the toilet."
+      },
+      {
+        "startMs": 439000,
+        "endMs": 441000,
+        "text": "For spitting spreads disease."
+      },
+      {
+        "startMs": 443001,
+        "endMs": 446000,
+        "text": "Here are the spoons for your cod liver oil, Joan."
+      },
+      {
+        "startMs": 446001,
+        "endMs": 449001,
+        "text": "It's extra sunshine for us in winter and spring."
+      },
+      {
+        "startMs": 450001,
+        "endMs": 458000,
+        "text": "You know, strong bodies can't always keep us from catching cold, but they help us resist a serious illness that may follow colds."
+      },
+      {
+        "startMs": 458000,
+        "endMs": 463000,
+        "text": "Keep away from persons with colds and keep your hands clean while you're eating."
+      },
+      {
+        "startMs": 466000,
+        "endMs": 476000,
+        "text": "Jim must wash his hands after he pets his dog, but he won't have to go upstairs, as Father has arranged a wash stand downstairs so Jim will remember to wash."
+      },
+      {
+        "startMs": 478000,
+        "endMs": 479000,
+        "text": "What's the trouble with Jim?"
+      },
+      {
+        "startMs": 480000,
+        "endMs": 483001,
+        "text": "He didn't like his breakfast and he was restless as he slept."
+      },
+      {
+        "startMs": 484000,
+        "endMs": 486000,
+        "text": "He's cross and tired this morning."
+      },
+      {
+        "startMs": 487000,
+        "endMs": 491000,
+        "text": "His throat isn't very red, but his eyes look queer."
+      },
+      {
+        "startMs": 492000,
+        "endMs": 495000,
+        "text": "He better stay home today so that Mother can watch him and keep him warm."
+      },
+      {
+        "startMs": 496001,
+        "endMs": 501000,
+        "text": "Joan's Mother can't go to the Kermis now, so Joan must take the paper bags for the party."
+      },
+      {
+        "startMs": 502001,
+        "endMs": 505000,
+        "text": "Colds are easy to catch during the first 24 hours."
+      },
+      {
+        "startMs": 505001,
+        "endMs": 509000,
+        "text": "Mother must see that Jim covers his coughs and stays away from others."
+      },
+      {
+        "startMs": 509001,
+        "endMs": 512001,
+        "text": "She must sterilize his dishes by boiling them thoroughly in water."
+      },
+      {
+        "startMs": 514000,
+        "endMs": 522000,
+        "text": "Joan's room at school is a busy place, and Joan wants to help get ready for the Kermis, but first she must wash her hands."
+      },
+      {
+        "startMs": 523001,
+        "endMs": 528001,
+        "text": "We must always wash hands clean before handling food."
+      },
+      {
+        "startMs": 529001,
+        "endMs": 534000,
+        "text": "So, Joan takes off a coat, uses plenty of soap and a good lather."
+      },
+      {
+        "startMs": 535000,
+        "endMs": 538001,
+        "text": "She rinses her hands well and dries them thoroughly with a paper towel."
+      },
+      {
+        "startMs": 540001,
+        "endMs": 544001,
+        "text": "In another room, the kindergarten children are getting ready for the Kermis."
+      },
+      {
+        "startMs": 545000,
+        "endMs": 548000,
+        "text": "It's best to go to the toilet and wash hands first."
+      },
+      {
+        "startMs": 549001,
+        "endMs": 555000,
+        "text": "Now Joan has her wraps off, her hands are clean, and she's ready to pack the bags for the Kermis."
+      },
+      {
+        "startMs": 557000,
+        "endMs": 559000,
+        "text": "The Kermis has started."
+      },
+      {
+        "startMs": 560000,
+        "endMs": 562000,
+        "text": "George's friends are selling the flowers they raised."
+      },
+      {
+        "startMs": 562001,
+        "endMs": 572000,
+        "text": "They learn that flowers, like children, need plenty of sunshine, water, good food, and moderate temperature to make them grow."
+      },
+      {
+        "startMs": 573000,
+        "endMs": 577000,
+        "text": "Joan's friends are selling cheese, and they are careful to keep the food clean."
+      },
+      {
+        "startMs": 577001,
+        "endMs": 582001,
+        "text": "Everyone is having a good time while poor George stays in bed."
+      },
+      {
+        "startMs": 583000,
+        "endMs": 588001,
+        "text": "His careless habits have made Jim miss the Kermis too, and Jim is restless in bed."
+      },
+      {
+        "startMs": 588001,
+        "endMs": 592001,
+        "text": "Now he knows it pays to avoid people with colds."
+      },
+      {
+        "startMs": 592001,
+        "endMs": 597000,
+        "text": "But Jim's friends are enjoying the Kermis. They learn that Dutch people are clean."
+      },
+      {
+        "startMs": 597001,
+        "endMs": 601001,
+        "text": "Hollanders leave their wooden shoes on their doorstep so that their floors are spotless."
+      },
+      {
+        "startMs": 602000,
+        "endMs": 606001,
+        "text": "The Dutch drink milk and raise their own vegetables and flowers. They keep well."
+      },
+      {
+        "startMs": 608000,
+        "endMs": 610001,
+        "text": "You have seen these children learning to take care of themselves."
+      },
+      {
+        "startMs": 611001,
+        "endMs": 615001,
+        "text": "Now, do you know why George and Jim missed the Kermis?"
+      }
     ]
   },
   {
-    "id": "voa-how-to-pronounce-comfortable",
-    "title": "How to Pronounce \"Comfortable\"",
-    "description": "How to pronounce the word \"comfortable\" quickly like a native speaker.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-comfortable",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 64000, "level": "B1", "topic": "Pronunciation", "accent": "US", "grad": "rose",
-    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
+    "id": "archive-careofth1949",
+    "title": "Care of the Skin",
+    "description": "Structure of the skin; good cleanliness habits; the proper way to wash; the correct use of soap.",
+    "sourceType": "BuiltInArchive",
+    "provider": "Internet Archive",
+    "providerItemId": "Careofth1949",
+    "sourcePageUrl": "https://archive.org/details/Careofth1949",
+    "videoUrl": "https://archive.org/download/Careofth1949/Careofth1949_512kb.mp4",
+    "thumbnailUrl": "https://archive.org/services/img/Careofth1949",
+    "transcriptUrl": "https://archive.org/download/Careofth1949/Careofth1949.asr.vtt",
+    "transcriptSource": "LocallyGenerated",
+    "durationMs": 625000,
+    "level": "B1",
+    "topic": "Health",
+    "accent": "US",
+    "grad": "violet",
+    "category": "Internet Archive",
+    "licenseType": "PublicDomain",
+    "sourceCredit": "Source: Internet Archive — Care of the Skin",
+    "safetyStatus": "PendingReview",
+    "blockedTopicsChecked": false,
     "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "The word is comfortable." },
-      { "startMs": 4000, "endMs": 8000, "text": "Most people say comf-ter-ble." }
-    ]
-  },
-  {
-    "id": "voa-minute-piece-of-cake",
-    "title": "A Piece of Cake",
-    "description": "The idiom \"a piece of cake\" means something is extremely easy.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "english-in-a-minute-piece-of-cake",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 60000, "level": "A2", "topic": "Vocabulary", "accent": "US", "grad": "amber",
-    "category": "English in a Minute", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "That test was a piece of cake." },
-      { "startMs": 4000, "endMs": 8000, "text": "It means something very easy." }
-    ]
-  },
-  {
-    "id": "voa-grammar-present-continuous",
-    "title": "Present Continuous",
-    "description": "How to use the present continuous tense to talk about actions happening right now.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-present-continuous",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 158000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
-    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "I am studying English right now." },
-      { "startMs": 4000, "endMs": 8000, "text": "They are watching a movie." }
-    ]
-  },
-  {
-    "id": "voa-lets-learn-at-the-office",
-    "title": "At the Office",
-    "description": "Polite phrases for discussing work at the office.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-office",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 205000, "level": "B1", "topic": "Office English", "accent": "US", "grad": "blue",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4500, "text": "Could you send me the report?" },
-      { "startMs": 4500, "endMs": 9000, "text": "I'll have it ready by noon." }
-    ]
-  },
-  {
-    "id": "voa-ask-a-teacher-make-vs-do",
-    "title": "Make vs. Do",
-    "description": "Distinguish between two easily confused verbs, \"make\" and \"do\".",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "ask-a-teacher-make-vs-do",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 175000, "level": "B1", "topic": "Grammar", "accent": "US", "grad": "violet",
-    "category": "Ask a Teacher", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "We use make to create something." },
-      { "startMs": 4000, "endMs": 8000, "text": "We use do for activities and tasks." }
-    ]
-  },
-  {
-    "id": "voa-words-stories-hit-the-road",
-    "title": "Hit the Road",
-    "description": "The idiom \"hit the road\" means to start a journey or leave.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "words-and-their-stories-hit-the-road",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 240000, "level": "B2", "topic": "Vocabulary", "accent": "US", "grad": "emerald",
-    "category": "Words and Their Stories", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "It's getting late, let's hit the road." },
-      { "startMs": 4000, "endMs": 8000, "text": "It means to leave or start a journey." }
-    ]
-  },
-  {
-    "id": "voa-lets-learn-at-the-airport",
-    "title": "At the Airport",
-    "description": "Common questions and phrases when checking in at the airport.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-airport",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 198000, "level": "A2", "topic": "Travel English", "accent": "US", "grad": "cyan",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4500, "text": "May I see your passport, please?" },
-      { "startMs": 4500, "endMs": 9000, "text": "Here you are. I have one bag to check." }
-    ]
-  },
-  {
-    "id": "voa-how-to-pronounce-wednesday",
-    "title": "How to Pronounce \"Wednesday\"",
-    "description": "Why \"Wednesday\" is pronounced as wenz-day.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "how-to-pronounce-wednesday",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 62000, "level": "A2", "topic": "Pronunciation", "accent": "US", "grad": "rose",
-    "category": "How to Pronounce", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "The word is Wednesday." },
-      { "startMs": 4000, "endMs": 8000, "text": "We say wenz-day, dropping the d." }
-    ]
-  },
-  {
-    "id": "voa-everyday-grammar-comparatives",
-    "title": "Comparatives",
-    "description": "How to make comparisons using short and long adjectives.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "everyday-grammar-comparatives",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 162000, "level": "A2", "topic": "Grammar", "accent": "US", "grad": "teal",
-    "category": "Everyday Grammar", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4000, "text": "This box is bigger than that one." },
-      { "startMs": 4000, "endMs": 8000, "text": "My phone is more expensive than yours." }
-    ]
-  },
-  {
-    "id": "voa-lets-learn-at-the-restaurant",
-    "title": "At the Restaurant",
-    "description": "Phrases for ordering and paying at a restaurant.",
-    "sourceType": "BuiltInVoa", "provider": "VOA Learning English", "providerItemId": "lets-learn-english-at-the-restaurant",
-    "sourceUrl": "", "videoUrl": "", "thumbnailUrl": "", "transcriptUrl": "",
-    "durationMs": 210000, "level": "A2", "topic": "Daily Conversation", "accent": "US", "grad": "amber",
-    "category": "Let's Learn English", "sourceCredit": "Source: VOA Learning English", "safetyStatus": "Curated",
-    "segments": [
-      { "startMs": 0, "endMs": 4500, "text": "Are you ready to order?" },
-      { "startMs": 4500, "endMs": 9000, "text": "Yes, I'll have the grilled chicken." }
+      {
+        "startMs": 21000,
+        "endMs": 26001,
+        "text": "[\"The Star-Spangled Banner\"] But Virginia was washing themselves."
+      },
+      {
+        "startMs": 27001,
+        "endMs": 28001,
+        "text": "So he'll be clean."
+      },
+      {
+        "startMs": 29000,
+        "endMs": 29001,
+        "text": "Why?"
+      },
+      {
+        "startMs": 29001,
+        "endMs": 32000,
+        "text": "Oh, just because."
+      },
+      {
+        "startMs": 34001,
+        "endMs": 35001,
+        "text": "Hey, Virginia."
+      },
+      {
+        "startMs": 36000,
+        "endMs": 38001,
+        "text": "Come on out more before I start my bath."
+      },
+      {
+        "startMs": 39000,
+        "endMs": 39001,
+        "text": "All right, Fred."
+      },
+      {
+        "startMs": 41001,
+        "endMs": 43000,
+        "text": "Come on, Billy. Let's go upstairs."
+      },
+      {
+        "startMs": 44000,
+        "endMs": 44001,
+        "text": "Wait, Virginia."
+      },
+      {
+        "startMs": 45000,
+        "endMs": 46000,
+        "text": "I can work right here."
+      },
+      {
+        "startMs": 46001,
+        "endMs": 47000,
+        "text": "Look!"
+      },
+      {
+        "startMs": 49001,
+        "endMs": 51000,
+        "text": "Oh, Billy, they're no good."
+      },
+      {
+        "startMs": 51000,
+        "endMs": 51001,
+        "text": "Why?"
+      },
+      {
+        "startMs": 52000,
+        "endMs": 53000,
+        "text": "That's just silly."
+      },
+      {
+        "startMs": 54000,
+        "endMs": 55001,
+        "text": "Oh, because."
+      },
+      {
+        "startMs": 56001,
+        "endMs": 57000,
+        "text": "Come on, Billy."
+      },
+      {
+        "startMs": 65001,
+        "endMs": 72000,
+        "text": "[\"The Star-Spangled Banner\"] Virginia doesn't know the answer to Billy's question."
+      },
+      {
+        "startMs": 72001,
+        "endMs": 74001,
+        "text": "Let's see if we can explain it."
+      },
+      {
+        "startMs": 77000,
+        "endMs": 81000,
+        "text": "You and I have a coat of armor that protects our bodies from the outside world."
+      },
+      {
+        "startMs": 81001,
+        "endMs": 82001,
+        "text": "It's our skin."
+      },
+      {
+        "startMs": 83000,
+        "endMs": 84001,
+        "text": "We wash it with soap and water."
+      },
+      {
+        "startMs": 85001,
+        "endMs": 87000,
+        "text": "Well, there's a special reason."
+      },
+      {
+        "startMs": 92000,
+        "endMs": 94001,
+        "text": "Look at your skin through a magnifying glass."
+      },
+      {
+        "startMs": 95000,
+        "endMs": 97001,
+        "text": "It looks like it's full of tiny holes, doesn't it?"
+      },
+      {
+        "startMs": 98000,
+        "endMs": 99001,
+        "text": "These holes are called pores."
+      },
+      {
+        "startMs": 100001,
+        "endMs": 102001,
+        "text": "Some have little hairs growing out of them."
+      },
+      {
+        "startMs": 106001,
+        "endMs": 109000,
+        "text": "But did you know that you really have two skins?"
+      },
+      {
+        "startMs": 112000,
+        "endMs": 114001,
+        "text": "The one you see is the outer skin."
+      },
+      {
+        "startMs": 114001,
+        "endMs": 116001,
+        "text": "It's the toughest part of this coat of armor."
+      },
+      {
+        "startMs": 119000,
+        "endMs": 121001,
+        "text": "Underneath it is another layer, the inner skin."
+      },
+      {
+        "startMs": 125000,
+        "endMs": 127000,
+        "text": "And beneath this is a layer of fat."
+      },
+      {
+        "startMs": 129001,
+        "endMs": 133001,
+        "text": "In this fatty layer are sweat glands, lots of them all over your body."
+      },
+      {
+        "startMs": 134000,
+        "endMs": 138001,
+        "text": "There are special kinds of sweat glands under your arms and in other parts of your skin."
+      },
+      {
+        "startMs": 139001,
+        "endMs": 144001,
+        "text": "These glands have little ducts to carry the sweat or perspiration to the outside air."
+      },
+      {
+        "startMs": 144001,
+        "endMs": 148000,
+        "text": "Most of the time, the sweat dries as fast as it comes out."
+      },
+      {
+        "startMs": 148001,
+        "endMs": 150001,
+        "text": "But sometimes it collects in little drops."
+      },
+      {
+        "startMs": 151000,
+        "endMs": 154000,
+        "text": "The air dries this sweat and that helps to keep you cool."
+      },
+      {
+        "startMs": 157001,
+        "endMs": 160001,
+        "text": "Every hair grows from a tiny root."
+      },
+      {
+        "startMs": 161000,
+        "endMs": 163000,
+        "text": "These roots are in the fatty layer too."
+      },
+      {
+        "startMs": 165000,
+        "endMs": 168000,
+        "text": "Around the hairs and in other parts of the skin are oil glands."
+      },
+      {
+        "startMs": 169000,
+        "endMs": 171001,
+        "text": "They open on the outer skin like the sweat glands."
+      },
+      {
+        "startMs": 172000,
+        "endMs": 175000,
+        "text": "These openings are some of the pores that you can see in your skin."
+      },
+      {
+        "startMs": 177001,
+        "endMs": 181000,
+        "text": "The oil made in these glands spreads over your skin and helps to keep it soft."
+      },
+      {
+        "startMs": 184000,
+        "endMs": 187000,
+        "text": "When you get dirty, the dirt sticks in this oil."
+      },
+      {
+        "startMs": 187001,
+        "endMs": 188001,
+        "text": "Germs do too."
+      },
+      {
+        "startMs": 189000,
+        "endMs": 191000,
+        "text": "You can't get them off with plain water."
+      },
+      {
+        "startMs": 193001,
+        "endMs": 198000,
+        "text": "To get off this mixture of oil, dirt, and germs, you have to use soap."
+      },
+      {
+        "startMs": 199000,
+        "endMs": 201000,
+        "text": "Soap has a special way of cutting into the oil."
+      },
+      {
+        "startMs": 201000,
+        "endMs": 204001,
+        "text": "It breaks the oil up into tiny drops and surrounds each drop."
+      },
+      {
+        "startMs": 205000,
+        "endMs": 211000,
+        "text": "When you wash off the soap, the oil, dirt, and germs come off with it, and your skin is fresh and clean."
+      },
+      {
+        "startMs": 211001,
+        "endMs": 214001,
+        "text": "And that's the special reason why people wash with soap."
+      },
+      {
+        "startMs": 216001,
+        "endMs": 222001,
+        "text": "From the time you were born, you have this living coat of armor."
+      },
+      {
+        "startMs": 223000,
+        "endMs": 226001,
+        "text": "It keeps out germs and dirt as long as it isn't broken or cut."
+      },
+      {
+        "startMs": 229000,
+        "endMs": 231000,
+        "text": "You have many kinds of skin."
+      },
+      {
+        "startMs": 231001,
+        "endMs": 234000,
+        "text": "Your fingernails are a kind of hardened skin."
+      },
+      {
+        "startMs": 234001,
+        "endMs": 236000,
+        "text": "Even your hair is a kind of skin."
+      },
+      {
+        "startMs": 236001,
+        "endMs": 239000,
+        "text": "In fact, most of what people see of you is your skin."
+      },
+      {
+        "startMs": 239001,
+        "endMs": 243000,
+        "text": "That's still another reason why the care of the skin is so important."
+      },
+      {
+        "startMs": 246001,
+        "endMs": 249001,
+        "text": "Your skin can get sick just like any part of your body."
+      },
+      {
+        "startMs": 250000,
+        "endMs": 252001,
+        "text": "And when it does, a doctor can help it to get well."
+      },
+      {
+        "startMs": 253000,
+        "endMs": 258000,
+        "text": "But if you keep your skin clean, there's less chance that a disease will be able to get started."
+      },
+      {
+        "startMs": 259001,
+        "endMs": 262000,
+        "text": "This boy's skin has a disease called eczema."
+      },
+      {
+        "startMs": 262000,
+        "endMs": 265001,
+        "text": "If it isn't taken care of, it may get dangerously infected."
+      },
+      {
+        "startMs": 268000,
+        "endMs": 271000,
+        "text": "Infections like this are painful and hard to get rid of."
+      },
+      {
+        "startMs": 273000,
+        "endMs": 274001,
+        "text": "This is athlete's foot."
+      },
+      {
+        "startMs": 274001,
+        "endMs": 277001,
+        "text": "To guard against it, keep your toes dry and clean."
+      },
+      {
+        "startMs": 278001,
+        "endMs": 283000,
+        "text": "And chapped hands can come from a little thing like not drying carefully."
+      },
+      {
+        "startMs": 285000,
+        "endMs": 287001,
+        "text": "Virginia knows how to take care of her skin."
+      },
+      {
+        "startMs": 288000,
+        "endMs": 290000,
+        "text": "She washes her hands at least four times a day."
+      },
+      {
+        "startMs": 291000,
+        "endMs": 295001,
+        "text": "She washes everywhere between her fingers too, with plenty of soap and warm water."
+      },
+      {
+        "startMs": 298001,
+        "endMs": 302000,
+        "text": "She knows that germs like to hide under fingernails."
+      },
+      {
+        "startMs": 302001,
+        "endMs": 305000,
+        "text": "A stiff fingernail brush gets them out."
+      },
+      {
+        "startMs": 306001,
+        "endMs": 311000,
+        "text": "It brushes the cuticle off her nails too and leaves her nails bright and pretty."
+      },
+      {
+        "startMs": 313000,
+        "endMs": 317000,
+        "text": "And now her face, a soapy washcloth, keeps from splashing water."
+      },
+      {
+        "startMs": 321000,
+        "endMs": 323001,
+        "text": "She washes her face at least every morning and evening."
+      },
+      {
+        "startMs": 324000,
+        "endMs": 326001,
+        "text": "She rubs gently all over her face."
+      },
+      {
+        "startMs": 327001,
+        "endMs": 329001,
+        "text": "She washes right up to the edge of her hair."
+      },
+      {
+        "startMs": 329001,
+        "endMs": 333000,
+        "text": "She rubs carefully to get all the dirt out of the pores so they won't clog."
+      },
+      {
+        "startMs": 336000,
+        "endMs": 339000,
+        "text": "Here's a place where dirt collects pretty fast."
+      },
+      {
+        "startMs": 339000,
+        "endMs": 344001,
+        "text": "She washes her ears inside and behind every time she washes her face."
+      },
+      {
+        "startMs": 347000,
+        "endMs": 351000,
+        "text": "And now her neck, she gets the front of it and she doesn't forget the back."
+      },
+      {
+        "startMs": 352000,
+        "endMs": 356001,
+        "text": "You won't ever find a high watermark on Virginia's neck after she has washed herself."
+      },
+      {
+        "startMs": 359001,
+        "endMs": 360000,
+        "text": "Who is it?"
+      },
+      {
+        "startMs": 362000,
+        "endMs": 364000,
+        "text": "Hurry up, Virginia. I want a wash."
+      },
+      {
+        "startMs": 365000,
+        "endMs": 366000,
+        "text": "I'll be waiting a minute, Billy."
+      },
+      {
+        "startMs": 367000,
+        "endMs": 370000,
+        "text": "He'll have to wait till Virginia rinses herself."
+      },
+      {
+        "startMs": 370001,
+        "endMs": 373000,
+        "text": "First, she gets all the soap out of the washcloth."
+      },
+      {
+        "startMs": 373001,
+        "endMs": 376001,
+        "text": "And then she uses the washcloth to take the soap off her face."
+      },
+      {
+        "startMs": 377000,
+        "endMs": 379000,
+        "text": "She's careful to get every bit of it off."
+      },
+      {
+        "startMs": 380000,
+        "endMs": 385000,
+        "text": "Soap left on the skin makes it feel dry and tight and makes it easier for the skin to chap."
+      },
+      {
+        "startMs": 387001,
+        "endMs": 394001,
+        "text": "She gets all the soap out of her ears and from behind her ears too."
+      },
+      {
+        "startMs": 395000,
+        "endMs": 400000,
+        "text": "And then she rinses her neck, the front of her neck and the back."
+      },
+      {
+        "startMs": 400001,
+        "endMs": 403001,
+        "text": "She gets underneath her hair to make sure no soap has been left there."
+      },
+      {
+        "startMs": 405000,
+        "endMs": 410000,
+        "text": "Now a final rinsing to get all the soap and dirt out of the washcloth before she hangs it up to dry."
+      },
+      {
+        "startMs": 411000,
+        "endMs": 415001,
+        "text": "She rinses the basin too so it will be clean and neat for the next person who uses it."
+      },
+      {
+        "startMs": 419000,
+        "endMs": 421000,
+        "text": "Not that it matters to Billy."
+      },
+      {
+        "startMs": 421000,
+        "endMs": 425000,
+        "text": "As far as he's concerned, he's been waiting much too long already."
+      },
+      {
+        "startMs": 426001,
+        "endMs": 428001,
+        "text": "But Virginia won't be rushed."
+      },
+      {
+        "startMs": 429000,
+        "endMs": 432000,
+        "text": "She knows that drying is just as important as washing."
+      },
+      {
+        "startMs": 432001,
+        "endMs": 437001,
+        "text": "A good job of drying leaves the skin more comfortable and helps to prevent chapping."
+      },
+      {
+        "startMs": 439001,
+        "endMs": 446001,
+        "text": "When Virginia's through, she hangs up her towel so it will dry and because it looks better that way."
+      },
+      {
+        "startMs": 447000,
+        "endMs": 450000,
+        "text": "Billy's learning to use plenty of soap and water when he washes."
+      },
+      {
+        "startMs": 450000,
+        "endMs": 454001,
+        "text": "Uh-oh. Looks like that kitten started something."
+      },
+      {
+        "startMs": 459000,
+        "endMs": 464000,
+        "text": "It's Fred's turn next."
+      },
+      {
+        "startMs": 465001,
+        "endMs": 468001,
+        "text": "He likes to take his bath every night before going to bed."
+      },
+      {
+        "startMs": 471000,
+        "endMs": 478000,
+        "text": "He uses plenty of warm water, not too hot and plenty of soap too."
+      },
+      {
+        "startMs": 479000,
+        "endMs": 482000,
+        "text": "He works up a good lather all over his body."
+      },
+      {
+        "startMs": 484000,
+        "endMs": 487001,
+        "text": "He's especially careful to do a good job where the skin sweats a lot."
+      },
+      {
+        "startMs": 488000,
+        "endMs": 490000,
+        "text": "Perspiration sometimes leaves an odor here."
+      },
+      {
+        "startMs": 493000,
+        "endMs": 497000,
+        "text": "Feet need special attention too. They often sweat inside the shoes."
+      },
+      {
+        "startMs": 501000,
+        "endMs": 502000,
+        "text": "And now for his back."
+      },
+      {
+        "startMs": 502001,
+        "endMs": 508000,
+        "text": "A long handled brush with soap on it is a handy thing if you can't reach far enough."
+      },
+      {
+        "startMs": 512000,
+        "endMs": 514001,
+        "text": "When he's all lanted up, he rinses the soap off."
+      },
+      {
+        "startMs": 515000,
+        "endMs": 518000,
+        "text": "He's just as careful to get it all off as Virginia is."
+      },
+      {
+        "startMs": 518001,
+        "endMs": 523000,
+        "text": "Fred bathes every day during the summer and at least three times a week during cold weather."
+      },
+      {
+        "startMs": 527000,
+        "endMs": 534000,
+        "text": "A brisk rub down with a large soft"
+      },
+      {
+        "startMs": 534000,
+        "endMs": 535001,
+        "text": "towel tops off the bath."
+      },
+      {
+        "startMs": 535001,
+        "endMs": 540001,
+        "text": "It speeds up the flow of fresh oil from the oil glands to help keep the skin soft."
+      },
+      {
+        "startMs": 541000,
+        "endMs": 545001,
+        "text": "And what's more, it gives you that tingling feeling that feels so good after your bath."
+      },
+      {
+        "startMs": 549000,
+        "endMs": 554001,
+        "text": "Fred's careful to dry between his toes, leaving them damp might let the athlete's foot fungus get started."
+      },
+      {
+        "startMs": 558000,
+        "endMs": 563001,
+        "text": "Fred's bath takes only a few minutes."
+      },
+      {
+        "startMs": 563001,
+        "endMs": 567000,
+        "text": "But what a difference it makes in the way he feels."
+      },
+      {
+        "startMs": 572000,
+        "endMs": 574000,
+        "text": "And now a final look at the bathroom."
+      },
+      {
+        "startMs": 575001,
+        "endMs": 577000,
+        "text": "Towels folded and humped to dry."
+      },
+      {
+        "startMs": 578000,
+        "endMs": 581001,
+        "text": "No ring around the tub and the basin rinsed and clean."
+      },
+      {
+        "startMs": 582001,
+        "endMs": 585000,
+        "text": "Fred's ready to turn in for the night."
+      },
+      {
+        "startMs": 587001,
+        "endMs": 590000,
+        "text": "Virginia is ready for bed too."
+      },
+      {
+        "startMs": 590000,
+        "endMs": 595001,
+        "text": "They both know that plenty of rest, anything that helps your health helps your skin too."
+      },
+      {
+        "startMs": 598000,
+        "endMs": 601000,
+        "text": "Billy's fast asleep."
+      },
+      {
+        "startMs": 602001,
+        "endMs": 604001,
+        "text": "Well, he should have been asleep long ago."
+      },
+      {
+        "startMs": 605000,
+        "endMs": 607000,
+        "text": "Seems that he has a problem tonight."
+      },
+      {
+        "startMs": 620000,
+        "endMs": 625000,
+        "text": "Oh well, someday Billy, you'll find out why people wash with soap."
+      }
     ]
   }
 ]

@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
 import { VideoLessonCard, type LessonCardData } from '../components/VideoLessonCard';
-import { getVoaCategories, type BuiltInVoaLesson } from '../services/video-source/builtInVoaResolver';
+import { VideoThumb } from '../components/primitives';
+import { searchArchiveItems, type ArchiveLibraryItem } from '../services/video-source/archiveLiveApi';
+import { prepareArchiveLesson, ArchiveProxyError } from '../services/video-source/archiveProxyApi';
 import { gradForId } from '../components/videoThumbStyles';
 import type { VideoShadowingLesson } from '../models/lesson';
 
@@ -20,31 +22,38 @@ export default function VideoShadowingLibraryPage() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [level, setLevel] = useState('All levels');
-  const [category, setCategory] = useState('All');
 
-  // Debounce the search box before it hits the API.
+  // Live Internet Archive results — 30 on entry, refreshed on every search.
+  const [items, setItems] = useState<ArchiveLibraryItem[]>([]);
+  const [itemsLoading, setItemsLoading] = useState(true);
+  const [itemsError, setItemsError] = useState(false);
+
+  // Debounce the search box before it hits the Archive API.
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 250);
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
     return () => clearTimeout(t);
   }, [search]);
 
-  // Each filter change → API call returns the matching videos.
-  const { voaLessons, myLessons, loading, removeLesson } = useVideoShadowingLibrary({
-    level,
-    category,
-    search: debouncedSearch,
-  });
+  // Query archive.org directly — advancedsearch is CORS-enabled, no backend.
+  useEffect(() => {
+    const ac = new AbortController();
+    setItemsLoading(true);
+    setItemsError(false);
+    searchArchiveItems(debouncedSearch, 30, ac.signal)
+      .then((res) => setItems(res))
+      .catch((err: unknown) => {
+        if ((err as { name?: string })?.name === 'AbortError') return;
+        setItemsError(true);
+        setItems([]);
+      })
+      .finally(() => {
+        if (!ac.signal.aborted) setItemsLoading(false);
+      });
+    return () => ac.abort();
+  }, [debouncedSearch]);
 
-  const categories = useMemo(() => getVoaCategories(), []);
-
-  const voaCardData = (l: BuiltInVoaLesson): LessonCardData => ({
-    lesson: l,
-    grad: l.grad,
-    category: l.category,
-    segmentCount: l.segments.length,
-    progress: 0,
-    videoUrl: l.videoUrl,
-  });
+  // "My Videos" still comes from local storage.
+  const { myLessons, removeLesson } = useVideoShadowingLibrary({ level, category: 'All', search: debouncedSearch });
 
   const myCardData = (l: VideoShadowingLesson): LessonCardData => ({
     lesson: l,
@@ -54,6 +63,22 @@ export default function VideoShadowingLibraryPage() {
     progress: 0,
     videoUrl: l.sourceUrl,
   });
+
+  // Opening a live item: the Archive helper service fetches + parses its captions
+  // into segments (the one CORS-blocked step), we persist it locally, then jump
+  // straight into the practice screen — full per-segment shadowing.
+  const [preparingId, setPreparingId] = useState<string | null>(null);
+  const openItem = async (item: ArchiveLibraryItem) => {
+    if (preparingId) return;
+    setPreparingId(item.identifier);
+    try {
+      const { lessonId } = await prepareArchiveLesson(item.identifier);
+      navigate(`/video-shadowing/lessons/${lessonId}/practice`);
+    } catch (err) {
+      toast.error(err instanceof ArchiveProxyError ? err.message : 'Could not load this video.');
+      setPreparingId(null);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     await removeLesson(id);
@@ -98,7 +123,7 @@ export default function VideoShadowingLibraryPage() {
       {/* Tabs + level filter */}
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit">
-          {([['voa', 'VOA Library', BadgeCheck], ['mine', 'My Videos', Folder]] as const).map(([k, label, Icon]) => (
+          {([['voa', 'Library', BadgeCheck], ['mine', 'My Videos', Folder]] as const).map(([k, label, Icon]) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -130,26 +155,18 @@ export default function VideoShadowingLibraryPage() {
         </div>
       </div>
 
-      {/* Category chips (VOA only) */}
-      {tab === 'voa' && (
-        <div className="flex flex-wrap gap-2 mb-7">
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategory(c)}
-              className={cn(
-                'px-3.5 py-2 rounded-full text-[13px] font-medium transition',
-                category === c ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700',
-              )}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Grid / loading / empty state */}
-      {loading ? (
+      {tab === 'mine' ? (
+        myLessons.length === 0 ? (
+          <MyVideosEmptyState onAdd={() => navigate('/video-shadowing/add')} />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+            {myLessons.map((l) => (
+              <VideoLessonCard key={l.id} data={myCardData(l)} onDelete={handleDelete} />
+            ))}
+          </div>
+        )
+      ) : itemsLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="glass-card rounded-2xl overflow-hidden animate-pulse">
@@ -162,28 +179,87 @@ export default function VideoShadowingLibraryPage() {
             </div>
           ))}
         </div>
-      ) : tab === 'mine' ? (
-        myLessons.length === 0 ? (
-          <MyVideosEmptyState onAdd={() => navigate('/video-shadowing/add')} />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-            {myLessons.map((l) => (
-              <VideoLessonCard key={l.id} data={myCardData(l)} onDelete={handleDelete} />
-            ))}
-          </div>
-        )
-      ) : voaLessons.length === 0 ? (
+      ) : itemsError ? (
         <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
           <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
-          No videos found matching the current filters.
+          Couldn’t reach the Internet Archive. Check your connection and try again.
+        </div>
+      ) : items.length === 0 ? (
+        <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
+          <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
+          No videos found. Try a different search.
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-          {voaLessons.map((l) => (
-            <VideoLessonCard key={l.id} data={voaCardData(l)} />
+          {items.map((item) => (
+            <ArchiveCard
+              key={item.identifier}
+              item={item}
+              preparing={preparingId === item.identifier}
+              disabled={preparingId !== null && preparingId !== item.identifier}
+              onOpen={() => openItem(item)}
+            />
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function ArchiveCard({
+  item,
+  preparing,
+  disabled,
+  onOpen,
+}: {
+  item: ArchiveLibraryItem;
+  preparing: boolean;
+  disabled: boolean;
+  onOpen: () => void;
+}) {
+  const open = () => {
+    if (!disabled && !preparing) onOpen();
+  };
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={open}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      }}
+      className={cn(
+        'glass-card rounded-2xl overflow-hidden flex flex-col group transition-all duration-300',
+        disabled ? 'opacity-50' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl',
+      )}
+    >
+      <VideoThumb grad={gradForId(item.identifier)} source="VOA" duration={item.runtime} thumbnailUrl={item.thumbnailUrl} />
+      <div className="p-5 flex flex-col flex-1">
+        <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Internet Archive</p>
+        <h3 className="text-lg font-bold leading-snug mb-1 line-clamp-2">{item.title}</h3>
+        {item.topic && <p className="text-xs text-slate-400 font-medium mb-4 line-clamp-1 capitalize">{item.topic}</p>}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            open();
+          }}
+          disabled={preparing || disabled}
+          className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold bg-indigo-600 text-white shadow-md shadow-indigo-500/25 transition active:scale-[0.98] disabled:opacity-60"
+        >
+          {preparing ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" /> Preparing…
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4" /> Start shadowing
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

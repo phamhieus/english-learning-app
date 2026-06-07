@@ -39,6 +39,68 @@ Local AI processing (now wired, web-only):
 Heavy worker + ONNX wasm are emitted as separate chunks, loaded only when
 transcription runs — not on app start or while browsing the Library.
 
+## Built-in library: Internet Archive (curated at build time)
+
+Curated lessons stream the video **directly from archive.org** at runtime; the
+app bundles only lightweight metadata + pre-parsed segments (no video download,
+no backend, no runtime Archive API calls).
+
+Curate with the Node script (runs outside the app, bypassing browser CORS):
+
+```bash
+npm run curate:archive -- --dry-run          # preview the CONFIG list
+npm run curate:archive -- ControlY1950        # curate one identifier
+npm run curate:archive -- --publish           # write + mark Curated
+```
+
+Pipeline (`scripts/curate-archive-lessons.mjs`): `GET /metadata/{id}` → reject
+dark items → pick a streamable `.mp4` → pick the best subtitle by the priority
+ladder (`.align.srt` › `.en.vtt` › … › `.asr.srt`) → parse SRT/VTT → merge
+sentence-ish segments → merge into `data/built-in-video-lessons.json` (dedupe by
+id). Pure parsers are unit-tested in `scripts/__tests__/`.
+
+**Content safety (gate):** without `--publish` a lesson is written as
+`PendingReview` and is **hidden** in the app. A developer must verify the
+license and check the content against the §11 checklist (no politics / religion
+/ war / conflict / protest / sensitive / adult / disallowed violence) and
+confirm captions match audio before re-running with `--publish`. The runtime
+resolver only ever surfaces `safetyStatus === 'Curated'` entries.
+
+Shipped examples (public-domain Prelinger educational films, ASR captions):
+*Control Your Emotions* (`ControlY1950`), *Ask Me, Don't Tell Me*
+(`AskMeDon1961`). ASR timing is approximate — fine for a demo, re-time in Review
+if needed.
+
+## Live Internet Archive library (browse + search + shadow)
+
+The **Library** tab is live: on entry it loads ~30 items from
+`archive.org/advancedsearch.php` and the search box queries the Archive directly
+(both endpoints send `Access-Control-Allow-Origin: *`, so the browser calls them
+with no backend). Card thumbnails use `archive.org/services/img/{id}`.
+
+**Captions need a tiny helper.** archive.org does **not** send CORS headers on
+`/download` files, so the browser can't fetch + parse a live item's subtitle (nor
+its audio for local Whisper). One small Node service does just that step:
+
+```bash
+npm run proxy        # starts server/archive-proxy.mjs on :8787
+```
+
+`GET /api/archive/lesson/{identifier}` → fetches metadata, picks the best video +
+subtitle, parses the captions into timed segments (reusing the curate script's
+parsers), and returns a ready-to-shadow lesson as JSON (CORS `*`). The **video
+itself is never proxied** — it still streams straight from archive.org via the
+`<video>` element. Point the app at a different host with
+`VITE_ARCHIVE_PROXY=https://my-host` (defaults to `http://localhost:8787`).
+
+Clicking a live card calls the proxy, persists the lesson + segments locally
+(IndexedDB), and opens the normal practice screen — full per-segment shadowing,
+identical to curated lessons. Items with no caption track can't be segmented and
+report that on click.
+
+The build-time `npm run curate:archive` path still exists for baking lessons into
+the static manifest (works fully offline, no proxy needed).
+
 ## Web-only processing plan (no special headers)
 
 The full local pipeline is achievable with **zero COOP/COEP / cross-origin

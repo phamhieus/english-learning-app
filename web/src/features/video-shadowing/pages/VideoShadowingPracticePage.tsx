@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, BadgeCheck, Film, Repeat, EyeOff, Eye, Square, Mic,
+  ArrowLeft, Film, Repeat, EyeOff, Eye, Square, Mic,
   RotateCcw, ArrowRight, SkipBack, SkipForward, Play, Captions,
   GitCompare, CheckCircle, Info, Loader2, Volume2,
 } from 'lucide-react';
@@ -94,11 +94,11 @@ export default function VideoShadowingPracticePage() {
       if (lesson.localVideoFileId) {
         url = (await fileStorage.getObjectUrl(lesson.localVideoFileId)) ?? null;
         revoke = true;
-      } else if (lesson.sourceUrl) {
-        url = lesson.sourceUrl;
       } else {
-        // Curated VOA lessons carry their playable URL on the manifest entry.
-        url = getBuiltInVoaLesson(lessonId)?.videoUrl ?? null;
+        // Curated built-ins carry their direct media URL on the manifest entry;
+        // prefer it over `sourceUrl` (which on a built-in is the attribution
+        // page, not a playable file). DirectUrl uploads fall back to sourceUrl.
+        url = getBuiltInVoaLesson(lessonId)?.videoUrl ?? lesson.sourceUrl ?? null;
       }
       setVideoUrl(url);
     })();
@@ -239,7 +239,7 @@ export default function VideoShadowingPracticePage() {
   const canPlay = isYouTube ? !!ytId : !!videoUrl;
   const togglePlay = () => {
     if (!canPlay) {
-      toast.info(isYouTube ? 'YouTube video is not ready, please try again in a moment.' : 'VOA lesson does not have a local video file yet — please upload a video to test playback.');
+      toast.info(isYouTube ? 'YouTube video is not ready, please try again in a moment.' : 'This lesson video is unavailable right now. Please try again or pick another lesson.');
       return;
     }
     if (isPlaying) pause();
@@ -263,7 +263,7 @@ export default function VideoShadowingPracticePage() {
   const hasScore = !!activeAttempt && !!activeAttempt.recognizedText;
 
   return (
-    <div className="flex flex-col lg:h-full">
+    <div className="flex flex-col lg:h-[calc(100dvh-6.5rem)]">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-4 shrink-0 gap-3 flex-wrap">
         <button onClick={() => navigate('/video-shadowing')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium">
@@ -271,14 +271,13 @@ export default function VideoShadowingPracticePage() {
         </button>
         <div className="flex items-center gap-3">
           <h2 className="font-bold text-lg">{lesson.title}</h2>
-          {lesson.sourceType === 'BuiltInVoa' && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-300"><BadgeCheck className="w-3.5 h-3.5" /> VOA</span>
-          )}
         </div>
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400"><Film className="w-4 h-4" /> Segment {activeIndex + 1} / {segments.length}</div>
       </div>
 
-      {/* Hero video — single, centered. Width-based on mobile, fills height on desktop. */}
+      {/* Hero video — single, centered. Full-width up to tablet; on desktop it
+          flexes to fill the remaining height so the whole screen fits without
+          scrolling (the page itself gets a definite height above). */}
       <div className="lg:flex-1 lg:min-h-0 flex items-center justify-center mb-3">
         <div className="relative w-full lg:w-auto lg:h-full aspect-video lg:max-w-full rounded-3xl overflow-hidden shadow-xl shadow-slate-200/60 dark:shadow-black/40 bg-black">
           {isYouTube ? (
@@ -378,7 +377,7 @@ export default function VideoShadowingPracticePage() {
       {/* Practice strip — record (left) + quick feedback (right). */}
       <div className="shrink-0 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-5">
         {/* Record + script */}
-        <div className="glass-card rounded-2xl p-5 flex flex-col">
+        <div className="glass-card rounded-2xl p-4 flex flex-col">
           <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1.5">Repeat after the speaker</p>
           <p
             className={cn(
@@ -431,7 +430,7 @@ export default function VideoShadowingPracticePage() {
         </div>
 
         {/* Quick feedback */}
-        <div className="glass-card rounded-2xl p-5 flex flex-col">
+        <div className="glass-card rounded-2xl p-4 flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Quick feedback</p>
             {hasScore && activeAttempt && <RatingChip score={activeAttempt.totalScore ?? 0} />}
@@ -468,7 +467,7 @@ export default function VideoShadowingPracticePage() {
       </div>
 
       {/* Segment timeline */}
-      <div className="shrink-0 mt-4 pt-4 border-t border-[var(--border)]">
+      <div className="shrink-0 mt-3 pt-3 border-t border-[var(--border)]">
         <div className="flex items-center justify-between mb-2.5">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Session timeline</p>
           <span className="text-[11px] font-bold text-indigo-500">{doneCount}/{segments.length} recorded</span>

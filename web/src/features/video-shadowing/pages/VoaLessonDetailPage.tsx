@@ -32,7 +32,7 @@ export default function VoaLessonDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 mb-8">
         <div>
           <div className="rounded-3xl overflow-hidden shadow-xl shadow-slate-200/60 dark:shadow-black/40">
-            <VideoThumb grad={lesson.grad} source="VOA" duration={formatClock(lesson.durationMs)} rounded="rounded-3xl" big videoUrl={lesson.videoUrl} />
+            <VideoThumb grad={lesson.grad} source="VOA" duration={formatClock(lesson.durationMs)} rounded="rounded-3xl" big videoUrl={lesson.videoUrl} thumbnailUrl={lesson.thumbnailUrl} />
           </div>
           <div className="mt-3 flex items-center gap-2 text-xs text-slate-400 font-medium">
             <Info className="w-3.5 h-3.5" /> {lesson.sourceCredit} · for educational purposes only

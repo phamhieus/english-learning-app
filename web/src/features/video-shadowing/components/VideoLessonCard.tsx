@@ -17,6 +17,8 @@ export interface LessonCardData {
   progress: number;
   /** Real clip URL — renders a poster-frame thumbnail when present. */
   videoUrl?: string;
+  /** Poster image URL — preferred over the video frame when present. */
+  thumbnailUrl?: string;
 }
 
 function ctaFor(progress: number) {
@@ -65,7 +67,7 @@ export function VideoLessonCard({
         className="text-left"
         aria-label={`Open ${lesson.title}`}
       >
-        <VideoThumb grad={grad} source={isVoa ? 'VOA' : 'Upload'} duration={formatClock(lesson.durationMs)} progress={progress} videoUrl={data.videoUrl} />
+        <VideoThumb grad={grad} source={isVoa ? 'VOA' : 'Upload'} duration={formatClock(lesson.durationMs)} progress={progress} videoUrl={data.videoUrl} thumbnailUrl={data.thumbnailUrl} />
       </button>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">

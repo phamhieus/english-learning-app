@@ -14,8 +14,10 @@
 //    link) and paste it into FEEDS below, tagging level + category yourself
 //    (RSS carries no CEFR level).
 // The script is best-effort: it fetches each feed, then opens each article to
-// pull a playable video URL (.m3u8 / .mp4) and the transcript. Items where no
-// video URL is found are skipped (a lesson with no video is useless here).
+// pull a playable video URL (.m3u8 / .mp4) and a caption track (.vtt). An item
+// is SKIPPED unless it has BOTH a video URL and captions — captions give the
+// real segment timing the shadowing player needs; without them a lesson is
+// useless here, so we don't import it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { writeFileSync } from 'node:fs';
@@ -99,21 +101,7 @@ function findVttUrl(html) {
 const thumbUrl = (html) =>
   pick(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i, html);
 
-// Pull the article transcript: text inside the main content block.
-function extractTranscript(html) {
-  const body =
-    pick(/<div[^>]+class=["'][^"']*\bwsw\b[^"']*["'][^>]*>([\s\S]*?)<\/div>\s*<\/div>/i, html) ||
-    pick(/<div[^>]+id=["']article-content["'][^>]*>([\s\S]*?)<\/div>/i, html);
-  return stripTags(body || '');
-}
-
-// ── timing ───────────────────────────────────────────────────────────────────
-
-function splitSentences(text) {
-  return (text.match(/[^.!?]+[.!?]+/g) || [text])
-    .map((s) => s.trim())
-    .filter((s) => s.length > 1);
-}
+// ── timing (from captions) ───────────────────────────────────────────────────
 
 const toMs = (clock) => {
   // "HH:MM:SS.mmm" | "MM:SS.mmm"
@@ -134,20 +122,6 @@ function parseVtt(vtt) {
   return cues;
 }
 
-// Fallback when there are no captions: distribute time across sentences in
-// proportion to their length. NOTE: this is APPROXIMATE — segment boundaries
-// won't line up perfectly with the audio. Captions (VTT) are strongly preferred.
-function synthSegments(sentences, durationMs) {
-  const totalChars = sentences.reduce((n, s) => n + s.length, 0) || 1;
-  let t = 0;
-  return sentences.map((text) => {
-    const span = Math.round((text.length / totalChars) * durationMs);
-    const seg = { startMs: t, endMs: Math.min(durationMs, t + span), text };
-    t += span;
-    return seg;
-  });
-}
-
 const slugify = (s) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
 
@@ -161,27 +135,25 @@ async function buildLessonFromItem(item, feed, index) {
     return null;
   }
 
-  const transcript = extractTranscript(html) || item.description;
+  // Captions are required: real VTT timing is the only way segment boundaries
+  // line up with the audio. No caption track → skip the item entirely.
   const vttUrl = findVttUrl(html);
-
+  if (!vttUrl) {
+    console.warn(`  skip (no captions): ${item.title}`);
+    return null;
+  }
   let segments;
-  let durationMs;
-  if (vttUrl) {
-    try {
-      segments = parseVtt(await get(vttUrl));
-    } catch {
-      segments = null;
-    }
+  try {
+    segments = parseVtt(await get(vttUrl));
+  } catch (err) {
+    console.warn(`  skip (caption fetch failed): ${item.title} — ${err.message}`);
+    return null;
   }
-  if (segments && segments.length) {
-    durationMs = segments[segments.length - 1].endMs;
-  } else {
-    // ~150 wpm → estimate duration, then synthesize timing.
-    const words = transcript.split(/\s+/).filter(Boolean).length;
-    durationMs = Math.max(20000, Math.round((words / 150) * 60000));
-    segments = synthSegments(splitSentences(transcript), durationMs);
-    console.warn(`  no captions → synthetic timing: ${item.title}`);
+  if (!segments.length) {
+    console.warn(`  skip (empty captions): ${item.title}`);
+    return null;
   }
+  const durationMs = segments[segments.length - 1].endMs;
 
   return {
     id: `voa-${slugify(feed.category)}-${slugify(item.title)}`.slice(0, 70),

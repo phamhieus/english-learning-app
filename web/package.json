@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "curate:archive": "node scripts/curate-archive-lessons.mjs",
+    "proxy": "node ../server/archive-proxy.mjs",
     "preview": "vite preview",
     "fetch:voa": "node scripts/fetch-voa-lessons.mjs",
     "postinstall": "node scripts/copy-ffmpeg-core.mjs"

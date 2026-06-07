@@ -28,7 +28,7 @@ export function SourceBadge({ source }: { source: 'VOA' | 'Upload' }) {
       )}
     >
       {voa ? <BadgeCheck className="w-3.5 h-3.5" /> : <Upload className="w-3.5 h-3.5" />}
-      {voa ? 'VOA Learning English' : 'My Upload'}
+      {voa ? 'Internet Archive' : 'My Upload'}
     </span>
   );
 }
@@ -42,10 +42,14 @@ interface VideoThumbProps {
   big?: boolean;
   /** When set, a real poster frame from the actual clip is shown. */
   videoUrl?: string;
+  /** Poster image (preferred over `videoUrl` — far lighter than loading video
+   *  metadata for the frame). Falls back to the video poster, then a gradient. */
+  thumbnailUrl?: string;
 }
 
-/** Video thumbnail: a real poster frame when `videoUrl` is given, otherwise a
- *  gradient placeholder. Always shows the frosted play button + source badge. */
+/** Video thumbnail: prefers a poster image, then a frame from the actual clip,
+ *  otherwise a gradient placeholder. Always shows the frosted play button +
+ *  source badge. */
 export function VideoThumb({
   grad = 'indigo',
   source = 'VOA',
@@ -54,10 +58,23 @@ export function VideoThumb({
   rounded = 'rounded-t-2xl',
   big = false,
   videoUrl,
+  thumbnailUrl,
 }: VideoThumbProps) {
   return (
     <div className={cn('relative overflow-hidden aspect-video', rounded)} style={{ background: GRADS[grad] }}>
-      {videoUrl ? (
+      {thumbnailUrl ? (
+        <>
+          <img
+            src={thumbnailUrl}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            alt=""
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
+        </>
+      ) : videoUrl ? (
         <>
           {/* `#t=` shows the frame at ~1s as a static poster (metadata only). */}
           <video

@@ -45,7 +45,11 @@
       "Read(//c/Users/phamh/AppData/Local/Temp/tmp/english-app/project/**)",
       "Bash(cat /tmp/english-app/project/screens-feedback.jsx)",
       "Read(//tmp/english-app/project/**)",
-      "Bash(tar -xzf webfetch-1780581780092-xjv0i2.bin -C /tmp english-app/project/screens-dropdown.jsx)"
+      "Bash(tar -xzf webfetch-1780581780092-xjv0i2.bin -C /tmp english-app/project/screens-dropdown.jsx)",
+      "Bash(findstr /I \"test spec vitest\")",
+      "Bash(dir /b vitest.config.* vite.config.*)",
+      "Bash(dir /b tsconfig*.json)",
+      "Bash(findstr /I \"include exclude types lib strict\")"
     ],
     "additionalDirectories": [
       "\\tmp\\design_extract\\english-app\\project",

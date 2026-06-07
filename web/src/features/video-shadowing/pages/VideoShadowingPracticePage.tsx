@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, BadgeCheck, Film, Repeat, EyeOff, Eye, Square, Mic,
@@ -10,6 +10,7 @@ import { useToast } from '../../../components/useToast';
 import { VideoThumb, Waveform, WAVE, ScorePill } from '../components/primitives';
 import { useVideoShadowingSession } from '../hooks/useVideoShadowingSession';
 import { useVideoSegmentPlayer, type PlaybackRate } from '../hooks/useVideoSegmentPlayer';
+import { useVideoSource } from '../hooks/useVideoSource';
 import { useYouTubeSegmentPlayer } from '../hooks/useYouTubeSegmentPlayer';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { useLiveTranscript } from '../hooks/useLiveTranscript';
@@ -61,6 +62,16 @@ export default function VideoShadowingPracticePage() {
   });
 
   const { videoRef } = htmlPlayer;
+  // Source attachment (mp4 vs HLS) is separate from playback control; compose
+  // both callback refs onto the same <video> element.
+  const sourceRef = useVideoSource(isYouTube ? null : videoUrl);
+  const setVideoEl = useCallback(
+    (node: HTMLVideoElement | null) => {
+      videoRef(node);
+      sourceRef(node);
+    },
+    [videoRef, sourceRef],
+  );
   const { containerRef: ytContainerRef } = ytPlayer;
   const { isPlaying, currentTimeMs, durationMs, playSegment, playAll, seekToSegment, pause } = isYouTube
     ? ytPlayer
@@ -280,8 +291,7 @@ export default function VideoShadowingPracticePage() {
               {/* Always mount the <video> so the player hook can attach its
                   listeners; overlay the placeholder until a URL resolves. */}
               <video
-                ref={videoRef}
-                src={videoUrl ?? undefined}
+                ref={setVideoEl}
                 className={cn('w-full h-full object-contain', !videoUrl && 'invisible')}
                 playsInline
                 muted={false}

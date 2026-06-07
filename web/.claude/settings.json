@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:learningenglish.voanews.com)",
+      "PowerShell(npm install hls.js)",
+      "PowerShell(npx tsc -b --pretty false 2>&1)",
+      "PowerShell(node scripts/fetch-voa-lessons.mjs --dry-run; \"exit=$LASTEXITCODE\")"
+    ]
+  }
+}

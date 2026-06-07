@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "build:uno": "tsc -b && vite build --outDir ../uno/AppUno/WebContent --emptyOutDir",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
+    "fetch:voa": "node scripts/fetch-voa-lessons.mjs",
     "postinstall": "node scripts/copy-ffmpeg-core.mjs"
   },
   "dependencies": {
@@ -21,6 +24,7 @@
     "clsx": "^2.1.1",
     "diff": "^9.0.0",
     "gsap": "^3.15.0",
+    "hls.js": "^1.6.16",
     "lucide-react": "^1.16.0",
     "openai": "^6.39.0",
     "react": "^19.2.6",
@@ -46,6 +50,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^3.2.6"
   }
 }

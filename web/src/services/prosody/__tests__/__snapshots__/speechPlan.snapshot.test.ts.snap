@@ -1,0 +1,235 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SpeechPlan snapshots > plan: contrastive-stress 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "I ordered the blue one,",
+      "strength": "weak",
+    },
+    {
+      "afterText": "not the green one.",
+      "strength": "medium",
+    },
+  ],
+  "context": "dialogue",
+  "emotion": "friendly",
+  "emotionDegree": 0.25,
+  "emphasis": [
+    {
+      "level": "strong",
+      "text": "not",
+    },
+    {
+      "level": "strong",
+      "text": "blue",
+    },
+    {
+      "level": "strong",
+      "text": "green",
+    },
+  ],
+  "id": "c4",
+  "language": "en-US",
+  "normalizedText": "I ordered the blue one, not the green one.",
+  "originalText": "I ordered the blue one, not the green one.",
+  "prosody": {
+    "pitch": 0,
+    "preserveRhythm": false,
+    "rate": 1.03,
+    "volume": 0.91,
+  },
+  "sentenceType": "statement",
+  "tonePreset": "natural-conversation",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: instruction-number 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "You will have 45 seconds to prepare.",
+      "strength": "medium",
+    },
+  ],
+  "context": "instruction",
+  "emotion": "neutral",
+  "emotionDegree": 0.25,
+  "emphasis": [
+    {
+      "level": "strong",
+      "text": "45 seconds",
+    },
+  ],
+  "id": "c1",
+  "language": "en-US",
+  "normalizedText": "You will have 45 seconds to prepare.",
+  "originalText": "You will have 45 seconds to prepare.",
+  "prosody": {
+    "pitch": 0,
+    "preserveRhythm": false,
+    "rate": 0.98,
+    "volume": 0.9,
+  },
+  "sentenceType": "statement",
+  "tonePreset": "clear-instruction",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: polite-request 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "Could you help me with this?",
+      "strength": "medium",
+    },
+  ],
+  "context": "dialogue",
+  "emotion": "friendly",
+  "emotionDegree": 0.25,
+  "emphasis": [],
+  "id": "c5",
+  "language": "en-US",
+  "normalizedText": "Could you help me with this?",
+  "originalText": "Could you help me with this?",
+  "prosody": {
+    "pitch": 0,
+    "preserveRhythm": false,
+    "rate": 1.03,
+    "volume": 0.91,
+  },
+  "sentenceType": "request",
+  "tonePreset": "natural-conversation",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: shadowing 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "I'd like to book a table for two,",
+      "strength": "weak",
+    },
+    {
+      "afterText": "please.",
+      "strength": "medium",
+    },
+  ],
+  "context": "shadowing",
+  "emotion": "neutral",
+  "emotionDegree": 0.25,
+  "emphasis": [],
+  "id": "c7",
+  "language": "en-US",
+  "normalizedText": "I'd like to book a table for two, please.",
+  "originalText": "I'd like to book a table for two, please.",
+  "prosody": {
+    "pitch": 0,
+    "preserveRhythm": true,
+    "rate": 1,
+    "volume": 0.9,
+  },
+  "sentenceType": "statement",
+  "tonePreset": "shadowing-standard",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: surprised-really 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "Really?",
+      "strength": "medium",
+    },
+  ],
+  "context": "dialogue",
+  "emotion": "surprised",
+  "emotionDegree": 0.5,
+  "emphasis": [],
+  "id": "c6",
+  "language": "en-US",
+  "normalizedText": "Really?",
+  "originalText": "Really?",
+  "prosody": {
+    "pitch": 3,
+    "preserveRhythm": false,
+    "rate": 1.04,
+    "volume": 0.95,
+  },
+  "sentenceType": "yes-no-question",
+  "tonePreset": "natural-conversation",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: wh-question 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "Where are you going?",
+      "strength": "medium",
+    },
+  ],
+  "context": "question",
+  "emotion": "friendly",
+  "emotionDegree": 0.25,
+  "emphasis": [
+    {
+      "level": "strong",
+      "text": "Where",
+    },
+  ],
+  "id": "c3",
+  "language": "en-US",
+  "normalizedText": "Where are you going?",
+  "originalText": "Where are you going?",
+  "prosody": {
+    "pitch": 0,
+    "preserveRhythm": false,
+    "rate": 1,
+    "volume": 0.91,
+  },
+  "sentenceType": "wh-question",
+  "tonePreset": "question-friendly",
+}
+`;
+
+exports[`SpeechPlan snapshots > plan: yes-no-question 1`] = `
+{
+  "breaks": [
+    {
+      "afterText": "Are you ready?",
+      "strength": "medium",
+    },
+  ],
+  "context": "question",
+  "emotion": "friendly",
+  "emotionDegree": 0.25,
+  "emphasis": [],
+  "id": "c2",
+  "language": "en-US",
+  "normalizedText": "Are you ready?",
+  "originalText": "Are you ready?",
+  "prosody": {
+    "pitch": 1,
+    "preserveRhythm": false,
+    "rate": 1,
+    "volume": 0.91,
+  },
+  "sentenceType": "yes-no-question",
+  "tonePreset": "question-friendly",
+}
+`;
+
+exports[`SpeechPlan snapshots > ssml: contrastive-stress 1`] = `"<speak xml:lang="en-US"><prosody rate="103%" pitch="+0st">I ordered the <emphasis level="strong">blue</emphasis> one,<break strength="weak" /> <emphasis level="strong">not</emphasis> the <emphasis level="strong">green</emphasis> one.</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: instruction-number 1`] = `"<speak xml:lang="en-US"><prosody rate="98%" pitch="+0st">You will have <emphasis level="strong">45 seconds</emphasis> to prepare.</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: polite-request 1`] = `"<speak xml:lang="en-US"><prosody rate="103%" pitch="+0st">Could you help me with this?</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: shadowing 1`] = `"<speak xml:lang="en-US"><prosody rate="100%" pitch="+0st">I&apos;d like to book a table for two,<break strength="weak" /> please.</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: surprised-really 1`] = `"<speak xml:lang="en-US"><prosody rate="104%" contour="(10%,+0st) (90%,+4st)">Really?</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: wh-question 1`] = `"<speak xml:lang="en-US"><prosody rate="100%" pitch="+0st"><emphasis level="strong">Where</emphasis> are you going?</prosody></speak>"`;
+
+exports[`SpeechPlan snapshots > ssml: yes-no-question 1`] = `"<speak xml:lang="en-US"><prosody rate="100%" contour="(10%,+0st) (90%,+4st)">Are you ready?</prosody></speak>"`;

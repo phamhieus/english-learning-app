@@ -105,6 +105,37 @@
         { "id": "sl-s-006-5", "lessonId": "sl-s-006", "order": 5, "type": "sentence", "text": "Whenever I face a challenge, I ask myself what she would do in my position.", "status": "not_started", "attempts": [] },
         { "id": "sl-s-006-6", "lessonId": "sl-s-006", "order": 6, "type": "sentence", "text": "She has had an enormous influence on the person I have become.", "status": "not_started", "attempts": [] }
       ]
+    },
+    {
+      "id": "sl-s-007",
+      "title": "Words That Inspire",
+      "description": "Shadow twenty uplifting, motivational sentences with natural rhythm, stress, and emphasis.",
+      "level": "intermediate",
+      "topic": "Motivation",
+      "durationMinutes": 14,
+      "totalSegments": 20,
+      "segments": [
+        { "id": "sl-s-007-1", "lessonId": "sl-s-007", "order": 1, "type": "sentence", "text": "Believe in yourself, and you are already halfway to where you want to be.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-2", "lessonId": "sl-s-007", "order": 2, "type": "sentence", "text": "Every great achievement once seemed completely impossible until someone decided to begin.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-3", "lessonId": "sl-s-007", "order": 3, "type": "sentence", "text": "Don't watch the clock; do what it does, and simply keep going.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-4", "lessonId": "sl-s-007", "order": 4, "type": "sentence", "text": "The only limit that truly matters is the one you set in your own mind.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-5", "lessonId": "sl-s-007", "order": 5, "type": "sentence", "text": "Success is not final, and failure is not fatal; it is the courage to continue that counts.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-6", "lessonId": "sl-s-007", "order": 6, "type": "sentence", "text": "Small steps taken every single day will eventually lead to remarkable results.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-7", "lessonId": "sl-s-007", "order": 7, "type": "sentence", "text": "The harder you work for something, the greater you will feel when you finally achieve it.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-8", "lessonId": "sl-s-007", "order": 8, "type": "sentence", "text": "Your future is created by what you choose to do today, not tomorrow.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-9", "lessonId": "sl-s-007", "order": 9, "type": "sentence", "text": "Fall seven times, and stand up eight; that is where real strength is born.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-10", "lessonId": "sl-s-007", "order": 10, "type": "sentence", "text": "Difficult roads very often lead to the most beautiful destinations.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-11", "lessonId": "sl-s-007", "order": 11, "type": "sentence", "text": "Do not be afraid to start over; this time, you are beginning with experience.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-12", "lessonId": "sl-s-007", "order": 12, "type": "sentence", "text": "A river cuts through rock not because of its power, but because of its persistence.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-13", "lessonId": "sl-s-007", "order": 13, "type": "sentence", "text": "You don't have to be perfect; you just have to be brave enough to keep trying.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-14", "lessonId": "sl-s-007", "order": 14, "type": "sentence", "text": "Discipline is simply choosing between what you want now and what you want most.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-15", "lessonId": "sl-s-007", "order": 15, "type": "sentence", "text": "Every expert you admire was once a beginner who refused to give up.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-16", "lessonId": "sl-s-007", "order": 16, "type": "sentence", "text": "When you feel like quitting, remember why you started in the first place.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-17", "lessonId": "sl-s-007", "order": 17, "type": "sentence", "text": "Real growth begins at the exact moment you step outside your comfort zone.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-18", "lessonId": "sl-s-007", "order": 18, "type": "sentence", "text": "Your dreams don't have an expiry date; it is never too late to chase them.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-19", "lessonId": "sl-s-007", "order": 19, "type": "sentence", "text": "Be proud of how far you have come, and have faith in how far you can still go.", "status": "not_started", "attempts": [] },
+        { "id": "sl-s-007-20", "lessonId": "sl-s-007", "order": 20, "type": "sentence", "text": "The best time to plant a tree was twenty years ago; the second best time is now.", "status": "not_started", "attempts": [] }
+      ]
     }
   ],
   "paragraph": [
@@ -150,6 +181,25 @@
         { "id": "sl-p-003-2", "lessonId": "sl-p-003", "order": 2, "type": "paragraph", "paragraphIndex": 2, "text": "I taught myself to play by watching video tutorials late at night after everyone had gone to sleep. My fingers ached for weeks, but I was completely obsessed.", "status": "not_started", "attempts": [] },
         { "id": "sl-p-003-3", "lessonId": "sl-p-003", "order": 3, "type": "paragraph", "paragraphIndex": 3, "text": "Three months later, I performed a simple song at my school's end-of-year concert. My hands were shaking so badly I nearly knocked the microphone over.", "status": "not_started", "attempts": [] },
         { "id": "sl-p-003-4", "lessonId": "sl-p-003", "order": 4, "type": "paragraph", "paragraphIndex": 4, "text": "But when the audience applauded at the end, I felt a rush of confidence I had never experienced before. That night changed the way I thought about learning and perseverance.", "status": "not_started", "attempts": [] }
+      ]
+    },
+    {
+      "id": "sl-p-004",
+      "title": "A Speech to Keep You Going",
+      "description": "Shadow an uplifting motivational speech with flowing, expressive paragraphs and confident delivery.",
+      "level": "advanced",
+      "topic": "Motivation",
+      "durationMinutes": 13,
+      "totalSegments": 8,
+      "segments": [
+        { "id": "sl-p-004-1", "lessonId": "sl-p-004", "order": 1, "type": "paragraph", "paragraphIndex": 1, "text": "Everyone faces moments of doubt, when the goal feels impossibly far away and every bit of effort seems to disappear into nothing. In those moments, the most powerful thing you can do is to remember exactly why you started this journey in the first place.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-2", "lessonId": "sl-p-004", "order": 2, "type": "paragraph", "paragraphIndex": 2, "text": "Success is rarely the result of a single, dramatic leap forward. Far more often, it is built quietly and patiently, through small and consistent actions repeated day after day, long after the excitement of the beginning has completely faded away.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-3", "lessonId": "sl-p-004", "order": 3, "type": "paragraph", "paragraphIndex": 3, "text": "Mistakes are not the opposite of progress; they are an essential part of it. Every single time you stumble, fall, and then choose to stand up again, you are quietly training yourself to become stronger, wiser, and far more resilient than you were before.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-4", "lessonId": "sl-p-004", "order": 4, "type": "paragraph", "paragraphIndex": 4, "text": "Comparison is one of the fastest ways to lose your sense of purpose. Your journey is entirely your own, with its own pace and its own season, so focus on becoming a little better than you were yesterday, rather than measuring yourself against anyone else.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-5", "lessonId": "sl-p-004", "order": 5, "type": "paragraph", "paragraphIndex": 5, "text": "Courage does not mean that you never feel afraid. It means that you feel the fear completely, and you still choose to take the next step anyway, trusting that real growth almost always begins at the very edge of your comfort zone.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-6", "lessonId": "sl-p-004", "order": 6, "type": "paragraph", "paragraphIndex": 6, "text": "Motivation may be what gets you started, but it is discipline and habit that keep you moving when the excitement fades. Show up for yourself on the difficult days, and those small, repeated choices will slowly shape the person you are becoming.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-7", "lessonId": "sl-p-004", "order": 7, "type": "paragraph", "paragraphIndex": 7, "text": "Be patient with your progress, because meaningful things take time to grow. A seed planted today does not become a tree overnight, yet with steady care and a little faith, it quietly grows stronger beneath the surface long before anyone can see it.", "status": "not_started", "attempts": [] },
+        { "id": "sl-p-004-8", "lessonId": "sl-p-004", "order": 8, "type": "paragraph", "paragraphIndex": 8, "text": "So keep moving forward, even when your steps feel painfully small and slow. The person you are becoming through all of this effort is worth far more than any single result you happen to be chasing, so hold on, stay kind to yourself, and never give up.", "status": "not_started", "attempts": [] }
       ]
     }
   ],

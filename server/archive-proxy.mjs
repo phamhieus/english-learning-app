@@ -23,11 +23,18 @@ import {
   getTranscriptCandidate,
   parseSubtitle,
   mergeIntoSentences,
-} from '../web/scripts/curate-archive-lessons.mjs';
+} from './archive-core.mjs';
+import { classifyCefr } from './cefr-classifier.mjs';
 
 const PORT = Number(process.env.ARCHIVE_PROXY_PORT) || 8787;
+// Lock CORS to your site in production, e.g. ALLOWED_ORIGIN=https://you.github.io
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
 const cleanText = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const downloadUrl = (id, name) => `https://archive.org/download/${id}/${encodeURIComponent(name)}`;
+
+// Archive items are immutable, so cache built lessons in memory (cheap, bounded).
+const cache = new Map();
+const CACHE_MAX = 200;
 
 async function buildLesson(identifier) {
   const meta = await fetch(`https://archive.org/metadata/${identifier}`).then((r) => r.json());
@@ -47,6 +54,8 @@ async function buildLesson(identifier) {
 
   const md = meta.metadata || {};
   const durationMs = segments.length ? segments[segments.length - 1].endMs : 0;
+  // Auto-classify CEFR by vocabulary profiling over the whole transcript.
+  const level = segments.length ? classifyCefr(segments.map((s) => s.text).join(' ')) : 'Auto';
   return {
     identifier,
     title: md.title || identifier,
@@ -55,7 +64,7 @@ async function buildLesson(identifier) {
     thumbnailUrl: `https://archive.org/services/img/${identifier}`,
     sourcePageUrl: `https://archive.org/details/${identifier}`,
     durationMs,
-    level: 'Auto',
+    level,
     topic: (Array.isArray(md.subject) ? md.subject[0] : md.subject) || 'Internet Archive',
     sourceCredit: `Source: Internet Archive — ${md.title || identifier}`,
     hasCaptions: segments.length > 0,
@@ -67,7 +76,7 @@ function sendJson(res, status, body) {
   const payload = JSON.stringify(body);
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Cache-Control': 'public, max-age=86400',
@@ -93,7 +102,12 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && match) {
     const identifier = decodeURIComponent(match[1]);
     try {
-      const lesson = await buildLesson(identifier);
+      let lesson = cache.get(identifier);
+      if (!lesson) {
+        lesson = await buildLesson(identifier);
+        if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value);
+        cache.set(identifier, lesson);
+      }
       console.log(`[proxy] ${identifier} → ${lesson.segments.length} segments, captions=${lesson.hasCaptions}`);
       return sendJson(res, 200, lesson);
     } catch (err) {

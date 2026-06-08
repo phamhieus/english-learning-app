@@ -5,6 +5,8 @@
 // — including subtitles — are NOT CORS-enabled, so per-segment captions still
 // have to be prepared by the curate script; live items here are browse/stream.)
 
+import { classifyCefr, type CefrLevel } from '../../utils/cefr';
+
 const SEARCH_ENDPOINT = 'https://archive.org/advancedsearch.php';
 
 // Default landing query: public-domain educational shorts that carry captions —
@@ -21,6 +23,9 @@ export interface ArchiveLibraryItem {
   /** e.g. "0:09:45" when the item reports it. */
   runtime?: string;
   topic?: string;
+  /** Quick CEFR estimate from the title + description (refined from the full
+   *  transcript by the proxy when the lesson is opened). 'Auto' = unknown. */
+  level: CefrLevel | 'Auto';
 }
 
 interface ArchiveSearchDoc {
@@ -35,14 +40,17 @@ const first = (v: string | string[] | undefined): string | undefined =>
   Array.isArray(v) ? v[0] : v;
 
 function toItem(doc: ArchiveSearchDoc): ArchiveLibraryItem {
+  const title = doc.title?.trim() || doc.identifier;
+  const description = first(doc.description);
   return {
     identifier: doc.identifier,
-    title: doc.title?.trim() || doc.identifier,
-    description: first(doc.description),
+    title,
+    description,
     thumbnailUrl: `https://archive.org/services/img/${doc.identifier}`,
     sourcePageUrl: `https://archive.org/details/${doc.identifier}`,
     runtime: doc.runtime,
     topic: first(doc.subject),
+    level: classifyCefr(`${title}. ${description ?? ''}`),
   };
 }
 
@@ -53,10 +61,11 @@ export async function searchArchiveItems(
   signal?: AbortSignal,
 ): Promise<ArchiveLibraryItem[]> {
   const trimmed = query.trim();
-  // A free-text search is scoped to streamable movies; the empty state uses the
-  // safe educational default above.
+  // Always require a SubRip caption track so every listed item is actually
+  // shadowable (the proxy needs captions to build segments); the empty state
+  // uses the safe educational default above.
   const q = trimmed
-    ? `(${trimmed}) AND mediatype:(movies)`
+    ? `(${trimmed}) AND mediatype:(movies) AND format:(SubRip)`
     : DEFAULT_QUERY;
 
   const params = new URLSearchParams();

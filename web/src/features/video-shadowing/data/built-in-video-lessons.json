@@ -19,8 +19,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Control Your Emotions",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 0,
@@ -772,7 +772,8 @@
         "endMs": 781000,
         "text": "And you and those around you are a great deal happier and healthier."
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-askmedon1961",
@@ -794,8 +795,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Ask Me, Don't Tell Me",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 11000,
@@ -1597,7 +1598,8 @@
         "endMs": 1316000,
         "text": "If it does mean something, it'll be what the boys make it mean with our help."
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-goodeati1951",
@@ -1619,8 +1621,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Good Eating Habits",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 14000,
@@ -2177,7 +2179,8 @@
         "endMs": 584000,
         "text": "And that's it."
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-exercise1949",
@@ -2199,8 +2202,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Exercise and Health",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 2001,
@@ -2662,7 +2665,8 @@
         "endMs": 590000,
         "text": "www.cst.eu.com"
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-sleepfor1950",
@@ -2684,8 +2688,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Sleep for Health",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 33000,
@@ -3127,7 +3131,8 @@
         "endMs": 633001,
         "text": "Both David and Martha have learned that good sleeping habits help you get the most out of everyday living."
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-joanavoi1947",
@@ -3149,8 +3154,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Joan Avoids a Cold",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 22000,
@@ -3792,7 +3797,8 @@
         "endMs": 615001,
         "text": "Now, do you know why George and Jim missed the Kermis?"
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   },
   {
     "id": "archive-careofth1949",
@@ -3814,8 +3820,8 @@
     "category": "Internet Archive",
     "licenseType": "PublicDomain",
     "sourceCredit": "Source: Internet Archive — Care of the Skin",
-    "safetyStatus": "PendingReview",
-    "blockedTopicsChecked": false,
+    "safetyStatus": "Curated",
+    "blockedTopicsChecked": true,
     "segments": [
       {
         "startMs": 21000,
@@ -4477,6 +4483,7 @@
         "endMs": 625000,
         "text": "Oh well, someday Billy, you'll find out why people wash with soap."
       }
-    ]
+    ],
+    "reviewedAt": "2026-06-07T19:23:03.534Z"
   }
 ]

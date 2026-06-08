@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, SlidersHorizontal, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play } from 'lucide-react';
+import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
@@ -12,7 +12,7 @@ import { gradForId } from '../components/videoThumbStyles';
 import type { VideoShadowingLesson } from '../models/lesson';
 
 type Tab = 'voa' | 'mine';
-const LEVELS = ['All levels', 'A1', 'A2', 'B1', 'B2'];
+const LEVELS = ['All levels', 'A1', 'A2', 'B1', 'B2', 'C1'];
 
 export default function VideoShadowingLibraryPage() {
   const navigate = useNavigate();
@@ -85,6 +85,9 @@ export default function VideoShadowingLibraryPage() {
     toast.success('Lesson deleted and local files cleaned up.');
   };
 
+  // Filter the live list by the auto-estimated CEFR level.
+  const filteredItems = level === 'All levels' ? items : items.filter((i) => i.level === level);
+
   return (
     <div>
       {/* Header */}
@@ -108,9 +111,6 @@ export default function VideoShadowingLibraryPage() {
               className="w-full sm:w-56 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
             />
           </div>
-          <button className="h-10 px-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center gap-2 shrink-0">
-            <SlidersHorizontal className="w-4 h-4" /> <span className="hidden sm:inline">Level</span>
-          </button>
           <button
             onClick={() => navigate('/video-shadowing/add')}
             className="h-10 px-4 bg-indigo-600 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition shrink-0"
@@ -139,19 +139,21 @@ export default function VideoShadowingLibraryPage() {
             </button>
           ))}
         </div>
+        {/* Level filter — live items are auto-classified (CEFR) from their text;
+            My Videos use the lesson's own level. */}
         <div className="flex flex-wrap gap-2">
           {LEVELS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setLevel(f)}
-              className={cn(
-                'px-3 py-1.5 rounded-full text-xs font-semibold transition',
-                level === f ? 'bg-slate-900 dark:bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700',
-              )}
-            >
-              {f}
-            </button>
-          ))}
+              <button
+                key={f}
+                onClick={() => setLevel(f)}
+                className={cn(
+                  'px-3 py-1.5 rounded-full text-xs font-semibold transition',
+                  level === f ? 'bg-slate-900 dark:bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700',
+                )}
+              >
+                {f}
+              </button>
+            ))}
         </div>
       </div>
 
@@ -184,14 +186,14 @@ export default function VideoShadowingLibraryPage() {
           <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
           Couldn’t reach the Internet Archive. Check your connection and try again.
         </div>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
         <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
           <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
-          No videos found. Try a different search.
+          {level === 'All levels' ? 'No videos found. Try a different search.' : `No ${level} videos in these results. Try another level or search.`}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <ArchiveCard
               key={item.identifier}
               item={item}
@@ -238,7 +240,14 @@ function ArchiveCard({
     >
       <VideoThumb grad={gradForId(item.identifier)} source="VOA" duration={item.runtime} thumbnailUrl={item.thumbnailUrl} />
       <div className="p-5 flex flex-col flex-1">
-        <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Internet Archive</p>
+        <div className="flex items-center gap-2 mb-2">
+          {item.level !== 'Auto' && (
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
+              {item.level}
+            </span>
+          )}
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Internet Archive</span>
+        </div>
         <h3 className="text-lg font-bold leading-snug mb-1 line-clamp-2">{item.title}</h3>
         {item.topic && <p className="text-xs text-slate-400 font-medium mb-4 line-clamp-1 capitalize">{item.topic}</p>}
         <button

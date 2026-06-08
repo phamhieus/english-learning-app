@@ -1,0 +1,18 @@
+{
+  // Standalone Internet Archive caption proxy (server/worker.mjs).
+  // Deploy/dev from web/ via the proxy:deploy / proxy:dev npm scripts, which
+  // pass `-c ../server/wrangler.jsonc`. `main` + bundled imports resolve
+  // relative to THIS file's directory (server/).
+  "$schema": "../web/node_modules/wrangler/config-schema.json",
+  "name": "archive-proxy",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-06-08",
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    // Override per-environment. Lock to your site in production, e.g.
+    // "https://phamhieus.github.io". "*" is fine for local dev.
+    "ALLOWED_ORIGIN": "*"
+  }
+}

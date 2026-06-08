@@ -37,6 +37,19 @@ interface ProxyLesson {
 
 export class ArchiveProxyError extends Error {}
 
+/** Returns true if the local Archive proxy service is reachable. */
+export async function checkProxyAvailable(): Promise<boolean> {
+  try {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), 3000);
+    const res = await fetch(`${PROXY_BASE}/health`, { signal: ac.signal });
+    clearTimeout(timer);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function fetchArchiveLesson(identifier: string, signal?: AbortSignal): Promise<ProxyLesson> {
   let res: Response;
   try {

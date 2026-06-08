@@ -25,3 +25,10 @@ dist-ssr
 
 # ffmpeg core copied from node_modules by scripts/copy-ffmpeg-core.mjs
 public/ffmpeg/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

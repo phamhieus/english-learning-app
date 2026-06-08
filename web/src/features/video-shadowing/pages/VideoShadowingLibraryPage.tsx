@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play } from 'lucide-react';
+import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play, AlertTriangle } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
 import { VideoLessonCard, type LessonCardData } from '../components/VideoLessonCard';
 import { VideoThumb } from '../components/primitives';
 import { searchArchiveItems, type ArchiveLibraryItem } from '../services/video-source/archiveLiveApi';
-import { prepareArchiveLesson, ArchiveProxyError } from '../services/video-source/archiveProxyApi';
+import { prepareArchiveLesson, checkProxyAvailable, ArchiveProxyError } from '../services/video-source/archiveProxyApi';
 import { gradForId } from '../components/videoThumbStyles';
 import type { VideoShadowingLesson } from '../models/lesson';
 
@@ -27,6 +27,12 @@ export default function VideoShadowingLibraryPage() {
   const [items, setItems] = useState<ArchiveLibraryItem[]>([]);
   const [itemsLoading, setItemsLoading] = useState(true);
   const [itemsError, setItemsError] = useState(false);
+
+  // null = checking, true = available, false = not reachable
+  const [proxyAvailable, setProxyAvailable] = useState<boolean | null>(null);
+  useEffect(() => {
+    checkProxyAvailable().then(setProxyAvailable);
+  }, []);
 
   // Debounce the search box before it hits the Archive API.
   useEffect(() => {
@@ -156,6 +162,22 @@ export default function VideoShadowingLibraryPage() {
             ))}
         </div>
       </div>
+
+      {/* Proxy unavailable notice — shown on the Library tab when the Archive
+          helper service isn't reachable (e.g. on GitHub Pages deployments). */}
+      {tab === 'voa' && proxyAvailable === false && (
+        <div className="glass-card rounded-2xl p-4 mb-5 border border-amber-200 dark:border-amber-500/30 bg-amber-50/50 dark:bg-amber-500/10 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">Archive helper not running</p>
+            <p className="text-xs text-amber-600 dark:text-amber-500 mt-0.5">
+              Shadowing live Archive videos requires the local helper service. Run{' '}
+              <code className="font-mono bg-amber-100 dark:bg-amber-500/20 px-1 rounded">npm run proxy</code>
+              {' '}in your project directory, then refresh. Curated built-in lessons and "My Videos" work without it.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Grid / loading / empty state */}
       {tab === 'mine' ? (

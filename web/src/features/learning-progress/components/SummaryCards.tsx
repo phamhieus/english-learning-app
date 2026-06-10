@@ -67,7 +67,7 @@ export const SummaryCards = ({ streak, summary, programLabel }: Props) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {cards.map((c) => (
         <div
           key={c.label}

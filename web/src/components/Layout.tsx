@@ -52,7 +52,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[var(--background)] selection:bg-indigo-200 dark:selection:bg-indigo-900 selection:text-indigo-900 dark:selection:text-indigo-100">
+    <div className="flex h-[100dvh] w-full overflow-hidden bg-[var(--background)] selection:bg-indigo-200 dark:selection:bg-indigo-900 selection:text-indigo-900 dark:selection:text-indigo-100">
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div
@@ -69,7 +69,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar onNavigate={() => setSidebarOpen(false)} />
       </div>
 
-      <main className="flex-1 overflow-y-auto px-4 py-4 pb-24 md:px-10 md:py-8 md:pb-8 relative">
+      <main className="flex-1 overflow-y-auto px-4 py-4 pb-28 md:px-10 md:py-8 md:pb-8 relative">
         <div
           key={location.pathname}
           className="max-w-6xl mx-auto w-full min-h-full pb-10 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"
@@ -79,7 +79,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       </main>
 
       {/* Mobile bottom tab bar (replaces the desktop sidebar on phones) */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-[var(--card)]/95 backdrop-blur-xl border-t border-[var(--border)] px-2 pt-2 pb-6">
+      <nav className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-[var(--card)]/95 backdrop-blur-xl border-t border-[var(--border)] px-2 pt-2" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
         <div className="flex items-center justify-around">
           {MOBILE_TABS.map((t) => {
             const active = t.path === '/' ? location.pathname === '/' : location.pathname.startsWith(t.path);

@@ -39,7 +39,7 @@ const Dashboard = () => {
       </section>
 
       {/* Stats — compact stacked cards on phone, horizontal on desktop */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-6 mb-10">
+      <div className="grid grid-cols-3 gap-3 lg:gap-6 mb-10">
         {[
           { color: 'orange', icon: Flame,     label: 'Daily Streak', value: streakLabel },
           { color: 'blue',   icon: Gauge,     label: 'TOEIC (est.)', value: toeicLabel  },
@@ -47,19 +47,19 @@ const Dashboard = () => {
         ].map((s, i) => (
           <div
             key={i}
-            className="glass-card rounded-2xl p-3 sm:p-6 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4 hover:-translate-y-1 transition-transform"
+            className="glass-card rounded-2xl p-3 lg:p-5 flex flex-col items-start gap-1.5 lg:flex-row lg:items-center lg:gap-4 hover:-translate-y-1 transition-transform"
           >
             <div className={cn(
-              'w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0',
+              'w-9 h-9 lg:w-11 lg:h-11 rounded-xl flex items-center justify-center shrink-0',
               s.color === 'orange' ? 'bg-orange-100 text-orange-500 dark:bg-orange-900/30' :
               s.color === 'blue'   ? 'bg-blue-100 text-blue-500 dark:bg-blue-900/30' :
                                      'bg-cyan-100 text-cyan-500 dark:bg-cyan-900/30'
             )}>
-              <s.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+              <s.icon className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-tight">{s.label}</p>
-              <p className="text-lg sm:text-2xl font-bold leading-tight mt-0.5">{s.value}</p>
+              <p className="text-[10px] sm:text-xs lg:text-sm text-slate-500 dark:text-slate-400 font-medium leading-tight">{s.label}</p>
+              <p className="text-base sm:text-lg lg:text-2xl font-bold leading-tight mt-0.5">{s.value}</p>
             </div>
           </div>
         ))}

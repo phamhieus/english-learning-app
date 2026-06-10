@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Send, Clock, Type, Check, Sparkles, Circle, Maximize2, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
@@ -56,6 +56,34 @@ const WritingEditor = () => {
   const [timer, setTimer] = useState(isChartTask ? 1200 : isPictureWriting ? 480 : 600);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false);
+
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const playTone = useCallback((frequency: number, duration: number, peak = 0.16) => {
+    try {
+      const AudioCtor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtor) return;
+      if (!audioCtxRef.current) audioCtxRef.current = new AudioCtor();
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') void ctx.resume();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(peak, ctx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration + 0.02);
+    } catch { /* Web Audio unavailable */ }
+  }, []);
+  const playTick = useCallback(() => playTone(880, 0.12), [playTone]);
+  const playEndBeep = useCallback(() => playTone(440, 0.7, 0.22), [playTone]);
+  const playNotification = useCallback((double = false) => {
+    playTone(660, 0.18, 0.18);
+    if (double) setTimeout(() => playTone(660, 0.18, 0.18), 270);
+  }, [playTone]);
+
   const sentenceTotal = sentenceCount(text);
   const openingSentence = firstSentence(text);
   const hasParagraphs = text.trim().split(/\n\s*\n/).filter(Boolean).length >= 2;
@@ -125,6 +153,16 @@ const WritingEditor = () => {
     return () => clearInterval(t);
   }, [isEvaluating]);
 
+  useEffect(() => {
+    if (isEvaluating) return;
+    if (timer === 600) playNotification(false);       // 10-minute warning
+    else if (timer === 300) playNotification(true);   // 5-minute warning (double beep)
+    else if (timer > 0 && timer <= 10) playTick();
+    else if (timer === 0) playEndBeep();
+  }, [timer, isEvaluating, playTick, playEndBeep, playNotification]);
+
+  useEffect(() => () => { void audioCtxRef.current?.close(); }, []);
+
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -151,7 +189,7 @@ const WritingEditor = () => {
   };
 
   return (
-    <div className="lg:h-[calc(100vh-8rem)] flex flex-col pb-32 lg:pb-0 animate-in slide-in-from-bottom-8 duration-500">
+    <div className="lg:h-[calc(100vh-8rem)] flex flex-col pb-32 md:pb-0 animate-in slide-in-from-bottom-8 duration-500">
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white font-medium">
           ← Exit
@@ -267,8 +305,20 @@ const WritingEditor = () => {
             <span className={cn('flex items-center gap-1.5 text-sm font-semibold', wordCount >= minWords ? 'text-green-600 dark:text-green-400' : 'text-slate-500')}>
               <Type className="w-4 h-4" /> {wordCount} / {minWords} words
             </span>
-            <div className="flex items-center gap-2 text-sm font-bold text-orange-500">
-              <Clock className="w-4 h-4" /> {formatTime(timer)}
+            <div className={cn(
+              'flex items-center gap-2 text-sm font-bold transition-colors duration-300',
+              timer <= 10
+                ? 'text-red-500'
+                : timer <= 300
+                  ? 'text-orange-500'
+                  : timer <= 600
+                    ? 'text-amber-500'
+                    : 'text-slate-500 dark:text-slate-400',
+            )}>
+              <Clock className={cn('w-4 h-4', timer <= 300 && timer > 10 && 'animate-pulse', timer <= 10 && 'animate-pulse')} />
+              <span key={timer <= 10 ? timer : 'calm'} className={cn(timer > 0 && timer <= 10 && 'animate-timer-shake')}>
+                {formatTime(timer)}
+              </span>
             </div>
           </div>
 
@@ -281,7 +331,7 @@ const WritingEditor = () => {
             spellCheck={false}
           />
 
-          <div className="hidden lg:flex p-4 border-t border-[var(--border)] bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur shrink-0 items-center justify-between gap-3">
+          <div className="hidden md:flex p-4 border-t border-[var(--border)] bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur shrink-0 items-center justify-between gap-3">
             <span className="text-xs text-slate-400 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" /> AI examiner ready
             </span>
@@ -309,7 +359,7 @@ const WritingEditor = () => {
         </div>
       </div>
 
-      <div className="lg:hidden fixed inset-x-0 bottom-[78px] z-30 px-4 pt-4 pb-2 bg-gradient-to-t from-[var(--background)] via-[var(--background)] to-transparent">
+      <div className="md:hidden fixed inset-x-0 bottom-[78px] z-30 px-4 pt-4 pb-2 bg-gradient-to-t from-[var(--background)] via-[var(--background)] to-transparent">
         <button
           onClick={handleSubmit}
           disabled={wordCount < 10 || isEvaluating}

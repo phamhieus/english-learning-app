@@ -27,9 +27,9 @@ type Phase = 'prep' | 'long_turn' | 'rounding_off' | 'complete';
 
 const PREP_SECONDS = 60;
 const MAX_LONG_TURN_SECONDS = 120;
-// Prep countdown turns amber at this mark, then red / shakes / ticks below it.
-const PREP_CAUTION_SECONDS = 20;
-const PREP_WARNING_SECONDS = 10;
+const PREP_NOTICE_SECONDS = 40;   // amber — first gentle nudge
+const PREP_CAUTION_SECONDS = 20;  // orange — time getting short
+const PREP_WARNING_SECONDS = 10;  // red + shake + tick — urgent
 const PART2_CATEGORIES = Array.from(new Set(PART2_CUE_CARDS.map((card) => card.category)));
 
 const IeltsSpeakingP2Session = () => {
@@ -104,6 +104,13 @@ const IeltsSpeakingP2Session = () => {
     else if (prepLeft === 0) playEndBeep();
   }, [phase, prepLeft, playTick, playEndBeep]);
 
+  // Auto-transition to speaking phase when prep countdown ends.
+  useEffect(() => {
+    if (phase !== 'prep' || prepLeft !== 0 || !selectedId) return;
+    const t = setTimeout(() => startLongTurn(), 800);
+    return () => clearTimeout(t);
+  }, [phase, prepLeft, selectedId, startLongTurn]);
+
   useEffect(() => {
     if (!selectedId) return;
     if (phase !== 'long_turn') return;
@@ -144,14 +151,14 @@ const IeltsSpeakingP2Session = () => {
     void audioCtxRef.current?.close();
   }, []);
 
-  const startLongTurn = () => {
+  const startLongTurn = useCallback(() => {
     reader.stop();
     speech.reset();
     setSpeakingSeconds(0);
     answerStartRef.current = Date.now();
     setPhase('long_turn');
     speech.start();
-  };
+  }, [reader, speech]);
 
   const finishLongTurn = () => {
     speech.stop();
@@ -274,8 +281,12 @@ const IeltsSpeakingP2Session = () => {
 
   const prepProgress = ((PREP_SECONDS - prepLeft) / PREP_SECONDS) * 100;
   const speakingProgress = (speakingSeconds / MAX_LONG_TURN_SECONDS) * 100;
-  const prepUrgent = phase === 'prep' && prepLeft > 0 && prepLeft <= PREP_WARNING_SECONDS;
+  const prepUrgent  = phase === 'prep' && prepLeft > 0 && prepLeft <= PREP_WARNING_SECONDS;
   const prepCaution = phase === 'prep' && prepLeft > PREP_WARNING_SECONDS && prepLeft <= PREP_CAUTION_SECONDS;
+  const prepNotice  = phase === 'prep' && prepLeft > PREP_CAUTION_SECONDS && prepLeft <= PREP_NOTICE_SECONDS;
+  const speakingRemaining = MAX_LONG_TURN_SECONDS - speakingSeconds;
+  const speakingUrgent  = speakingRemaining > 0 && speakingRemaining <= 10;
+  const speakingCaution = speakingRemaining > 10 && speakingRemaining <= 30;
 
   return (
     <div className="max-w-6xl mx-auto min-h-[calc(100vh-8rem)] animate-in fade-in duration-300">
@@ -308,7 +319,7 @@ const IeltsSpeakingP2Session = () => {
                     r={34}
                     className={cn(
                       'transition-colors duration-300',
-                      prepUrgent ? 'stroke-red-500' : prepCaution ? 'stroke-orange-500' : 'stroke-cyan-500',
+                      prepUrgent ? 'stroke-red-500' : prepCaution ? 'stroke-orange-500' : prepNotice ? 'stroke-amber-500' : 'stroke-cyan-500',
                     )}
                     strokeWidth="7"
                     strokeLinecap="round"
@@ -326,7 +337,9 @@ const IeltsSpeakingP2Session = () => {
                         ? 'text-red-500 animate-timer-shake'
                         : prepCaution
                           ? 'text-orange-500'
-                          : 'text-slate-800 dark:text-slate-100',
+                          : prepNotice
+                            ? 'text-amber-500'
+                            : 'text-slate-800 dark:text-slate-100',
                     )}
                   >
                     0:{String(prepLeft).padStart(2, '0')}
@@ -447,8 +460,20 @@ const IeltsSpeakingP2Session = () => {
             <div className="flex items-end justify-between mb-3">
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Speaking time</p>
-                <p className="text-4xl font-black tabular-nums text-slate-800 dark:text-slate-100 leading-none mt-1">
-                  {Math.floor(speakingSeconds / 60)}:{String(speakingSeconds % 60).padStart(2, '0')}
+                <p className={cn(
+                  'text-4xl font-black tabular-nums leading-none mt-1 transition-colors duration-300',
+                  speakingUrgent
+                    ? 'text-red-500'
+                    : speakingCaution
+                      ? 'text-amber-500'
+                      : 'text-slate-800 dark:text-slate-100',
+                )}>
+                  <span
+                    key={speakingUrgent ? speakingSeconds : speakingCaution ? 'caution' : 'calm'}
+                    className={cn(speakingUrgent && 'animate-timer-shake')}
+                  >
+                    {Math.floor(speakingSeconds / 60)}:{String(speakingSeconds % 60).padStart(2, '0')}
+                  </span>
                 </p>
               </div>
               <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-bold border border-red-100 dark:border-red-900/30">

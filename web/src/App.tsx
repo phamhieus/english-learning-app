@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 import { ThemeProvider } from './components/ThemeContext';
 import { SettingsProvider } from './components/SettingsContext';
 import { ToastProvider } from './components/ToastContext';
@@ -40,7 +42,8 @@ function App() {
   return (
     <>
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
-      <ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
         <SettingsProvider>
           <ToastProvider>
             <HashRouter>
@@ -87,7 +90,8 @@ function App() {
             </HashRouter>
           </ToastProvider>
         </SettingsProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </Provider>
     </>
   );
 }

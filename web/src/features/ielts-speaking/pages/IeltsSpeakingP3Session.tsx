@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CheckCircle2, ChevronLeft, ChevronRight, Circle, MessageSquareText, Mic, Radio, RefreshCw, Volume2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MessageSquareText, Mic, Radio, RefreshCw, Volume2 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
-import { useTheme } from '../../../components/useTheme';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
@@ -17,7 +16,6 @@ function createSessionKey() {
 }
 
 const IeltsSpeakingP3Session = () => {
-  const { resolvedTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const sessionState = location.state as { cueCardId?: string; discussionSetId?: string; sessionKey?: string } | null;

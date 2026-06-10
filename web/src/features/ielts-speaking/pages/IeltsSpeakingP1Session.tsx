@@ -48,8 +48,10 @@ const IeltsSpeakingP1Session = () => {
   const navType = useNavigationType();
   const input = location.state as SessionInput | null;
 
-  // ── Build question queue ──────────────────────────────────────────────────
-  const queue = useRef<QueueItem[]>(
+  // ── Build question queue (once) ───────────────────────────────────────────
+  // useState lazy-init keeps the queue reactive + readable during render
+  // (React Compiler forbids reading a ref during render).
+  const [queue] = useState<QueueItem[]>(() =>
     input ? buildQueue(input.topics, input.questionCount, input.mode) : [],
   );
   const isMock = input?.isMockMode ?? false;
@@ -57,7 +59,7 @@ const IeltsSpeakingP1Session = () => {
   // ── Stable refs to avoid stale closures ──────────────────────────────────
   const answersRef = useRef<IeltsAnswerRecord[]>([]);
   const answerStartRef = useRef<number>(0);
-  const sessionStartRef = useRef<number>(Date.now());
+  const sessionStartRef = useRef<number>(0);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const silenceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const currentTranscriptRef = useRef('');
@@ -72,21 +74,30 @@ const IeltsSpeakingP1Session = () => {
   const speech = useSpeechRecognition({ continuous: true, interimResults: true });
   const voiceReader = useVoiceReader({ exerciseId: `ielts-p1-q${idx}` });
 
-  const currentItem = queue.current[idxRef.current];
+  const currentItem = queue[idx];
 
   // ── Redirect if no input or user navigated here via browser history ───────
   useEffect(() => {
-    if (!input || queue.current.length === 0 || navType === 'POP') {
+    if (!input || queue.length === 0 || navType === 'POP') {
       navigate('/speaking/ielts-p1', { replace: true });
+      return;
     }
+    sessionStartRef.current = Date.now();
   }, []);
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-  const clearSilenceTimers = useCallback(() => {
+  // Stop the silence timer/interval WITHOUT touching state — safe to call from
+  // an effect body (React Compiler forbids synchronous setState there).
+  const stopSilenceTimers = useCallback(() => {
     if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
     if (silenceIntervalRef.current) { clearInterval(silenceIntervalRef.current); silenceIntervalRef.current = null; }
-    setSilenceLeft(null);
   }, []);
+
+  // Stop the timers AND hide the on-screen silence countdown. Use from callbacks.
+  const clearSilenceTimers = useCallback(() => {
+    stopSilenceTimers();
+    setSilenceLeft(null);
+  }, [stopSilenceTimers]);
 
   const startListening = useCallback(() => {
     speech.reset();
@@ -101,7 +112,7 @@ const IeltsSpeakingP1Session = () => {
     speech.stop();
     voiceReader.stop();
 
-    const item = queue.current[idxRef.current];
+    const item = queue[idxRef.current];
     const record: IeltsAnswerRecord = {
       questionId: item?.questionId ?? '',
       question: item?.questionText ?? '',
@@ -113,7 +124,7 @@ const IeltsSpeakingP1Session = () => {
     answersRef.current = [...answersRef.current, record];
     const nextIdx = idxRef.current + 1;
 
-    if (nextIdx >= queue.current.length) {
+    if (nextIdx >= queue.length) {
       navigate('/speaking/ielts-p1/result', {
         state: {
           answers: answersRef.current,
@@ -129,15 +140,23 @@ const IeltsSpeakingP1Session = () => {
     }
   }, [clearSilenceTimers, speech, voiceReader, input, isMock, navigate]);
 
-  // Keep ref so silence timer always has latest version
+  // Keep ref so the silence timer always calls the latest version. Assigning in
+  // an effect (not during render) satisfies the React Compiler ref rules.
   const advanceRef = useRef(advanceQuestion);
-  advanceRef.current = advanceQuestion;
+  useEffect(() => {
+    advanceRef.current = advanceQuestion;
+  }, [advanceQuestion]);
 
   // ── Countdown ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (phase !== 'countdown') return;
-    if (countdown <= 0) { setPhase('reading'); return; }
-    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    // Decrement (and the final → 'reading' transition) happen inside the timer
+    // callback, so no synchronous setState runs in the effect body.
+    const delay = countdown <= 0 ? 400 : 1000;
+    const t = setTimeout(() => {
+      if (countdown <= 0) setPhase('reading');
+      else setCountdown((c) => c - 1);
+    }, delay);
     return () => clearTimeout(t);
   }, [phase, countdown]);
 
@@ -202,7 +221,7 @@ const IeltsSpeakingP1Session = () => {
 
   if (!currentItem) return null;
 
-  const progress = (idx / queue.current.length) * 100;
+  const progress = (idx / queue.length) * 100;
   const liveText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
 
   return (
@@ -216,7 +235,7 @@ const IeltsSpeakingP1Session = () => {
             {countdown === 0 ? 'Go!' : countdown}
           </div>
           <p className="text-white/40 text-xs mt-6">
-            IELTS Speaking Part 1 · {queue.current.length} question{queue.current.length !== 1 ? 's' : ''}
+            IELTS Speaking Part 1 · {queue.length} question{queue.length !== 1 ? 's' : ''}
           </p>
         </div>
       )}
@@ -236,7 +255,7 @@ const IeltsSpeakingP1Session = () => {
             </span>
           )}
           <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-            Q{idx + 1} / {queue.current.length}
+            Q{idx + 1} / {queue.length}
           </span>
         </div>
       </div>
@@ -341,7 +360,7 @@ const IeltsSpeakingP1Session = () => {
               : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed',
           )}
         >
-          {idx + 1 >= queue.current.length ? 'Finish & See Results' : 'Next Question'}
+          {idx + 1 >= queue.length ? 'Finish & See Results' : 'Next Question'}
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>

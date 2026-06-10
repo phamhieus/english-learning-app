@@ -6,7 +6,6 @@ import {
   Clock,
   Mic,
   RefreshCw,
-  Trash2,
   Volume2,
   ChevronDown,
   Pencil,
@@ -279,7 +278,6 @@ const IeltsSpeakingP2Session = () => {
     );
   }
 
-  const prepProgress = ((PREP_SECONDS - prepLeft) / PREP_SECONDS) * 100;
   const speakingProgress = (speakingSeconds / MAX_LONG_TURN_SECONDS) * 100;
   const prepUrgent  = phase === 'prep' && prepLeft > 0 && prepLeft <= PREP_WARNING_SECONDS;
   const prepCaution = phase === 'prep' && prepLeft > PREP_WARNING_SECONDS && prepLeft <= PREP_CAUTION_SECONDS;

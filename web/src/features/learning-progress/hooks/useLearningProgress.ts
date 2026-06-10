@@ -10,11 +10,15 @@ import type {
   DailyPracticeSummary,
   FilteredSummary,
   PracticeHistoryFilter,
-  PracticeSession,
   StreakSummary,
 } from '../types/learningProgress.types';
-import { practiceSessionRepository } from '../services/storage/practiceSessionRepository';
-import { ensureSeedData } from '../services/seedProgressData';
+import { useAppDispatch, useAppSelector } from '../../../app/store/hooks';
+import {
+  loadSessions,
+  resetProgress,
+  selectAllSessions,
+  selectProgressLoading,
+} from '../store';
 import {
   buildDailySummaries,
   computeFilteredSummary,
@@ -58,22 +62,23 @@ export interface LearningProgressState {
 }
 
 export function useLearningProgress(): LearningProgressState {
-  const [allSessions, setAllSessions] = useState<PracticeSession[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  // Sessions come from the shared progress store — the SAME source as the
+  // dashboard/sidebar stats — so every view stays in sync.
+  const allSessions = useAppSelector(selectAllSessions);
+  const loading = useAppSelector(selectProgressLoading);
   const [filter, setFilterState] = useState<PracticeHistoryFilter>(DEFAULT_FILTER);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    await ensureSeedData();
-    const sessions = await practiceSessionRepository.getAll();
-    setAllSessions(sessions);
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    void load();
-  }, [load]);
+    void dispatch(loadSessions());
+  }, [dispatch]);
+
+  // Force a fresh read from the repository (e.g. after the user clears history).
+  const reload = useCallback(() => {
+    dispatch(resetProgress());
+    void dispatch(loadSessions());
+  }, [dispatch]);
 
   const setFilter = useCallback((patch: Partial<PracticeHistoryFilter>) => {
     setFilterState((prev) => ({ ...prev, ...patch }));
@@ -147,6 +152,6 @@ export function useLearningProgress(): LearningProgressState {
     selectDate: setSelectedDate,
     selectedDay,
     calendarActiveDays,
-    reload: () => void load(),
+    reload,
   };
 }

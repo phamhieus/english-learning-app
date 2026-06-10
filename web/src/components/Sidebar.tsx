@@ -30,7 +30,7 @@ function readStored(): boolean | null {
 }
 
 function saveStored(v: boolean) {
-  try { localStorage.setItem('sidebar.collapsed', v ? '1' : '0'); } catch {}
+  try { localStorage.setItem('sidebar.collapsed', v ? '1' : '0'); } catch { /* storage unavailable — ignore */ }
 }
 
 export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {

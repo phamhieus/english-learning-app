@@ -82,6 +82,18 @@
   .dark .text-gradient {
     background-image: linear-gradient(to right, #818cf8, #c084fc);
   }
+
+  /* Quick shake used to flag a countdown that is about to run out. */
+  .animate-timer-shake {
+    animation: timer-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+}
+
+@keyframes timer-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
 }
 
 /* ── Custom scrollbar ─────────────────────────────────────────────── */

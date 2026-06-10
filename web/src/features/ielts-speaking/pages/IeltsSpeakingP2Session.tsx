@@ -104,6 +104,15 @@ const IeltsSpeakingP2Session = () => {
     else if (prepLeft === 0) playEndBeep();
   }, [phase, prepLeft, playTick, playEndBeep]);
 
+  const startLongTurn = useCallback(() => {
+    reader.stop();
+    speech.reset();
+    setSpeakingSeconds(0);
+    answerStartRef.current = Date.now();
+    setPhase('long_turn');
+    speech.start();
+  }, [reader, speech]);
+
   // Auto-transition to speaking phase when prep countdown ends.
   useEffect(() => {
     if (phase !== 'prep' || prepLeft !== 0 || !selectedId) return;
@@ -150,15 +159,6 @@ const IeltsSpeakingP2Session = () => {
     reader.stop();
     void audioCtxRef.current?.close();
   }, []);
-
-  const startLongTurn = useCallback(() => {
-    reader.stop();
-    speech.reset();
-    setSpeakingSeconds(0);
-    answerStartRef.current = Date.now();
-    setPhase('long_turn');
-    speech.start();
-  }, [reader, speech]);
 
   const finishLongTurn = () => {
     speech.stop();

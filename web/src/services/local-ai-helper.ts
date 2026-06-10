@@ -1,0 +1,201 @@
+// Installed AI tool detection (Codex CLI, Gemini CLI, Claude Code,
+// Antigravity CLI). All detection policy lives here in the frontend:
+//
+// 1. Inside the Uno desktop app, primitives (fileExists/dirList/which/version)
+//    are answered by the C# host over the WebView2 bridge — no extra process.
+// 2. In a plain browser the sandbox cannot touch the machine, so detection
+//    falls back to the Local AI Helper's GET /ai-tools endpoint.
+
+import { bridgeCall, isNativeBridgeAvailable } from './native-bridge';
+
+export type InstalledAiToolId = 'codex-cli' | 'gemini-cli' | 'claude-code' | 'antigravity-cli';
+
+export type InstalledAiToolStatus =
+  | 'not_installed'
+  | 'checking'
+  | 'installed'
+  | 'login_required'
+  | 'ready'
+  | 'error'
+  | 'disabled';
+
+export type InstalledAiAvailability =
+  | 'checking'
+  | 'available'
+  | 'unavailable'
+  | 'helper_unavailable'
+  | 'error';
+
+export interface InstalledAiTool {
+  id: InstalledAiToolId;
+  name: string;
+  installed: boolean;
+  authenticated: boolean;
+  enabled: boolean;
+  selectableAsRuntime: boolean;
+  status: InstalledAiToolStatus;
+  version?: string;
+  errorMessage?: string;
+}
+
+interface AiToolsResponse {
+  tools: InstalledAiTool[];
+}
+
+export const SUPPORTED_TOOL_IDS: InstalledAiToolId[] = ['codex-cli', 'gemini-cli', 'claude-code', 'antigravity-cli'];
+
+const HELPER_URL_STORAGE_KEY = 'localAiHelperUrl';
+const DEFAULT_HELPER_URL = 'http://127.0.0.1:8765';
+const HELPER_TIMEOUT_MS = 5000;
+
+export function getLocalAiHelperUrl(): string {
+  return localStorage.getItem(HELPER_URL_STORAGE_KEY) || DEFAULT_HELPER_URL;
+}
+
+/** Thrown when no detection transport is reachable. */
+export class HelperUnavailableError extends Error {
+  constructor(message = 'The local AI service is not running.') {
+    super(message);
+    this.name = 'HelperUnavailableError';
+  }
+}
+
+// ── Detection policy ────────────────────────────────────────────────────────
+// `command` is resolved via PATH; `fallbackPaths` cover tools that do not
+// register on PATH (env vars are expanded by the native host). Tools with no
+// `credentialFiles` are treated as not requiring sign-in.
+
+interface ToolDefinition {
+  id: InstalledAiToolId;
+  name: string;
+  command: string;
+  fallbackPaths: string[];
+  /** Extra dynamically-discovered locations (e.g. versioned folders). */
+  dynamicFallbacks?: () => Promise<string[]>;
+  credentialFiles: string[];
+}
+
+const TOOL_DEFINITIONS: ToolDefinition[] = [
+  {
+    id: 'codex-cli',
+    name: 'Codex CLI',
+    command: 'codex',
+    fallbackPaths: [],
+    credentialFiles: ['%USERPROFILE%\\.codex\\auth.json'],
+  },
+  {
+    id: 'gemini-cli',
+    name: 'Gemini CLI',
+    command: 'gemini',
+    fallbackPaths: [],
+    credentialFiles: ['%USERPROFILE%\\.gemini\\oauth_creds.json'],
+  },
+  {
+    id: 'claude-code',
+    name: 'Claude Code',
+    command: 'claude',
+    fallbackPaths: ['%USERPROFILE%\\.local\\bin\\claude.exe'],
+    // The VS Code extension bundles the binary under a versioned folder.
+    dynamicFallbacks: async () => {
+      const names = await bridgeCall<string[]>('dirList', '%USERPROFILE%\\.vscode\\extensions').catch(() => []);
+      return names
+        .filter((name) => name.startsWith('anthropic.claude-code-'))
+        .sort()
+        .reverse()
+        .map((name) => `%USERPROFILE%\\.vscode\\extensions\\${name}\\resources\\native-binary\\claude.exe`);
+    },
+    credentialFiles: ['%USERPROFILE%\\.claude\\.credentials.json', '%USERPROFILE%\\.claude.json'],
+  },
+  {
+    id: 'antigravity-cli',
+    name: 'Antigravity CLI',
+    // The real CLI is agy.exe (installed by Antigravity's install.cmd);
+    // the IDE's antigravity-ide.cmd is just a GUI launcher, not a runtime.
+    command: 'agy',
+    fallbackPaths: ['%LOCALAPPDATA%\\agy\\bin\\agy.exe'],
+    credentialFiles: [],
+  },
+];
+
+async function resolveBinary(def: ToolDefinition): Promise<string | null> {
+  const onPath = await bridgeCall<string | null>('which', def.command).catch(() => null);
+  if (onPath) return onPath;
+
+  const candidates = [...def.fallbackPaths, ...(def.dynamicFallbacks ? await def.dynamicFallbacks() : [])];
+  for (const path of candidates) {
+    if (await bridgeCall<boolean>('fileExists', path).catch(() => false)) return path;
+  }
+  return null;
+}
+
+async function detectTool(def: ToolDefinition): Promise<InstalledAiTool> {
+  const base = { id: def.id, name: def.name, enabled: true, selectableAsRuntime: true };
+
+  const binary = await resolveBinary(def);
+  if (!binary) {
+    return { ...base, installed: false, authenticated: false, status: 'not_installed' };
+  }
+
+  const versionOutput = await bridgeCall<string | null>('version', binary).catch(() => null);
+  const version = versionOutput?.match(/\d+(\.\d+)+/)?.[0];
+
+  let authenticated = true;
+  if (def.credentialFiles.length > 0) {
+    const checks = await Promise.all(
+      def.credentialFiles.map((path) => bridgeCall<boolean>('fileExists', path).catch(() => false)),
+    );
+    authenticated = checks.some(Boolean);
+  }
+
+  return {
+    ...base,
+    installed: true,
+    authenticated,
+    status: authenticated ? 'ready' : 'login_required',
+    ...(version ? { version } : {}),
+  };
+}
+
+// ── Transports ──────────────────────────────────────────────────────────────
+
+async function fetchViaHttpHelper(): Promise<InstalledAiTool[]> {
+  let response: Response;
+  try {
+    response = await fetch(`${getLocalAiHelperUrl()}/ai-tools`, {
+      signal: AbortSignal.timeout(HELPER_TIMEOUT_MS),
+    });
+  } catch {
+    throw new HelperUnavailableError();
+  }
+  if (!response.ok) {
+    throw new HelperUnavailableError(`Local AI Helper responded with ${response.status}.`);
+  }
+
+  const data = (await response.json()) as AiToolsResponse;
+  const tools = Array.isArray(data.tools) ? data.tools : [];
+  return tools.filter((tool) => SUPPORTED_TOOL_IDS.includes(tool.id));
+}
+
+/**
+ * Detect installed AI tools on this computer.
+ * Throws HelperUnavailableError when no transport can answer.
+ */
+export async function fetchInstalledAiTools(): Promise<InstalledAiTool[]> {
+  if (isNativeBridgeAvailable()) {
+    try {
+      return await Promise.all(TOOL_DEFINITIONS.map(detectTool));
+    } catch {
+      throw new HelperUnavailableError('The native bridge did not respond.');
+    }
+  }
+  return fetchViaHttpHelper();
+}
+
+/** A tool can be selected as runtime only when ready, enabled and selectable. */
+export function isToolReady(tool: InstalledAiTool): boolean {
+  return tool.status === 'ready' && tool.enabled && tool.selectableAsRuntime;
+}
+
+export function getReadyTools(tools: InstalledAiTool[]): InstalledAiTool[] {
+  return tools.filter(isToolReady);
+}

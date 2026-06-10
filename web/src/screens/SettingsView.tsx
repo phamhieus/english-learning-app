@@ -18,6 +18,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { useSettings } from '../components/useSettings';
+import { AiRuntimeSection } from '../features/ai-runtime/components/AiRuntimeSection';
 import { useToast } from '../components/useToast';
 import { useTheme } from '../components/useTheme';
 import { cn } from '../components/classNames';
@@ -262,55 +263,59 @@ const SettingsView = () => {
           </div>
         </section>
 
-        {/* AI Models */}
+        {/* AI Runtime — Cloud AI vs Installed AI */}
         <section className="glass-card rounded-3xl p-8">
-          <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-indigo-500" /> AI Provider & Models</h2>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">AI Provider</label>
-              <Select
-                value={aiProvider}
-                onChange={(e) => {
-                  const newProvider = e.target.value as AIProvider;
-                  setAiProvider(newProvider);
-                  setTextModel(PROVIDER_DEFAULT_MODEL[newProvider]);
-                }}
-              >
-                {PROVIDER_OPTIONS.map((p) => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
-                ))}
-              </Select>
-            </div>
+          <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-indigo-500" /> AI Runtime</h2>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
-                {activeKeyMeta.label}
-                <a href={activeKeyMeta.link} target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
-                  (Get your API key here)
-                </a>
-              </label>
-              <PasswordInput
-                placeholder={activeKeyMeta.placeholder}
-                value={activeKey.value}
-                onChange={(e) => activeKey.set(e.target.value)}
-              />
-            </div>
+          <AiRuntimeSection
+            cloudConfig={
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">AI Provider</label>
+                  <Select
+                    value={aiProvider}
+                    onChange={(e) => {
+                      const newProvider = e.target.value as AIProvider;
+                      setAiProvider(newProvider);
+                      setTextModel(PROVIDER_DEFAULT_MODEL[newProvider]);
+                    }}
+                  >
+                    {PROVIDER_OPTIONS.map((p) => (
+                      <option key={p.value} value={p.value}>{p.label}</option>
+                    ))}
+                  </Select>
+                </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Default Text Model</label>
-              <Select
-                value={textModel}
-                onChange={(e) => setTextModel(e.target.value)}
-              >
-                {MODELS_BY_PROVIDER[aiProvider].map((m) => (
-                  <option key={m.id} value={m.id}>{m.label}</option>
-                ))}
-              </Select>
-            </div>
-            
-            <p className="text-xs text-slate-500 mt-2">Your keys are stored locally on your device and never sent to our servers.</p>
-          </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                    {activeKeyMeta.label}
+                    <a href={activeKeyMeta.link} target="_blank" rel="noreferrer" className="text-indigo-500 hover:underline ml-2 font-normal text-xs">
+                      (Get your API key here)
+                    </a>
+                  </label>
+                  <PasswordInput
+                    placeholder={activeKeyMeta.placeholder}
+                    value={activeKey.value}
+                    onChange={(e) => activeKey.set(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Default Text Model</label>
+                  <Select
+                    value={textModel}
+                    onChange={(e) => setTextModel(e.target.value)}
+                  >
+                    {MODELS_BY_PROVIDER[aiProvider].map((m) => (
+                      <option key={m.id} value={m.id}>{m.label}</option>
+                    ))}
+                  </Select>
+                </div>
+
+                <p className="text-xs text-slate-500 mt-2">Your keys are stored locally on your device and never sent to our servers.</p>
+              </div>
+            }
+          />
         </section>
 
         {/* Audio & Voice Reader (collapsible) */}

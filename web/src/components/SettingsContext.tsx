@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   SettingsContext,
   type AIProvider,
+  type AiRuntimeType,
   type PrimaryExam,
   type UserAudioSettings,
 } from './settings-context';
@@ -60,6 +61,12 @@ function readAudioSettings(): UserAudioSettings {
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [aiProvider, setAiProvider] = useState<AIProvider>((localStorage.getItem('aiProvider') as AIProvider) || 'gemini');
+  const [aiRuntimeType, setAiRuntimeType] = useState<AiRuntimeType>(
+    localStorage.getItem('aiRuntimeType') === 'installed' ? 'installed' : 'cloud'
+  );
+  const [selectedInstalledToolId, setSelectedInstalledToolId] = useState(
+    localStorage.getItem('selectedInstalledToolId') || ''
+  );
   const [primaryExam, setPrimaryExam] = useState<PrimaryExam>((localStorage.getItem('primaryExam') as PrimaryExam) || 'IELTS');
   const [geminiKey, setGeminiKey] = useState(() => {
     const stored = localStorage.getItem('geminiKey');
@@ -79,6 +86,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [userAudioSettings, setAudioSettings] = useState<UserAudioSettings>(readAudioSettings);
 
   useEffect(() => {
+    localStorage.setItem('aiRuntimeType', aiRuntimeType);
+    localStorage.setItem('selectedInstalledToolId', selectedInstalledToolId);
     localStorage.setItem('aiProvider', aiProvider);
     localStorage.setItem('primaryExam', primaryExam);
     localStorage.setItem('geminiKey', geminiKey);
@@ -89,7 +98,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('moonshotKey', moonshotKey);
     localStorage.setItem('zhipuKey', zhipuKey);
     localStorage.setItem('textModel', textModel);
-  }, [aiProvider, primaryExam, geminiKey, openAiKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
+  }, [aiRuntimeType, selectedInstalledToolId, aiProvider, primaryExam, geminiKey, openAiKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
 
   useEffect(() => {
     localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify(userAudioSettings));
@@ -104,7 +113,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <SettingsContext.Provider value={{ 
+    <SettingsContext.Provider value={{
+      aiRuntimeType, setAiRuntimeType,
+      selectedInstalledToolId, setSelectedInstalledToolId,
       aiProvider, setAiProvider,
       primaryExam, setPrimaryExam,
       geminiKey, setGeminiKey,

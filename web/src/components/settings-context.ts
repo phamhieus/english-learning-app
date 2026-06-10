@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 
 export type AIProvider = 'gemini' | 'openai' | 'deepseek' | 'grok' | 'qwen' | 'moonshot' | 'zhipu';
+export type AiRuntimeType = 'cloud' | 'installed';
 export type PrimaryExam = 'TOEIC' | 'IELTS';
 export type VoiceReaderLanguage = 'en-US' | 'en-GB';
 export type VoiceReaderSpeed = 0.75 | 1 | 1.25;
@@ -21,6 +22,8 @@ export interface UserAudioSettings {
 }
 
 export interface AppSettings {
+  aiRuntimeType: AiRuntimeType;
+  selectedInstalledToolId: string;
   aiProvider: AIProvider;
   primaryExam: PrimaryExam;
   geminiKey: string;
@@ -35,6 +38,8 @@ export interface AppSettings {
 }
 
 export interface SettingsContextType extends AppSettings {
+  setAiRuntimeType: (runtime: AiRuntimeType) => void;
+  setSelectedInstalledToolId: (toolId: string) => void;
   setAiProvider: (provider: AIProvider) => void;
   setPrimaryExam: (exam: PrimaryExam) => void;
   setGeminiKey: (key: string) => void;

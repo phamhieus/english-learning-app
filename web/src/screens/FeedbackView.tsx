@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { cn } from '../components/classNames';
 
-// ── Direct contact channels ──────────────────────────────────────────────────
 const FB_TEAM_EMAIL = 'phamhieutb.dev@gmail.com';
 const FB_TELEGRAM = 'https://t.me/Phamhieus';
 const FB_FACEBOOK = 'https://www.facebook.com/phamhieu.dev/';

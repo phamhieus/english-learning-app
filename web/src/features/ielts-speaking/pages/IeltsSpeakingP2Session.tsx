@@ -43,8 +43,8 @@ const IeltsSpeakingP2Session = () => {
   const speech = useSpeechRecognition({ continuous: true, interimResults: true });
   const reader = useVoiceReader({ exerciseId: `ielts-p2-${cueCard.id}` });
 
-  const sessionStartRef = useRef(Date.now());
-  const answerStartRef = useRef(Date.now());
+  const sessionStartRef = useRef(0);
+  const answerStartRef = useRef(0);
   const longTurnRef = useRef<IeltsP2AnswerInput | null>(null);
   const [phase, setPhase] = useState<Phase>('prep');
   const [prepLeft, setPrepLeft] = useState(PREP_SECONDS);
@@ -133,14 +133,14 @@ const IeltsSpeakingP2Session = () => {
     return () => clearInterval(timer);
   }, [selectedId, phase]);
 
-  // Reset session state whenever the user picks a different cue card.
-  // Without this, phase/roundingIndex from the previous card bleed into the
-  // new session and cause mismatched (apparently random) questions.
-  useEffect(() => {
-    if (!selectedId) return;
-    speech.stop();
-    reader.stop();
-    speech.reset();
+  // Reset session state whenever the user picks a different cue card. Without
+  // this, phase/roundingIndex from the previous card bleed into the new session
+  // and cause mismatched (apparently random) questions. We use React's
+  // "adjust state while rendering on prop change" pattern (not an effect) so no
+  // cascading setState runs in an effect body.
+  const [prevSelectedId, setPrevSelectedId] = useState(selectedId);
+  if (selectedId && selectedId !== prevSelectedId) {
+    setPrevSelectedId(selectedId);
     setPhase('prep');
     setPrepLeft(PREP_SECONDS);
     setSpeakingSeconds(0);
@@ -148,9 +148,18 @@ const IeltsSpeakingP2Session = () => {
     setRoundingIndex(0);
     setLongTurn(null);
     setRoundingAnswers([]);
-    longTurnRef.current = null;
+  }
+
+  // Side effects for the same card change (stop the previous session's audio,
+  // restamp the timers). No setState here — safe inside an effect.
+  useEffect(() => {
     sessionStartRef.current = Date.now();
     answerStartRef.current = Date.now();
+    if (!selectedId) return;
+    speech.stop();
+    reader.stop();
+    speech.reset();
+    longTurnRef.current = null;
   }, [selectedId]);
 
   useEffect(() => () => {

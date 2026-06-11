@@ -163,24 +163,32 @@ const IeltsSpeakingP1Session = () => {
   // ── Read question aloud when phase transitions to 'reading' ───────────────
   useEffect(() => {
     if (phase !== 'reading' || !currentItem) return;
-    clearSilenceTimers();
+    stopSilenceTimers();
     const segs = makeVoiceReaderSegments([currentItem.questionText]);
     const spoke = voiceReader.speakSegments(segs, { mode: 'single' });
     if (!spoke) {
-      // Voice reader disabled → skip straight to listening
-      setPhase('listening');
-      startListening();
+      // Voice reader disabled → skip straight to listening (deferred so no
+      // synchronous setState runs in the effect body).
+      const t = setTimeout(() => {
+        setPhase('listening');
+        startListening();
+      }, 0);
+      return () => clearTimeout(t);
     }
   }, [phase, idx]); // idx triggers re-run for each new question
 
-  // When voice reader finishes reading → start recording
+  // When voice reader finishes reading → start recording. Defer the transition
+  // to a timer so no synchronous setState runs in the effect body.
   useEffect(() => {
     if (phase !== 'reading') return;
     if (voiceReader.status === 'completed' || voiceReader.status === 'error') {
-      setPhase('listening');
-      startListening();
+      const t = setTimeout(() => {
+        setPhase('listening');
+        startListening();
+      }, 0);
+      return () => clearTimeout(t);
     }
-  }, [voiceReader.status, phase]);
+  }, [voiceReader.status, phase, startListening]);
 
   // Track transcript into ref
   useEffect(() => {
@@ -189,13 +197,16 @@ const IeltsSpeakingP1Session = () => {
 
   // ── Silence detection ─────────────────────────────────────────────────────
   useEffect(() => {
-    if (phase !== 'listening') { clearSilenceTimers(); return; }
+    if (phase !== 'listening') { stopSilenceTimers(); return; }
 
     const wordCount = speech.transcript.trim().split(/\s+/).filter(Boolean).length;
-    if (wordCount < MIN_WORDS_BEFORE_SILENCE_DETECT) { clearSilenceTimers(); return; }
+    // Too few words yet → no countdown is showing, just stop any timers.
+    if (wordCount < MIN_WORDS_BEFORE_SILENCE_DETECT) { stopSilenceTimers(); return; }
 
-    // Interim means user is still speaking — reset
-    if (speech.interimTranscript) { clearSilenceTimers(); return; }
+    // Interim means user is still speaking — stop the timers; the on-screen
+    // countdown is hidden via the `!interimTranscript` render guard, and the
+    // timer restarts automatically once the interim clears.
+    if (speech.interimTranscript) { stopSilenceTimers(); return; }
 
     // Start silence timer only once
     if (!silenceTimerRef.current) {
@@ -210,7 +221,7 @@ const IeltsSpeakingP1Session = () => {
         advanceRef.current();
       }, SILENCE_THRESHOLD_MS);
     }
-  }, [speech.transcript, speech.interimTranscript, phase, clearSilenceTimers]);
+  }, [speech.transcript, speech.interimTranscript, phase, stopSilenceTimers, clearSilenceTimers]);
 
   // Cleanup on unmount
   useEffect(() => () => {
@@ -311,7 +322,7 @@ const IeltsSpeakingP1Session = () => {
         </div>
 
         {/* Silence countdown */}
-        {silenceLeft !== null && silenceLeft > 0 && (
+        {silenceLeft !== null && silenceLeft > 0 && !speech.interimTranscript && (
           <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 font-medium">
             <Clock className="w-3.5 h-3.5" />
             Auto-advancing in {silenceLeft}s — or tap Next

@@ -19,23 +19,27 @@ const IeltsSpeakingP3Session = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const sessionState = location.state as { cueCardId?: string; discussionSetId?: string; sessionKey?: string } | null;
-  const fallbackSessionKeyRef = useRef(createSessionKey());
-  const sessionKey = sessionState?.sessionKey ?? fallbackSessionKeyRef.current;
-  const hasSelectedSet = Boolean(sessionState?.cueCardId || sessionState?.discussionSetId);
+  // useState lazy-init: stable per mount and readable during render (a ref read
+  // during render is forbidden by the React Compiler).
+  const [fallbackSessionKey] = useState(createSessionKey);
+  const sessionKey = sessionState?.sessionKey ?? fallbackSessionKey;
+  // Pull the specific fields into locals so the memo's dependencies are simple
+  // values (the React Compiler otherwise infers a coarser `sessionState` dep and
+  // skips optimizing the whole component).
+  const cueCardId = sessionState?.cueCardId;
+  const discussionSetId = sessionState?.discussionSetId;
+  const hasSelectedSet = Boolean(cueCardId || discussionSetId);
   const discussionSet = useMemo(() => {
-    const baseSet = (() => {
-      if (sessionState?.discussionSetId) {
-        return PART3_DISCUSSION_SETS.find((set) => set.id === sessionState.discussionSetId) ?? getLinkedPart3Set(sessionState?.cueCardId);
-      }
-      return getLinkedPart3Set(sessionState?.cueCardId);
-    })();
+    const baseSet = discussionSetId
+      ? PART3_DISCUSSION_SETS.find((set) => set.id === discussionSetId) ?? getLinkedPart3Set(cueCardId)
+      : getLinkedPart3Set(cueCardId);
     return generatePart3DiscussionSet(baseSet, sessionKey, QUESTION_COUNT);
-  }, [sessionState?.cueCardId, sessionState?.discussionSetId, sessionKey]);
+  }, [cueCardId, discussionSetId, sessionKey]);
   const questions = useMemo(() => discussionSet.questions.slice(0, QUESTION_COUNT), [discussionSet]);
   const speech = useSpeechRecognition({ continuous: true, interimResults: true });
   const reader = useVoiceReader({ exerciseId: `ielts-p3-${discussionSet.id}` });
-  const sessionStartRef = useRef(Date.now());
-  const answerStartRef = useRef(Date.now());
+  const sessionStartRef = useRef(0);
+  const answerStartRef = useRef(0);
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<IeltsP3AnswerInput[]>([]);
   const [isReading, setIsReading] = useState(true);
@@ -44,40 +48,57 @@ const IeltsSpeakingP3Session = () => {
   const current = questions[idx];
   const liveText = speech.transcript + (speech.interimTranscript ? ` ${speech.interimTranscript}` : '');
 
-  useEffect(() => {
-    if (!hasSelectedSet) return;
-    speech.stop();
-    reader.stop();
-    speech.reset();
+  // Reset session state when the active discussion set changes. React's
+  // "adjust state while rendering on prop change" pattern (not an effect) keeps
+  // cascading setState out of an effect body.
+  const [prevSetId, setPrevSetId] = useState(discussionSet.id);
+  if (hasSelectedSet && discussionSet.id !== prevSetId) {
+    setPrevSetId(discussionSet.id);
     setIdx(0);
     setAnswers([]);
     setIsReading(true);
     setActiveDiscussionSetId(discussionSet.id);
+  }
+
+  // Side effects for the same change (stop previous audio, restamp timers).
+  useEffect(() => {
     sessionStartRef.current = Date.now();
     answerStartRef.current = Date.now();
+    if (!hasSelectedSet) return;
+    speech.stop();
+    reader.stop();
+    speech.reset();
   }, [hasSelectedSet, discussionSet.id]);
 
   useEffect(() => {
     if (!hasSelectedSet) return;
     if (activeDiscussionSetId !== discussionSet.id) return;
     if (!current) return;
-    speech.reset();
-    setIsReading(true);
-    const spoke = reader.speakSegments(makeVoiceReaderSegments([current.text]), { mode: 'single' });
-    if (!spoke) {
-      setIsReading(false);
-      answerStartRef.current = Date.now();
-      speech.start();
-    }
+    // Deferred to a timer so no synchronous setState runs in the effect body.
+    const t = setTimeout(() => {
+      speech.reset();
+      setIsReading(true);
+      const spoke = reader.speakSegments(makeVoiceReaderSegments([current.text]), { mode: 'single' });
+      if (!spoke) {
+        setIsReading(false);
+        answerStartRef.current = Date.now();
+        speech.start();
+      }
+    }, 0);
+    return () => clearTimeout(t);
   }, [hasSelectedSet, activeDiscussionSetId, discussionSet.id, idx]);
 
   useEffect(() => {
     if (!hasSelectedSet) return;
     if (!isReading) return;
     if (reader.status === 'completed' || reader.status === 'error') {
-      setIsReading(false);
-      answerStartRef.current = Date.now();
-      speech.start();
+      // Deferred so no synchronous setState runs in the effect body.
+      const t = setTimeout(() => {
+        setIsReading(false);
+        answerStartRef.current = Date.now();
+        speech.start();
+      }, 0);
+      return () => clearTimeout(t);
     }
   }, [hasSelectedSet, reader.status, isReading]);
 

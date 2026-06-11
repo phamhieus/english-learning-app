@@ -18,6 +18,13 @@
     <Description>AppUno powered by Uno Platform.</Description>
 
     <!--
+      Uno's .app packaging defaults LSMinimumSystemVersion to 15.0 for net10.0-desktop,
+      which blocks Macs on Sonoma and older ("You can't use this version of the application
+      with this version of macOS"). .NET 10 itself supports macOS 14+, so pin to 14.0.
+    -->
+    <UnoMacOSMinimumSystemVersion>14.0</UnoMacOSMinimumSystemVersion>
+
+    <!--
       UnoFeatures are used to quickly add and manage features enabled for your app.
       https://aka.platform.uno/singleproject-features
     -->
@@ -31,5 +38,38 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <PropertyGroup>
+    <WebAppDir>$(MSBuildProjectDirectory)\..\..\web\</WebAppDir>
+    <WebContentStamp>$(BaseIntermediateOutputPath)webcontent.stamp</WebContentStamp>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <WebAppInput Include="$(WebAppDir)src\**\*" />
+    <WebAppInput Include="$(WebAppDir)public\**\*" />
+    <WebAppInput Include="$(WebAppDir)index.html" />
+    <WebAppInput Include="$(WebAppDir)package.json" />
+    <WebAppInput Include="$(WebAppDir)vite.config.ts" />
+    <WebAppInput Include="$(WebAppDir)tsconfig*.json" />
+  </ItemGroup>
+
+  <!--
+    Rebuilds the web app into WebContent so every Debug/Release build ships the
+    latest web bundle. Skipped while web sources are unchanged (stamp file);
+    delete obj\webcontent.stamp to force a web rebuild.
+  -->
+  <Target Name="BuildWebContent"
+          BeforeTargets="DispatchToInnerBuilds;AssignTargetPaths"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="@(WebAppInput)"
+          Outputs="$(WebContentStamp)">
+    <Exec Command="npm run build:uno" WorkingDirectory="$(WebAppDir)" />
+    <Touch Files="$(WebContentStamp)" AlwaysCreate="true" />
+    <!-- Vite emits freshly hashed filenames; the static Content glob was evaluated before they existed. -->
+    <ItemGroup Condition="'$(TargetFramework)' != ''">
+      <Content Remove="WebContent\**\*" />
+      <Content Include="WebContent\**\*" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
 
 </Project>

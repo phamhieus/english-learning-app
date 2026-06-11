@@ -17,10 +17,14 @@ public partial class App : Application
 
     protected Window? MainWindow { get; private set; }
 
+    // iPad Air / iPad 10th-gen landscape viewport. Classic iPad is 1024x768.
+    private const int WindowWidth = 1180;
+    private const int WindowHeight = 820;
+
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         MainWindow = new Window();
-        MainWindow.AppWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 600, Height = 700 });
+        ResizeToIpadLandscape(MainWindow);
 #if DEBUG
         MainWindow.UseStudio();
 #endif
@@ -37,6 +41,10 @@ public partial class App : Application
             MainWindow.Content = rootFrame;
 
             rootFrame.NavigationFailed += OnNavigationFailed;
+
+            // Resize again once XamlRoot exists, when the actual DPI scale is known.
+            var window = MainWindow;
+            rootFrame.Loaded += (_, _) => ResizeToIpadLandscape(window);
         }
 
         if (rootFrame.Content == null)
@@ -50,6 +58,24 @@ public partial class App : Application
         MainWindow.SetWindowIcon();
         // Ensure the current window is active
         MainWindow.Activate();
+    }
+
+    private static void ResizeToIpadLandscape(Window window)
+    {
+        // AppWindow sizes are physical pixels; scale so the WebView's CSS viewport
+        // matches a real iPad regardless of the monitor's DPI scaling.
+        var scale = window.Content?.XamlRoot?.RasterizationScale ?? 1.0;
+        var size = new Windows.Graphics.SizeInt32
+        {
+            Width = (int)Math.Round(WindowWidth * scale),
+            Height = (int)Math.Round(WindowHeight * scale),
+        };
+#if HAS_UNO
+        // Uno Skia desktop doesn't implement ResizeClient (Uno0001).
+        window.AppWindow.Resize(size);
+#else
+        window.AppWindow.ResizeClient(size);
+#endif
     }
 
     /// <summary>

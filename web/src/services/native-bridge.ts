@@ -22,6 +22,9 @@ interface BridgeResponse {
 }
 
 const BRIDGE_TIMEOUT_MS = 15_000;
+// AI generation can take a while, so `run` gets a much longer ceiling than the
+// quick file/PATH probes.
+const RUN_TIMEOUT_MS = 180_000;
 
 let requestSeq = 0;
 let listenerAttached = false;
@@ -44,8 +47,9 @@ function ensureListener(bridge: WebView2Bridge) {
   });
 }
 
-/** One request/response round-trip to the C# host. */
-export function bridgeCall<T>(op: 'fileExists' | 'dirList' | 'which' | 'version', arg: string): Promise<T> {
+// Shared request/response plumbing. `payload` is merged into the message sent
+// to the host; the host echoes the `id` back so we can resolve the right call.
+function send<T>(op: string, payload: Record<string, unknown>, timeoutMs: number): Promise<T> {
   const bridge = window.chrome?.webview;
   if (!bridge) return Promise.reject(new Error('Native bridge is not available'));
   ensureListener(bridge);
@@ -55,7 +59,7 @@ export function bridgeCall<T>(op: 'fileExists' | 'dirList' | 'which' | 'version'
     const timer = setTimeout(() => {
       pending.delete(id);
       reject(new Error(`Native bridge call timed out: ${op}`));
-    }, BRIDGE_TIMEOUT_MS);
+    }, timeoutMs);
     pending.set(id, {
       resolve: (value) => {
         clearTimeout(timer);
@@ -66,6 +70,20 @@ export function bridgeCall<T>(op: 'fileExists' | 'dirList' | 'which' | 'version'
         reject(reason);
       },
     });
-    bridge.postMessage({ id, op, arg });
+    bridge.postMessage({ id, op, ...payload });
   });
+}
+
+/** One request/response round-trip to the C# host for a detection primitive. */
+export function bridgeCall<T>(op: 'fileExists' | 'dirList' | 'which' | 'version', arg: string): Promise<T> {
+  return send<T>(op, { arg }, BRIDGE_TIMEOUT_MS);
+}
+
+/**
+ * Run a binary non-interactively via the host: spawn `file args`, write
+ * `stdin` if given, and resolve with trimmed stdout. Used by the Installed AI
+ * runtime to drive a local CLI tool.
+ */
+export function bridgeRun(payload: { file: string; args: string[]; stdin?: string }): Promise<string> {
+  return send<string>('run', payload, RUN_TIMEOUT_MS);
 }

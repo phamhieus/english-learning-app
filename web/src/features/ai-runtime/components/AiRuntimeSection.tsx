@@ -8,7 +8,6 @@ import {
   HardDrive,
   LoaderCircle,
   LogIn,
-  Orbit,
   Play,
   RefreshCw,
   Settings2,
@@ -31,7 +30,6 @@ const TOOL_ICON: Record<string, typeof Terminal> = {
   'codex-cli': Terminal,
   'gemini-cli': Sparkles,
   'claude-code': Asterisk,
-  'antigravity-cli': Orbit,
 };
 
 const STATUS_META: Record<InstalledAiTool['status'], { label: string; tone: string; icon: typeof CheckCircle }> = {

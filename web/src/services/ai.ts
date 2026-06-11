@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
 import type { AppSettings, AIProvider } from "../components/settings-context";
 import type { Practice } from "./storage";
+import { runInstalledAiPrompt } from "./local-ai-helper";
 
 export interface WritingFeedback {
   score: number;
@@ -88,7 +89,28 @@ const stripJsonFences = (text: string): string => {
   return (fenced ? fenced[1] : t).trim();
 };
 
+// Installed AI runtime: a single combined prompt is handed to a local CLI tool
+// (Codex/Gemini/Claude) which prints its answer. There is no separate system
+// channel, so we prepend the system instruction to the user content.
+const buildInstalledPrompt = (systemInstruction: string, userContent: string): string =>
+  `${systemInstruction}\n\n${userContent}`;
+
+const callInstalledAI = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean): Promise<string> => {
+  if (!settings.selectedInstalledToolId) {
+    throw new Error('No installed AI tool is selected.');
+  }
+  const output = await runInstalledAiPrompt(
+    settings.selectedInstalledToolId,
+    buildInstalledPrompt(systemInstruction, userContent),
+  );
+  return isJson ? stripJsonFences(output) : output;
+};
+
 const callAI = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean = true): Promise<string> => {
+  if (settings.aiRuntimeType === 'installed') {
+    return callInstalledAI(settings, systemInstruction, userContent, isJson);
+  }
+
   if (settings.aiProvider === 'gemini') {
     if (!settings.geminiKey) throw new Error("Gemini API Key is missing");
     const genAI = new GoogleGenerativeAI(settings.geminiKey);
@@ -941,10 +963,18 @@ export class UnifiedChatSession {
   private systemInstruction: string;
   private history: OpenAI.Chat.ChatCompletionMessageParam[] = [];
   private geminiChat: GeminiChatSession | null = null;
+  // Plain-text turn log used only by the Installed AI runtime, which is
+  // stateless per call — we replay the conversation as one prompt each time.
+  private installedTurns: { role: 'You' | 'Assistant'; text: string }[] = [];
 
   constructor(settings: AppSettings, systemInstruction: string) {
     this.settings = settings;
     this.systemInstruction = systemInstruction;
+
+    if (settings.aiRuntimeType === 'installed') {
+      if (!settings.selectedInstalledToolId) throw new Error('No installed AI tool is selected.');
+      return;
+    }
 
     if (settings.aiProvider === 'gemini') {
       if (!settings.geminiKey) throw new Error("Gemini API Key is missing");
@@ -958,6 +988,15 @@ export class UnifiedChatSession {
   }
 
   async sendMessage(text: string): Promise<string> {
+    if (this.settings.aiRuntimeType === 'installed') {
+      this.installedTurns.push({ role: 'You', text });
+      const conversation = this.installedTurns.map((t) => `${t.role}: ${t.text}`).join('\n\n');
+      const prompt = `${this.systemInstruction}\n\n${conversation}\n\nAssistant:`;
+      const reply = (await runInstalledAiPrompt(this.settings.selectedInstalledToolId, prompt)).trim();
+      this.installedTurns.push({ role: 'Assistant', text: reply });
+      return reply;
+    }
+
     if (this.settings.aiProvider === 'gemini') {
       if (!this.geminiChat) throw new Error("Gemini chat session is not initialized");
       const result = await this.geminiChat.sendMessage(text);

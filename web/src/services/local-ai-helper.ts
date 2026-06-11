@@ -1,14 +1,17 @@
-// Installed AI tool detection (Codex CLI, Gemini CLI, Claude Code,
-// Antigravity CLI). All detection policy lives here in the frontend:
+// Installed AI tool detection (Codex CLI, Gemini CLI, Claude Code).
+// All detection policy lives here in the frontend:
 //
 // 1. Inside the Uno desktop app, primitives (fileExists/dirList/which/version)
 //    are answered by the C# host over the WebView2 bridge — no extra process.
 // 2. In a plain browser the sandbox cannot touch the machine, so detection
 //    falls back to the Local AI Helper's GET /ai-tools endpoint.
 
-import { bridgeCall, isNativeBridgeAvailable } from './native-bridge';
+import { bridgeCall, bridgeRun, isNativeBridgeAvailable } from './native-bridge';
 
-export type InstalledAiToolId = 'codex-cli' | 'gemini-cli' | 'claude-code' | 'antigravity-cli';
+// Antigravity is intentionally excluded: per the AI Runtime spec it is an
+// external IDE, not a runtime the app invokes directly, so it is never a
+// selectable Installed AI runtime.
+export type InstalledAiToolId = 'codex-cli' | 'gemini-cli' | 'claude-code';
 
 export type InstalledAiToolStatus =
   | 'not_installed'
@@ -42,11 +45,24 @@ interface AiToolsResponse {
   tools: InstalledAiTool[];
 }
 
-export const SUPPORTED_TOOL_IDS: InstalledAiToolId[] = ['codex-cli', 'gemini-cli', 'claude-code', 'antigravity-cli'];
+export const SUPPORTED_TOOL_IDS: InstalledAiToolId[] = ['codex-cli', 'gemini-cli', 'claude-code'];
 
 const HELPER_URL_STORAGE_KEY = 'localAiHelperUrl';
 const DEFAULT_HELPER_URL = 'http://127.0.0.1:8765';
 const HELPER_TIMEOUT_MS = 5000;
+// Running a prompt through a local CLI can take much longer than detection.
+const HELPER_RUN_TIMEOUT_MS = 180_000;
+
+// How each tool is invoked non-interactively. These are FLAGS ONLY — the prompt
+// itself is written to the tool's stdin, so multi-word/JSON content never needs
+// shell escaping (critical for .cmd shims). `--skip-trust` lets Gemini run
+// headless in any working directory. Keep in sync with the helper's RUN_ARGS in
+// local-ai-helper/server.mjs.
+const RUN_ARGS: Record<InstalledAiToolId, string[]> = {
+  'codex-cli': ['exec'],
+  'gemini-cli': ['--skip-trust'],
+  'claude-code': ['-p'],
+};
 
 export function getLocalAiHelperUrl(): string {
   return localStorage.getItem(HELPER_URL_STORAGE_KEY) || DEFAULT_HELPER_URL;
@@ -105,15 +121,6 @@ const TOOL_DEFINITIONS: ToolDefinition[] = [
         .map((name) => `%USERPROFILE%\\.vscode\\extensions\\${name}\\resources\\native-binary\\claude.exe`);
     },
     credentialFiles: ['%USERPROFILE%\\.claude\\.credentials.json', '%USERPROFILE%\\.claude.json'],
-  },
-  {
-    id: 'antigravity-cli',
-    name: 'Antigravity CLI',
-    // The real CLI is agy.exe (installed by Antigravity's install.cmd);
-    // the IDE's antigravity-ide.cmd is just a GUI launcher, not a runtime.
-    command: 'agy',
-    fallbackPaths: ['%LOCALAPPDATA%\\agy\\bin\\agy.exe'],
-    credentialFiles: [],
   },
 ];
 
@@ -198,4 +205,58 @@ export function isToolReady(tool: InstalledAiTool): boolean {
 
 export function getReadyTools(tools: InstalledAiTool[]): InstalledAiTool[] {
   return tools.filter(isToolReady);
+}
+
+// ── Execution ─────────────────────────────────────────────────────────────
+// Drive an installed CLI tool with a single prompt and return its stdout.
+// Same two transports as detection: the native bridge inside the Uno app,
+// the HTTP helper in a plain browser.
+
+interface RunResponse {
+  output?: string;
+  error?: string;
+}
+
+function isSupportedToolId(toolId: string): toolId is InstalledAiToolId {
+  return (SUPPORTED_TOOL_IDS as string[]).includes(toolId);
+}
+
+async function runViaHttpHelper(toolId: InstalledAiToolId, prompt: string): Promise<string> {
+  let response: Response;
+  try {
+    response = await fetch(`${getLocalAiHelperUrl()}/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ toolId, prompt }),
+      signal: AbortSignal.timeout(HELPER_RUN_TIMEOUT_MS),
+    });
+  } catch {
+    throw new HelperUnavailableError();
+  }
+  const data = (await response.json().catch(() => ({}))) as RunResponse;
+  if (!response.ok) {
+    throw new Error(data.error || `Local AI Helper responded with ${response.status}.`);
+  }
+  return data.output ?? '';
+}
+
+/**
+ * Run `prompt` through the given installed tool and return its raw text output.
+ * Throws if the tool id is unsupported, no transport is reachable, or the CLI
+ * itself fails.
+ */
+export async function runInstalledAiPrompt(toolId: string, prompt: string): Promise<string> {
+  if (!isSupportedToolId(toolId)) {
+    throw new Error(`Unsupported installed AI tool: ${toolId}`);
+  }
+
+  if (isNativeBridgeAvailable()) {
+    const def = TOOL_DEFINITIONS.find((d) => d.id === toolId);
+    if (!def) throw new Error(`Unsupported installed AI tool: ${toolId}`);
+    const binary = await resolveBinary(def);
+    if (!binary) throw new HelperUnavailableError(`${def.name} could not be located on this computer.`);
+    return bridgeRun({ file: binary, args: RUN_ARGS[toolId], stdin: prompt });
+  }
+
+  return runViaHttpHelper(toolId, prompt);
 }

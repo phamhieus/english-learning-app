@@ -2,7 +2,7 @@
 // design prototype to the real app's Tailwind `dark:` convention + lucide-react.
 /* eslint-disable react-refresh/only-export-components */
 
-import { BadgeCheck, Upload, Clock, Play, Check } from 'lucide-react';
+import { BadgeCheck, Upload, Clock, Play, Check, Rocket } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { GRADS, type GradKey } from './videoThumbStyles';
 import type { LessonLevel } from '../models/lesson';
@@ -18,24 +18,26 @@ export function cefrClass(level: LessonLevel | string): string {
   return map[level] ?? 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
 }
 
-export function SourceBadge({ source }: { source: 'VOA' | 'Upload' }) {
-  const voa = source === 'VOA';
+export type VideoSourceBadge = 'VOA' | 'Upload' | 'NASA';
+
+export function SourceBadge({ source }: { source: VideoSourceBadge }) {
+  const style: Record<VideoSourceBadge, { cls: string; Icon: typeof BadgeCheck; label: string }> = {
+    VOA: { cls: 'bg-white/90 text-indigo-600 dark:bg-slate-800/90 dark:text-indigo-300', Icon: BadgeCheck, label: 'Internet Archive' },
+    NASA: { cls: 'bg-white/90 text-blue-700 dark:bg-slate-800/90 dark:text-blue-300', Icon: Rocket, label: 'NASA' },
+    Upload: { cls: 'bg-purple-600/90 text-white', Icon: Upload, label: 'My Upload' },
+  };
+  const { cls, Icon, label } = style[source];
   return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold backdrop-blur-md shadow-sm',
-        voa ? 'bg-white/90 text-indigo-600 dark:bg-slate-800/90 dark:text-indigo-300' : 'bg-purple-600/90 text-white',
-      )}
-    >
-      {voa ? <BadgeCheck className="w-3.5 h-3.5" /> : <Upload className="w-3.5 h-3.5" />}
-      {voa ? 'Internet Archive' : 'My Upload'}
+    <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold backdrop-blur-md shadow-sm', cls)}>
+      <Icon className="w-3.5 h-3.5" />
+      {label}
     </span>
   );
 }
 
 interface VideoThumbProps {
   grad?: GradKey;
-  source?: 'VOA' | 'Upload';
+  source?: VideoSourceBadge;
   duration?: string;
   progress?: number;
   rounded?: string;

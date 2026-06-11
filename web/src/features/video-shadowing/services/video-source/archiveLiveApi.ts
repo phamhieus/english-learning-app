@@ -14,6 +14,11 @@ const SEARCH_ENDPOINT = 'https://archive.org/advancedsearch.php';
 const DEFAULT_QUERY =
   'collection:(prelinger) AND mediatype:(movies) AND format:(SubRip)';
 
+const BLOCKED_ARCHIVE_IDENTIFIERS = new Set([
+  // Caption/voice mismatch in the playable stream; not suitable for shadowing.
+  'Doctorin1946',
+]);
+
 export interface ArchiveLibraryItem {
   identifier: string;
   title: string;
@@ -84,5 +89,6 @@ export async function searchArchiveItems(
   const data: { response?: { docs?: ArchiveSearchDoc[] } } = await res.json();
   return (data.response?.docs ?? [])
     .filter((d) => d.identifier)
+    .filter((d) => !BLOCKED_ARCHIVE_IDENTIFIERS.has(d.identifier))
     .map(toItem);
 }

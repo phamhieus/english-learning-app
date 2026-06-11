@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play, AlertTriangle } from 'lucide-react';
+import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play, AlertTriangle, Rocket } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
 import { VideoLessonCard, type LessonCardData } from '../components/VideoLessonCard';
-import { VideoThumb } from '../components/primitives';
+import { VideoThumb, type VideoSourceBadge } from '../components/primitives';
 import { searchArchiveItems, type ArchiveLibraryItem } from '../services/video-source/archiveLiveApi';
-import { prepareArchiveLesson, checkProxyAvailable, ArchiveProxyError } from '../services/video-source/archiveProxyApi';
+import { prepareArchiveLesson, checkProxyAvailable, validateArchiveLesson, ArchiveProxyError } from '../services/video-source/archiveProxyApi';
+import { searchNasaItems, prepareNasaLesson, NasaApiError, type NasaLibraryItem } from '../services/video-source/nasaLiveApi';
 import { gradForId } from '../components/videoThumbStyles';
 import type { VideoShadowingLesson } from '../models/lesson';
 
-type Tab = 'voa' | 'mine';
+type Tab = 'voa' | 'nasa' | 'mine';
 const LEVELS = ['All levels', 'A1', 'A2', 'B1', 'B2', 'C1'];
 
 export default function VideoShadowingLibraryPage() {
@@ -46,6 +47,19 @@ export default function VideoShadowingLibraryPage() {
     setItemsLoading(true);
     setItemsError(false);
     searchArchiveItems(debouncedSearch, 30, ac.signal)
+      .then(async (res) => {
+        if (proxyAvailable !== true) return res;
+        const checks = await Promise.all(
+          res.map(async (item) => {
+            try {
+              return (await validateArchiveLesson(item.identifier, ac.signal)) ? item : null;
+            } catch {
+              return null;
+            }
+          }),
+        );
+        return checks.filter((item): item is ArchiveLibraryItem => item !== null);
+      })
       .then((res) => setItems(res))
       .catch((err: unknown) => {
         if ((err as { name?: string })?.name === 'AbortError') return;
@@ -56,7 +70,34 @@ export default function VideoShadowingLibraryPage() {
         if (!ac.signal.aborted) setItemsLoading(false);
       });
     return () => ac.abort();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, proxyAvailable]);
+
+  // Live NASA library — loaded lazily the first time the tab is opened, then
+  // re-queried when the search changes. Fully browser-side (no proxy needed).
+  const [nasaItems, setNasaItems] = useState<NasaLibraryItem[]>([]);
+  const [nasaLoading, setNasaLoading] = useState(false);
+  const [nasaError, setNasaError] = useState(false);
+  const [nasaLoadedFor, setNasaLoadedFor] = useState<string | null>(null);
+  useEffect(() => {
+    if (tab !== 'nasa' || nasaLoadedFor === debouncedSearch) return;
+    const ac = new AbortController();
+    setNasaLoading(true);
+    setNasaError(false);
+    searchNasaItems(debouncedSearch, 30, ac.signal)
+      .then((res) => {
+        setNasaItems(res);
+        setNasaLoadedFor(debouncedSearch);
+      })
+      .catch((err: unknown) => {
+        if ((err as { name?: string })?.name === 'AbortError') return;
+        setNasaError(true);
+        setNasaItems([]);
+      })
+      .finally(() => {
+        if (!ac.signal.aborted) setNasaLoading(false);
+      });
+    return () => ac.abort();
+  }, [tab, debouncedSearch, nasaLoadedFor]);
 
   // "My Videos" still comes from local storage.
   const { myLessons, removeLesson } = useVideoShadowingLibrary({ level, category: 'All', search: debouncedSearch });
@@ -86,13 +127,28 @@ export default function VideoShadowingLibraryPage() {
     }
   };
 
+  // NASA items resolve fully in the browser (asset manifest + caption fetch),
+  // then reuse the exact same persist → practice flow.
+  const openNasaItem = async (item: NasaLibraryItem) => {
+    if (preparingId) return;
+    setPreparingId(item.nasaId);
+    try {
+      const { lessonId } = await prepareNasaLesson(item);
+      navigate(`/video-shadowing/lessons/${encodeURIComponent(lessonId)}/practice`);
+    } catch (err) {
+      toast.error(err instanceof NasaApiError ? err.message : 'Could not load this video.');
+      setPreparingId(null);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     await removeLesson(id);
     toast.success('Lesson deleted and local files cleaned up.');
   };
 
-  // Filter the live list by the auto-estimated CEFR level.
+  // Filter the live lists by the auto-estimated CEFR level.
   const filteredItems = level === 'All levels' ? items : items.filter((i) => i.level === level);
+  const filteredNasaItems = level === 'All levels' ? nasaItems : nasaItems.filter((i) => i.level === level);
 
   return (
     <div>
@@ -129,7 +185,7 @@ export default function VideoShadowingLibraryPage() {
       {/* Tabs + level filter */}
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit">
-          {([['voa', 'Library', BadgeCheck], ['mine', 'My Videos', Folder]] as const).map(([k, label, Icon]) => (
+          {([['voa', 'Library', BadgeCheck], ['nasa', 'NASA', Rocket], ['mine', 'My Videos', Folder]] as const).map(([k, label, Icon]) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -190,19 +246,39 @@ export default function VideoShadowingLibraryPage() {
             ))}
           </div>
         )
+      ) : tab === 'nasa' ? (
+        nasaLoading ? (
+          <SkeletonGrid />
+        ) : nasaError ? (
+          <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
+            <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
+            Couldn’t reach the NASA video library. Check your connection and try again.
+          </div>
+        ) : filteredNasaItems.length === 0 ? (
+          <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
+            <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
+            {level === 'All levels' ? 'No captioned NASA videos found. Try a different search.' : `No ${level} videos in these results. Try another level or search.`}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+            {filteredNasaItems.map((item) => (
+              <LiveItemCard
+                key={item.nasaId}
+                id={item.nasaId}
+                title={item.title}
+                topic={item.topic}
+                level={item.level}
+                thumbnailUrl={item.thumbnailUrl}
+                source="NASA"
+                preparing={preparingId === item.nasaId}
+                disabled={preparingId !== null && preparingId !== item.nasaId}
+                onOpen={() => openNasaItem(item)}
+              />
+            ))}
+          </div>
+        )
       ) : itemsLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="glass-card rounded-2xl overflow-hidden animate-pulse">
-              <div className="aspect-video bg-slate-100 dark:bg-slate-800" />
-              <div className="p-5 space-y-3">
-                <div className="h-3 w-20 rounded bg-slate-100 dark:bg-slate-800" />
-                <div className="h-4 w-3/4 rounded bg-slate-100 dark:bg-slate-800" />
-                <div className="h-9 w-full rounded-xl bg-slate-100 dark:bg-slate-800" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <SkeletonGrid />
       ) : itemsError ? (
         <div className="glass-card rounded-3xl py-16 text-center text-slate-500 dark:text-slate-400">
           <Sparkles className="w-8 h-8 mx-auto mb-3 text-indigo-400" />
@@ -216,9 +292,15 @@ export default function VideoShadowingLibraryPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
           {filteredItems.map((item) => (
-            <ArchiveCard
+            <LiveItemCard
               key={item.identifier}
-              item={item}
+              id={item.identifier}
+              title={item.title}
+              topic={item.topic}
+              level={item.level}
+              thumbnailUrl={item.thumbnailUrl}
+              runtime={item.runtime}
+              source="VOA"
               preparing={preparingId === item.identifier}
               disabled={preparingId !== null && preparingId !== item.identifier}
               onOpen={() => openItem(item)}
@@ -230,13 +312,44 @@ export default function VideoShadowingLibraryPage() {
   );
 }
 
-function ArchiveCard({
-  item,
+function SkeletonGrid() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="glass-card rounded-2xl overflow-hidden animate-pulse">
+          <div className="aspect-video bg-slate-100 dark:bg-slate-800" />
+          <div className="p-5 space-y-3">
+            <div className="h-3 w-20 rounded bg-slate-100 dark:bg-slate-800" />
+            <div className="h-4 w-3/4 rounded bg-slate-100 dark:bg-slate-800" />
+            <div className="h-9 w-full rounded-xl bg-slate-100 dark:bg-slate-800" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Card for a live library item (Internet Archive or NASA) — same layout, the
+// source badge and meta label switch with the provider.
+function LiveItemCard({
+  id,
+  title,
+  topic,
+  level,
+  thumbnailUrl,
+  runtime,
+  source,
   preparing,
   disabled,
   onOpen,
 }: {
-  item: ArchiveLibraryItem;
+  id: string;
+  title: string;
+  topic?: string;
+  level: string;
+  thumbnailUrl?: string;
+  runtime?: string;
+  source: Extract<VideoSourceBadge, 'VOA' | 'NASA'>;
   preparing: boolean;
   disabled: boolean;
   onOpen: () => void;
@@ -260,18 +373,20 @@ function ArchiveCard({
         disabled ? 'opacity-50' : 'cursor-pointer hover:-translate-y-1 hover:shadow-xl',
       )}
     >
-      <VideoThumb grad={gradForId(item.identifier)} source="VOA" duration={item.runtime} thumbnailUrl={item.thumbnailUrl} />
+      <VideoThumb grad={gradForId(id)} source={source} duration={runtime} thumbnailUrl={thumbnailUrl} />
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
-          {item.level !== 'Auto' && (
+          {level !== 'Auto' && (
             <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
-              {item.level}
+              {level}
             </span>
           )}
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Internet Archive</span>
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            {source === 'NASA' ? 'NASA' : 'Internet Archive'}
+          </span>
         </div>
-        <h3 className="text-lg font-bold leading-snug mb-1 line-clamp-2">{item.title}</h3>
-        {item.topic && <p className="text-xs text-slate-400 font-medium mb-4 line-clamp-1 capitalize">{item.topic}</p>}
+        <h3 className="text-lg font-bold leading-snug mb-1 line-clamp-2">{title}</h3>
+        {topic && <p className="text-xs text-slate-400 font-medium mb-4 line-clamp-1 capitalize">{topic}</p>}
         <button
           onClick={(e) => {
             e.stopPropagation();

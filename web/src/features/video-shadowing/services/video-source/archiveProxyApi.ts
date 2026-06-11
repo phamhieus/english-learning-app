@@ -14,6 +14,11 @@ import type { VideoTranscriptSegment } from '../../models/segment';
 const PROXY_BASE =
   (import.meta.env.VITE_ARCHIVE_PROXY as string | undefined)?.replace(/\/$/, '') ?? 'http://localhost:8787';
 
+const BLOCKED_ARCHIVE_IDENTIFIERS = new Set([
+  // Caption/voice mismatch in the playable stream; not suitable for shadowing.
+  'Doctorin1946',
+]);
+
 interface ProxySegment {
   startMs: number;
   endMs: number;
@@ -36,6 +41,21 @@ interface ProxyLesson {
 }
 
 export class ArchiveProxyError extends Error {}
+
+function hasUsableCaptionText(text: string): boolean {
+  const normalized = text
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!normalized) return false;
+  // Captions that are only "...", punctuation, or music-note noise are not
+  // useful for shadowing.
+  return /[\p{L}\p{N}]/u.test(normalized);
+}
+
+function hasUsableSegments(segs: ProxySegment[]): boolean {
+  return segs.some((s) => hasUsableCaptionText(s.text));
+}
 
 /** Returns true if the local Archive proxy service is reachable. */
 export async function checkProxyAvailable(): Promise<boolean> {
@@ -66,6 +86,12 @@ async function fetchArchiveLesson(identifier: string, signal?: AbortSignal): Pro
   return (await res.json()) as ProxyLesson;
 }
 
+export async function validateArchiveLesson(identifier: string, signal?: AbortSignal): Promise<boolean> {
+  if (BLOCKED_ARCHIVE_IDENTIFIERS.has(identifier)) return false;
+  const data = await fetchArchiveLesson(identifier, signal);
+  return data.hasCaptions && hasUsableSegments(data.segments);
+}
+
 function toSegments(lessonId: string, segs: ProxySegment[]): VideoTranscriptSegment[] {
   const now = new Date().toISOString();
   return segs.map((s, i) => ({
@@ -94,9 +120,12 @@ export async function prepareArchiveLesson(
   identifier: string,
   signal?: AbortSignal,
 ): Promise<PreparedArchiveLesson> {
+  if (BLOCKED_ARCHIVE_IDENTIFIERS.has(identifier)) {
+    throw new ArchiveProxyError('This item has mismatched captions/audio, so it can’t be used for shadowing.');
+  }
   const data = await fetchArchiveLesson(identifier, signal);
-  if (!data.hasCaptions || data.segments.length === 0) {
-    throw new ArchiveProxyError('This item has no caption track, so it can’t be split into shadowing segments.');
+  if (!data.hasCaptions || !hasUsableSegments(data.segments)) {
+    throw new ArchiveProxyError('This item has no usable caption track, so it can’t be split into shadowing segments.');
   }
 
   const lessonId = `archive-${data.identifier}`;

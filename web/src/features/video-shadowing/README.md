@@ -101,6 +101,18 @@ report that on click.
 The build-time `npm run curate:archive` path still exists for baking lessons into
 the static manifest (works fully offline, no proxy needed).
 
+## Live NASA library (browse + search + shadow, no helper needed)
+
+The **NASA** tab searches the official [NASA Image and Video Library API](https://images-api.nasa.gov)
+(`images-api.nasa.gov`). Unlike archive.org, **both** the API endpoints
+(search / asset / captions) **and** the media host (`images-assets.nasa.gov`)
+send `Access-Control-Allow-Origin: *`, so the whole flow runs browser-side with
+no proxy: search → verify the `.srt`/`.vtt` caption track exists (HEAD) → on
+click, pick the best streamable MP4 rendition from the asset manifest, fetch +
+parse the captions, merge them into sentence segments (same rules as the
+Archive pipeline), persist locally, and open the normal practice screen.
+NASA media is generally public domain. Only caption-backed items are listed.
+
 ## Web-only processing plan (no special headers)
 
 The full local pipeline is achievable with **zero COOP/COEP / cross-origin
@@ -119,9 +131,11 @@ isolation**, so it works on plain static hosting and inside the Uno WebView:
   Configurable in `utils/fileValidation.ts`.
 - Best on recent **Chrome / Edge**. WebGPU → fast; otherwise compatibility mode.
 - **Direct URL / CORS:** only `https` direct media links that allow browser
-  access work. YouTube/TikTok/Facebook and login/DRM links are unsupported.
-  If a source blocks CORS, the user is told to download legally and upload the
-  file instead. We never scrape, proxy, or bypass CORS.
+  access work. TikTok/Facebook and login/DRM links are unsupported. YouTube
+  links play via the official IFrame embed (no download/extraction — subtitles
+  must be supplied for the script). If a source blocks CORS, the user is told
+  to download legally and upload the file instead. We never scrape, proxy, or
+  bypass CORS.
 
 ## Privacy
 

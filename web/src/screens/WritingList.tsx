@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings } from 'lucide-react';
+import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings, Shuffle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { OptimizedImage } from '../components/OptimizedImage';
@@ -23,7 +23,7 @@ interface TaskDef {
 
 const WRITING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
   TOEIC: {
-    blurb: '8 questions · 3 task types. Scored on grammar, vocabulary, organisation & whether you answer the task.',
+    blurb: '8 questions · 3 task types · 60 minutes. Scored on grammar, vocabulary, organisation & whether you answer the task.',
     tasks: [
       { key: 'pic',   label: 'Describe a Picture',   q: 'Practice', icon: <Image className="w-4 h-4" />,    section: 'Describe a Picture' },
       { key: 'sent',  label: 'Write a Sentence',      q: 'Q1–5',  icon: <Image className="w-4 h-4" />,    section: 'Write a Sentence Based on a Picture' },
@@ -32,7 +32,7 @@ const WRITING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
     ],
   },
   IELTS: {
-    blurb: 'Two tasks. Scored by band (0–9) on Task Achievement, Coherence, Lexical Resource & Grammar.',
+    blurb: 'Two tasks · 60 minutes (Task 1: 20 min · Task 2: 40 min). Scored by band (0–9) on Task Achievement, Coherence, Lexical Resource & Grammar.',
     tasks: [
       { key: 't1a', label: 'Task 1 · Academic', q: 'Chart',  icon: <BarChart3 className="w-4 h-4" />, section: 'Task 1 Academic' },
       { key: 't1g', label: 'Task 1 · General',  q: 'Letter', icon: <Mail className="w-4 h-4" />,      section: 'Task 1 General' },
@@ -60,7 +60,9 @@ const WritingList = () => {
   const conf = WRITING_TASKS[activeExam];
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
-  const practices: Practice[] = useMemo(() => {
+  const [shuffleSeed, setShuffleSeed] = useState(0);
+
+  const allPractices: Practice[] = useMemo(() => {
     // Describe a Picture (TOEIC Writing) reuses the same curated photo set as
     // the Speaking module, so both flows share fast, optimised images.
     if (activeExam === 'TOEIC' && activeTask.key === 'pic') {
@@ -76,6 +78,14 @@ const WritingList = () => {
     }
     return getExamTopics(activeExam, 'Writing', activeTask.section);
   }, [activeExam, activeTask.key, activeTask.section]);
+
+  // The IELTS banks now hold 300+ prompts per part — show a random sample so
+  // the grid stays fast; "Shuffle" draws a fresh set.
+  const practices: Practice[] = useMemo(() => {
+    void shuffleSeed;
+    if (allPractices.length <= 24) return allPractices;
+    return [...allPractices].sort(() => 0.5 - Math.random()).slice(0, 24);
+  }, [allPractices, shuffleSeed]);
 
   useEffect(() => {
     setActiveTaskKey(WRITING_TASKS[activeExam].tasks[0].key);
@@ -147,7 +157,18 @@ const WritingList = () => {
       <div className="flex items-center gap-2 mb-4 text-sm">
         <span className="text-orange-500">{activeTask.icon}</span>
         <span className="font-bold text-slate-700 dark:text-slate-200">{activeTask.label}</span>
-        <span className="text-slate-400 dark:text-slate-500">· {practices.length} prompts</span>
+        <span className="text-slate-400 dark:text-slate-500">
+          · {practices.length < allPractices.length ? `${practices.length} of ${allPractices.length}` : practices.length} prompts
+        </span>
+        {practices.length < allPractices.length && (
+          <button
+            type="button"
+            onClick={() => setShuffleSeed((s) => s + 1)}
+            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+          >
+            <Shuffle className="w-3.5 h-3.5" /> Shuffle
+          </button>
+        )}
       </div>
 
       {practices.length > 0 ? (

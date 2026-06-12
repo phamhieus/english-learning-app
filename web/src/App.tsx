@@ -33,6 +33,8 @@ import IeltsSpeakingOverview from './features/ielts-speaking/pages/IeltsSpeaking
 import IeltsSpeakingP2Session from './features/ielts-speaking/pages/IeltsSpeakingP2Session';
 import IeltsSpeakingP3Session from './features/ielts-speaking/pages/IeltsSpeakingP3Session';
 import IeltsSpeakingPracticeResult from './features/ielts-speaking/pages/IeltsSpeakingPracticeResult';
+import { FeedbackResultPage } from './features/feedback/FeedbackResultPage';
+import { FeedbackDemo } from './features/feedback/FeedbackDemo';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -81,6 +83,8 @@ function App() {
                   <Route path="/history" element={<HistoryView />} />
                   <Route path="/settings" element={<SettingsView />} />
                   <Route path="/feedback" element={<FeedbackView />} />
+                  <Route path="/feedback/result" element={<FeedbackResultPage />} />
+                  <Route path="/feedback/demo" element={<FeedbackDemo />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Layout>

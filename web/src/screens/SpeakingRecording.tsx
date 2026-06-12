@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Mic, RotateCcw, Check, Volume2, Activity } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Mic, RotateCcw, Check, Volume2, Activity, Timer } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
@@ -7,6 +7,7 @@ import { evaluateSpeaking, generateSpeakingTranscript } from '../services/ai';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import { useSpeechRecognition } from '../services/useSpeechRecognition';
+import { TOEIC_SPEAKING_TIMING } from '../services/examTiming';
 import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
 import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
 import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
@@ -18,12 +19,18 @@ const SpeakingRecording = () => {
   const { error: showError, success: showSuccess } = useToast();
   const practice = location.state?.practice || { title: "General Practice", level: "Medium", type: "Paragraph" };
   const exam = (location.state?.exam as string) || '';
+  const taskKey = (location.state?.taskKey as string) || '';
   const taskLabel = (location.state?.taskLabel as string) || 'Speaking';
-  
+
   const [transcript, setTranscript] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [didAutoRead, setDidAutoRead] = useState(false);
+
+  // Official TOEIC Speaking timing for this task (prep + response countdowns).
+  const timing = exam === 'TOEIC' ? TOEIC_SPEAKING_TIMING[taskKey] : undefined;
+  const [prepLeft, setPrepLeft] = useState<number | null>(null);
+  const [responseLeft, setResponseLeft] = useState<number | null>(null);
 
   const speech = useSpeechRecognition();
   const recognizedText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
@@ -61,16 +68,22 @@ const SpeakingRecording = () => {
     setDidAutoRead(true);
   }, [didAutoRead, isLoading, voiceReader, voiceSegments]);
 
+  const startRecording = () => {
+    voiceReader.stop();
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    speech.start();
+  };
+  const startRecordingRef = useRef(startRecording);
+  startRecordingRef.current = startRecording;
+
   const toggleRecording = () => {
     if (speech.isListening) {
       speech.stop();
     } else {
-      voiceReader.stop();
-      document.querySelectorAll('audio').forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-      speech.start();
+      startRecording();
     }
   };
 
@@ -79,12 +92,54 @@ const SpeakingRecording = () => {
       speech.stop();
     }
     speech.reset();
+    setPrepLeft(timing ? timing.prepSeconds : null);
+    setResponseLeft(null);
     voiceReader.stop();
     document.querySelectorAll('audio').forEach(audio => {
       audio.pause();
       audio.currentTime = 0;
     });
   };
+
+  // ── Official TOEIC timing: prep countdown, then timed response ────────────
+  // Start the prep countdown once the prompt is ready.
+  useEffect(() => {
+    if (isLoading || !timing) return;
+    setPrepLeft(timing.prepSeconds);
+    setResponseLeft(null);
+  }, [isLoading, timing]);
+
+  // Tick down prep time; when it ends, recording starts automatically.
+  useEffect(() => {
+    if (prepLeft === null || speech.isListening) return;
+    if (prepLeft <= 0) {
+      setPrepLeft(null);
+      startRecordingRef.current();
+      return;
+    }
+    const t = setTimeout(() => setPrepLeft((v) => (v === null ? null : v - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [prepLeft, speech.isListening]);
+
+  // When recording starts, switch to the response countdown.
+  useEffect(() => {
+    if (!speech.isListening || !timing) return;
+    setPrepLeft(null);
+    setResponseLeft(timing.responseSeconds);
+  }, [speech.isListening, timing]);
+
+  // Tick down response time; stop the recording when time is up.
+  const stopRecordingRef = useRef(speech.stop);
+  stopRecordingRef.current = speech.stop;
+  useEffect(() => {
+    if (!speech.isListening || responseLeft === null) return;
+    if (responseLeft <= 0) {
+      stopRecordingRef.current();
+      return;
+    }
+    const t = setTimeout(() => setResponseLeft((v) => (v === null ? null : v - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [responseLeft, speech.isListening]);
 
   const handleEvaluate = async () => {
     if (speech.isListening) speech.stop();
@@ -119,6 +174,21 @@ const SpeakingRecording = () => {
             </span>
           )}
           <span className="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-full text-sm font-semibold">{taskLabel}</span>
+          {timing && (prepLeft !== null || (speech.isListening && responseLeft !== null)) && (
+            <span className={cn(
+              'flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold tabular-nums',
+              prepLeft !== null
+                ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                : responseLeft !== null && responseLeft <= 10
+                  ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 animate-pulse'
+                  : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+            )}>
+              <Timer className="w-4 h-4" />
+              {prepLeft !== null
+                ? `Prep 0:${String(prepLeft).padStart(2, '0')}`
+                : `Speak 0:${String(Math.max(responseLeft ?? 0, 0)).padStart(2, '0')}`}
+            </span>
+          )}
         </div>
       </div>
 
@@ -262,7 +332,13 @@ const SpeakingRecording = () => {
         </button>
       </div>
       <p className="text-center text-sm font-medium text-slate-400 mt-6 pb-4">
-        {isEvaluating ? "Evaluating your speaking..." : speech.isListening ? "Click to Stop" : "Click to Record"}
+        {isEvaluating
+          ? "Evaluating your speaking..."
+          : speech.isListening
+            ? "Click to Stop"
+            : prepLeft !== null && timing
+              ? `Official timing: ${timing.label} — recording starts when prep ends`
+              : "Click to Record"}
       </p>
     </div>
   );

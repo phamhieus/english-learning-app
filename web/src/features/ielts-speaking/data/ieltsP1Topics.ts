@@ -446,6 +446,122 @@ export const IELTS_P1_TOPICS: IeltsSpeakingTopic[] = [
       { id: 'cafes-8', text: 'Do you have a regular order at your favourite café?' },
     ],
   },
+
+  // ── 2026 rotation topics ──────────────────────────────────────────────────
+  // Based on topics reported by candidates in the Jan–Aug 2026 question bank
+  // (compiled from simplyielts.com, ieltsliz.com, and allthingsielts.com).
+  {
+    id: 'art',
+    name: 'Art',
+    questions: [
+      { id: 'art-1', text: 'Do you like art?' },
+      { id: 'art-2', text: 'Did you learn drawing or painting at school?' },
+      { id: 'art-3', text: 'Have you ever visited an art gallery or museum?' },
+      { id: 'art-4', text: 'Is there any art on the walls of your home?' },
+      { id: 'art-5', text: 'Would you like to learn more about art in the future?' },
+      { id: 'art-6', text: 'Do you think children should study art at school?' },
+      { id: 'art-7', text: 'Is street art popular in your country?' },
+      { id: 'art-8', text: 'Have you ever bought a piece of art or a handmade item?' },
+    ],
+  },
+  {
+    id: 'shoes',
+    name: 'Shoes',
+    questions: [
+      { id: 'shoes-1', text: 'How often do you buy shoes?' },
+      { id: 'shoes-2', text: 'Do you prefer comfortable shoes or fashionable shoes?' },
+      { id: 'shoes-3', text: 'Have you ever bought shoes online?' },
+      { id: 'shoes-4', text: 'Do you have a favourite pair of shoes?' },
+      { id: 'shoes-5', text: 'What kind of shoes do you usually wear every day?' },
+      { id: 'shoes-6', text: 'Did you choose your own shoes when you were a child?' },
+      { id: 'shoes-7', text: 'Do people in your country spend a lot of money on shoes?' },
+      { id: 'shoes-8', text: 'Have you ever regretted buying a pair of shoes?' },
+    ],
+  },
+  {
+    id: 'plants',
+    name: 'Plants',
+    questions: [
+      { id: 'plants-1', text: 'Do you keep any plants at home?' },
+      { id: 'plants-2', text: 'Do you know much about growing plants?' },
+      { id: 'plants-3', text: 'Did you ever grow a plant when you were a child?' },
+      { id: 'plants-4', text: 'Are plants important in your culture?' },
+      { id: 'plants-5', text: 'Would you like to have a garden in the future?' },
+      { id: 'plants-6', text: 'Do people in your country like giving plants as gifts?' },
+      { id: 'plants-7', text: 'Why do you think some people enjoy keeping houseplants?' },
+      { id: 'plants-8', text: 'Are there many green spaces with trees and plants in your city?' },
+    ],
+  },
+  {
+    id: 'wild-animals',
+    name: 'Wild Animals',
+    questions: [
+      { id: 'wild-1', text: 'Do you like watching programmes about wild animals?' },
+      { id: 'wild-2', text: 'Is there a wild animal you would like to know more about?' },
+      { id: 'wild-3', text: 'Have you ever seen wild animals in their natural habitat?' },
+      { id: 'wild-4', text: 'Did you learn about wild animals at school?' },
+      { id: 'wild-5', text: 'What is the most popular wild animal in your country?' },
+      { id: 'wild-6', text: 'Do you think zoos are a good place to see animals?' },
+      { id: 'wild-7', text: 'Why do you think some people love dangerous animals?' },
+      { id: 'wild-8', text: 'Is protecting wild animals important in your country?' },
+    ],
+  },
+  {
+    id: 'toys-childhood',
+    name: 'Toys and Childhood',
+    questions: [
+      { id: 'toys-1', text: 'What was your favourite toy when you were a child?' },
+      { id: 'toys-2', text: 'Did you prefer playing indoors or outdoors as a child?' },
+      { id: 'toys-3', text: 'Do you still keep any of your childhood toys?' },
+      { id: 'toys-4', text: 'Did you share toys with other children?' },
+      { id: 'toys-5', text: 'Do children today play with the same kinds of toys as you did?' },
+      { id: 'toys-6', text: 'Do you think children have too many toys nowadays?' },
+      { id: 'toys-7', text: 'What kinds of toys are popular with children in your country?' },
+      { id: 'toys-8', text: 'Would you give a child a traditional toy or an electronic one?' },
+    ],
+  },
+  {
+    id: 'water-sports',
+    name: 'Water Sports',
+    questions: [
+      { id: 'water-1', text: 'Can you swim?' },
+      { id: 'water-2', text: 'Have you ever tried any water sports?' },
+      { id: 'water-3', text: 'Is there a water sport you would like to try?' },
+      { id: 'water-4', text: 'Are water sports popular in your country?' },
+      { id: 'water-5', text: 'Do you prefer swimming in a pool or in the sea?' },
+      { id: 'water-6', text: 'Did you learn to swim when you were a child?' },
+      { id: 'water-7', text: 'Do you think water sports are dangerous?' },
+      { id: 'water-8', text: 'Would you like to live near the sea or a lake?' },
+    ],
+  },
+  {
+    id: 'musical-instruments',
+    name: 'Musical Instruments',
+    questions: [
+      { id: 'instrument-1', text: 'Can you play a musical instrument?' },
+      { id: 'instrument-2', text: 'Did you learn to play an instrument at school?' },
+      { id: 'instrument-3', text: 'Is there an instrument you would like to learn?' },
+      { id: 'instrument-4', text: 'What is the most popular instrument in your country?' },
+      { id: 'instrument-5', text: 'Do you think children should learn a musical instrument?' },
+      { id: 'instrument-6', text: 'Is it easier to learn an instrument as a child or as an adult?' },
+      { id: 'instrument-7', text: 'Have you ever been to a live performance with traditional instruments?' },
+      { id: 'instrument-8', text: 'Do you think learning an instrument is worth the time it takes?' },
+    ],
+  },
+  {
+    id: 'habits-routines',
+    name: 'Habits and Routines',
+    questions: [
+      { id: 'habit-1', text: 'Have you made any positive changes to your daily routine recently?' },
+      { id: 'habit-2', text: 'Is there a habit a friend has that you would like to develop?' },
+      { id: 'habit-3', text: 'Do you find it easy to build new habits?' },
+      { id: 'habit-4', text: 'Is there a habit you would like to give up?' },
+      { id: 'habit-5', text: 'Do you prefer to plan your day or be spontaneous?' },
+      { id: 'habit-6', text: 'What is the first thing you usually do in the morning?' },
+      { id: 'habit-7', text: 'Have your daily habits changed since you were younger?' },
+      { id: 'habit-8', text: 'Do you use any apps or tools to track your habits?' },
+    ],
+  },
 ];
 
 export const getTopicById = (id: string): IeltsSpeakingTopic | undefined =>

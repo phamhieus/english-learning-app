@@ -22,11 +22,12 @@ import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
 import { PART2_CUE_CARDS, getRandomCueCard } from '../data/part2CueCards';
 import type { IeltsP2AnswerInput, Part2CueCard } from '../types/ielts-speaking.types';
+import { IELTS_P2_PREP_SECONDS, IELTS_P2_LONG_TURN_SECONDS } from '../../../services/examTiming';
 
 type Phase = 'prep' | 'long_turn' | 'rounding_off' | 'complete';
 
-const PREP_SECONDS = 60;
-const MAX_LONG_TURN_SECONDS = 120;
+const PREP_SECONDS = IELTS_P2_PREP_SECONDS;
+const MAX_LONG_TURN_SECONDS = IELTS_P2_LONG_TURN_SECONDS;
 const PREP_NOTICE_SECONDS = 40;   // amber — first gentle nudge
 const PREP_CAUTION_SECONDS = 20;  // orange — time getting short
 const PREP_WARNING_SECONDS = 10;  // red + shake + tick — urgent

@@ -981,3 +981,149 @@ export class UnifiedChatSession {
     }
   }
 }
+
+// ─── Teacher-style feedback (rich FeedbackResult format) ─────────────────────
+
+import type { FeedbackResult, FeedbackModule } from '../features/feedback/types/feedback.types';
+
+/**
+ * Generates a detailed teacher-style FeedbackResult for any supported module.
+ * The AI is prompted to return only JSON matching the FeedbackResult schema.
+ * Callers should handle partial/invalid responses gracefully.
+ */
+export async function generateTeacherFeedback(
+  settings: AppSettings,
+  module: FeedbackModule,
+  input: {
+    originalAnswer?: string;
+    transcript?: string;
+    prompt?: string;
+    taskKey?: string;
+    audioAnalysisSummary?: string;
+  }
+): Promise<FeedbackResult> {
+  const systemInstruction = buildFeedbackSystemInstruction(module, input.taskKey, input.prompt);
+
+  const userContent = JSON.stringify({
+    module,
+    originalAnswer: input.originalAnswer,
+    transcript: input.transcript,
+    audioAnalysisSummary: input.audioAnalysisSummary,
+  });
+
+  const raw = await callAI(settings, systemInstruction, userContent, true);
+  const parsed = JSON.parse(stripJsonFences(raw)) as Partial<FeedbackResult>;
+
+  // Merge required fields with safe defaults so the UI never crashes
+  return {
+    id: `ai-${Date.now()}`,
+    module,
+    scoreLabel: parsed.scoreLabel ?? '—',
+    overallScore: parsed.overallScore,
+    teacherComment: parsed.teacherComment ?? '',
+    strengths: parsed.strengths ?? [],
+    topPriorities: parsed.topPriorities ?? [],
+    criteria: parsed.criteria ?? [],
+    issues: parsed.issues ?? [],
+    originalAnswer: input.originalAnswer,
+    transcript: input.transcript,
+    improvedSample: parsed.improvedSample,
+    recommendedPractice: parsed.recommendedPractice ?? [],
+    audioAnalysis: parsed.audioAnalysis,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+const buildFeedbackSystemInstruction = (
+  module: FeedbackModule,
+  taskKey?: string,
+  prompt?: string
+): string => {
+  const rubricInstructions: Partial<Record<FeedbackModule, string>> = {
+    'ielts-writing-task-1': `
+You are an expert IELTS examiner providing detailed teacher-style feedback on an IELTS Academic or General Writing Task 1 response.
+Apply the official IELTS Task 1 rubric: Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy.
+Task 1 criterion is called "Task Achievement" (not "Task Response").
+Band descriptors: Band 9 (expert), 8 (very good), 7 (good), 6 (competent), 5 (modest), 4 (limited), 3 (extremely limited).
+Check for: clear overview, accurate data reporting, meaningful comparisons, no personal opinion, appropriate map/chart vocabulary.`,
+    'ielts-writing-task-2': `
+You are an expert IELTS examiner providing detailed teacher-style feedback on an IELTS Writing Task 2 essay.
+Apply the official IELTS Task 2 rubric: Task Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy.
+Task 2 criterion is called "Task Response" (not "Task Achievement").
+Check for: clear consistent position, fully developed arguments, specific examples, logical paragraphing, appropriate conclusion.`,
+    'ielts-speaking': `
+You are an expert IELTS Speaking examiner providing detailed teacher-style feedback.
+Apply the official IELTS Speaking rubric: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation.
+Check for: pause frequency, filler words, vocabulary range, sentence variety, pronunciation clarity.`,
+    'toeic-speaking-picture-description': `
+You are a TOEIC Speaking examiner providing teacher-style feedback on a "Describe a Picture" response.
+Evaluate: content coverage (main subject, action, setting, background, inference), vocabulary accuracy, grammar, fluency & delivery.
+Do not use IELTS band scores. Use a 0-100 scale.`,
+    shadowing: `
+You are a pronunciation coach providing feedback on a shadowing exercise.
+Evaluate: overall similarity %, pronunciation accuracy, rhythm & timing, completeness, intonation.
+Do NOT use IELTS band scores. Use percentages (0-100%) for all scores.
+Report specific mispronounced words and rhythm issues.`,
+    'virtual-conversation': `
+You are a conversational English coach providing feedback on a virtual conversation practice.
+Evaluate: relevance, topic development, naturalness & fluency, grammar, vocabulary.
+Do NOT use IELTS bands unless the user is in IELTS mode.
+Use a 0-100 scale.`,
+  };
+
+  const rubric = rubricInstructions[module] ?? `You are an English language teacher providing detailed feedback. Module: ${module}.`;
+
+  return `${rubric}
+
+Return ONLY valid JSON matching this exact structure — no markdown, no prose outside the JSON:
+{
+  "module": "${module}",
+  "scoreLabel": "string (e.g. 'Band 5.5' or '78%' or '70/100')",
+  "overallScore": number,
+  "teacherComment": "2-4 sentence honest encouraging comment explaining the score",
+  "strengths": ["string", "string", "string"],
+  "topPriorities": [
+    { "title": "string", "description": "string", "relatedIssueIds": ["issue-1"] }
+  ],
+  "criteria": [
+    {
+      "id": "criterion-id",
+      "name": "Criterion Name",
+      "score": number,
+      "scoreLabel": "string",
+      "summary": "one sentence",
+      "whyThisScore": "2-3 sentences with specific evidence",
+      "strengths": ["string"],
+      "issueIds": ["issue-1"],
+      "nextBandTarget": "what the learner needs to do to improve"
+    }
+  ],
+  "issues": [
+    {
+      "id": "issue-1",
+      "criterionId": "criterion-id",
+      "group": "must-fix" | "nice-to-improve",
+      "severity": "high" | "medium" | "low",
+      "type": "short-type-code",
+      "title": "short title",
+      "originalText": "exact excerpt from learner answer",
+      "suggestedRevision": "improved version",
+      "explanation": "plain English explanation for a learner",
+      "impactOnScore": "which criterion this affects"
+    }
+  ],
+  "improvedSample": "optional improved version of learner answer",
+  "recommendedPractice": [
+    { "title": "string", "description": "string", "activityType": "${module}" }
+  ]
+}
+
+Rules:
+- Use exact excerpts from the learner's answer as originalText — never invent examples.
+- Return maximum 3 topPriorities, 5 must-fix issues, 5 nice-to-improve issues.
+- Explain issues in simple language suitable for intermediate English learners.
+- Never invent pronunciation issues when no audio data is provided.
+- Label uncertain suggestions as "nice-to-improve", not "must-fix".
+- Keep teacherComment encouraging but honest.
+- The taskKey is "${taskKey ?? 'unknown'}" and the prompt topic is: "${prompt ?? 'not provided'}".`;
+};

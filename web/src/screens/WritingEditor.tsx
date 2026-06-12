@@ -5,7 +5,7 @@ import { cn } from '../components/classNames';
 import { OptimizedImage } from '../components/OptimizedImage';
 import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
-import { evaluateWriting } from '../services/ai';
+import { evaluateWriting, generateTeacherFeedback } from '../services/ai';
 import { getWritingTaskTiming } from '../services/examTiming';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
@@ -189,10 +189,24 @@ const WritingEditor = () => {
       const prompt = isPictureWriting
         ? `${practice.title}\nWrite a picture description paragraph.`
         : practice.title;
-      const result = await evaluateWriting(settings, prompt, text, taskKey);
+
+      // Run both evaluations in parallel: legacy (for WritingResult) + rich teacher feedback
+      const feedbackModule = activeExam === 'IELTS'
+        ? (taskKey === 't2' ? 'ielts-writing-task-2' : 'ielts-writing-task-1')
+        : 'ielts-writing-task-1'; // TOEIC uses the same page structure
+
+      const [result, teacherFeedback] = await Promise.all([
+        evaluateWriting(settings, prompt, text, taskKey),
+        generateTeacherFeedback(settings, feedbackModule as import('../features/feedback/types/feedback.types').FeedbackModule, {
+          originalAnswer: text,
+          prompt,
+          taskKey,
+        }).catch(() => null), // teacher feedback is non-critical
+      ]);
+
       addHistory({ title: practice.title, type: practice.type, score: result.score, focus: 'Writing' });
       toast.success('Evaluation completed!');
-      navigate('/writing/result', { state: { result, originalText: text, practice, exam: activeExam, taskKey } });
+      navigate('/writing/result', { state: { result, originalText: text, practice, exam: activeExam, taskKey, teacherFeedback } });
     } catch (e) {
       console.error(e);
       toast.error('Failed to evaluate. Please check API key.');

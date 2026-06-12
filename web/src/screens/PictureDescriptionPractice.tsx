@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Mic, RotateCcw, Check, Activity, Image, ArrowLeft } from 'lucide-react';
+import { Mic, RotateCcw, Check, Activity, Image, ArrowLeft, Timer } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { OptimizedImage } from '../components/OptimizedImage';
@@ -9,6 +9,7 @@ import { evaluatePictureDescription } from '../services/ai';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
+import { TOEIC_SPEAKING_TIMING } from '../services/examTiming';
 import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
 import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
 import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
@@ -23,7 +24,7 @@ const PictureDescriptionPractice = () => {
     title: 'A scene from daily life',
     imageUrl: '',
     level: 'Medium',
-    duration: '3 min',
+    duration: '45s prep · 30s speak',
     category: 'Daily Life',
   };
 
@@ -31,6 +32,11 @@ const PictureDescriptionPractice = () => {
   const [recognizedText, setRecognizedText] = useState('');
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [didAutoRead, setDidAutoRead] = useState(false);
+
+  // Official TOEIC "Describe a Picture" timing: 45s prep · 30s response.
+  const timing = settings.primaryExam === 'TOEIC' ? TOEIC_SPEAKING_TIMING.pic : undefined;
+  const [prepLeft, setPrepLeft] = useState<number | null>(timing ? timing.prepSeconds : null);
+  const [responseLeft, setResponseLeft] = useState<number | null>(null);
   const recognitionRef = React.useRef<SpeechRecognition | null>(null);
   const promptText = `Describe everything you see in this picture. ${practice.title}`;
   const voiceSegments = useMemo(() => splitVoiceReaderText(promptText), [promptText]);
@@ -72,21 +78,55 @@ const PictureDescriptionPractice = () => {
     setDidAutoRead(true);
   }, [didAutoRead, voiceReader, voiceSegments]);
 
+  const startRecording = React.useCallback(() => {
+    setRecognizedText('');
+    voiceReader.stop();
+    document.querySelectorAll('audio').forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    recognitionRef.current?.start();
+    setIsRecording(true);
+  }, [voiceReader]);
+
   const toggleRecording = () => {
     if (isRecording) {
       recognitionRef.current?.stop();
       setIsRecording(false);
     } else {
-      setRecognizedText('');
-      voiceReader.stop();
-      document.querySelectorAll('audio').forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-      recognitionRef.current?.start();
-      setIsRecording(true);
+      startRecording();
     }
   };
+
+  // Prep countdown — recording starts automatically when prep ends.
+  useEffect(() => {
+    if (prepLeft === null || isRecording) return;
+    if (prepLeft <= 0) {
+      setPrepLeft(null);
+      startRecording();
+      return;
+    }
+    const t = setTimeout(() => setPrepLeft((v) => (v === null ? null : v - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [prepLeft, isRecording, startRecording]);
+
+  // Response countdown — recording stops automatically when time is up.
+  useEffect(() => {
+    if (!isRecording || !timing) return;
+    setPrepLeft(null);
+    setResponseLeft(timing.responseSeconds);
+  }, [isRecording, timing]);
+
+  useEffect(() => {
+    if (!isRecording || responseLeft === null) return;
+    if (responseLeft <= 0) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+    const t = setTimeout(() => setResponseLeft((v) => (v === null ? null : v - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [responseLeft, isRecording]);
 
   const handleEvaluate = async () => {
     if (isRecording) recognitionRef.current?.stop();
@@ -113,6 +153,8 @@ const PictureDescriptionPractice = () => {
   const handleReset = () => {
     if (isRecording) recognitionRef.current?.stop();
     setIsRecording(false);
+    setPrepLeft(timing ? timing.prepSeconds : null);
+    setResponseLeft(null);
     setRecognizedText('');
     voiceReader.stop();
     document.querySelectorAll('audio').forEach(audio => {
@@ -135,6 +177,21 @@ const PictureDescriptionPractice = () => {
           <span className="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 rounded-full text-sm font-semibold">
             Picture Description
           </span>
+          {timing && (prepLeft !== null || (isRecording && responseLeft !== null)) && (
+            <span className={cn(
+              'flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold tabular-nums',
+              prepLeft !== null
+                ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                : responseLeft !== null && responseLeft <= 10
+                  ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 animate-pulse'
+                  : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+            )}>
+              <Timer className="w-4 h-4" />
+              {prepLeft !== null
+                ? `Prep 0:${String(prepLeft).padStart(2, '0')}`
+                : `Speak 0:${String(Math.max(responseLeft ?? 0, 0)).padStart(2, '0')}`}
+            </span>
+          )}
           <span
             className={cn(
               'px-3 py-1 rounded-full text-sm font-semibold',

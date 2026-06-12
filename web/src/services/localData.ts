@@ -1,5 +1,6 @@
 import type { Practice } from './storage';
 import topicsData from '../assets/topics.json';
+import { getSectionDurationLabel } from './examTiming';
 
 const mapLevel = (levelStr: string) => {
   if (levelStr.includes('Beginner')) return 'Easy';
@@ -114,7 +115,7 @@ export const getExamTopics = (
           shortTitle: extractShortTitle(topic.description, topic.topicName),
           type: topic.taskType,
           level: mapLevel(topic.level),
-          duration: '5 mins',
+          duration: getSectionDurationLabel(section),
         };
         if (img) {
           practice.image = img;

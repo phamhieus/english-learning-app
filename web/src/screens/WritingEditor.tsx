@@ -6,6 +6,7 @@ import { OptimizedImage } from '../components/OptimizedImage';
 import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import { evaluateWriting } from '../services/ai';
+import { getWritingTaskTiming } from '../services/examTiming';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import ChartPrompt from '../features/writing/IELTSChart';
@@ -44,7 +45,15 @@ const WritingEditor = () => {
       taskLabel.toLowerCase().includes('academic') ||
       practice.title?.toLowerCase().includes('chart') ||
       practice.title?.toLowerCase().includes('graph'));
-  const minWords = isPictureWriting ? 60 : isChartTask ? 150 : activeExam === 'IELTS' ? 150 : 100;
+  // Official minimums: IELTS Task 1 = 150 words, Task 2 = 250 words; TOEIC essay = 300 words.
+  const isIeltsTask2 = activeExam === 'IELTS' && (taskKey === 't2' || taskLabel.toLowerCase().includes('task 2'));
+  const isToeicEssay = activeExam === 'TOEIC' && (taskKey === 'essay' || taskLabel.toLowerCase().includes('essay'));
+  const minWords = isPictureWriting ? 60
+    : isToeicEssay ? 300
+    : isIeltsTask2 ? 250
+    : isChartTask ? 150
+    : activeExam === 'IELTS' ? 150
+    : 100;
   const promptImage =
     practice.image ||
     (isPictureWriting
@@ -53,7 +62,11 @@ const WritingEditor = () => {
   // Revising returns to the same task with a blank editor — the old answer is cleared.
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
-  const [timer, setTimer] = useState(isChartTask ? 1200 : isPictureWriting ? 480 : 600);
+  // Official timings: IELTS Task 1 = 20 min, Task 2 = 40 min;
+  // TOEIC picture sentences = 8 min, email = 10 min, opinion essay = 30 min.
+  const officialTiming = getWritingTaskTiming(activeExam, taskKey);
+  const fallbackSeconds = isChartTask ? 1200 : isPictureWriting ? 480 : 600;
+  const [timer, setTimer] = useState(officialTiming?.totalSeconds ?? fallbackSeconds);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isChartExpanded, setIsChartExpanded] = useState(false);
 

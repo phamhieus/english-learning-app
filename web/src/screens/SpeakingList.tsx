@@ -20,17 +20,17 @@ interface TaskDef {
 
 const SPEAKING_TASKS: Record<Exam, { blurb: string; tasks: TaskDef[] }> = {
   TOEIC: {
-    blurb: '11 questions · 6 task types. Each answer is scored on pronunciation, intonation, grammar & relevance.',
+    blurb: '11 questions · 5 parts · about 20 minutes. Each answer is scored on pronunciation, intonation, grammar & relevance.',
     tasks: [
       { key: 'read',  label: 'Read Aloud',           q: 'Q1–2',    icon: <Volume2 className="w-4 h-4" />,         section: 'Read a Text Aloud' },
-      { key: 'pic',   label: 'Describe a Picture',    q: 'Q3',      icon: <Image className="w-4 h-4" />,           section: 'Describe a Picture' },
-      { key: 'resp',  label: 'Respond to Questions',  q: 'Q4–6',    icon: <MessagesSquare className="w-4 h-4" />,  section: 'Respond to Questions' },
-      { key: 'info',  label: 'Respond Using Info',    q: 'Q7–9',    icon: <Table2 className="w-4 h-4" />,          section: 'Respond Using Information' },
+      { key: 'pic',   label: 'Describe a Picture',    q: 'Q3–4',    icon: <Image className="w-4 h-4" />,           section: 'Describe a Picture' },
+      { key: 'resp',  label: 'Respond to Questions',  q: 'Q5–7',    icon: <MessagesSquare className="w-4 h-4" />,  section: 'Respond to Questions' },
+      { key: 'info',  label: 'Respond Using Info',    q: 'Q8–10',   icon: <Table2 className="w-4 h-4" />,          section: 'Respond Using Information' },
       { key: 'op',    label: 'Express an Opinion',    q: 'Q11',     icon: <Megaphone className="w-4 h-4" />,       section: 'Express an Opinion' },
     ],
   },
   IELTS: {
-    blurb: '3 parts. Scored by band (0–9) on Fluency, Lexical Resource, Grammar & Pronunciation.',
+    blurb: '3 parts · 11–14 minutes. Scored by band (0–9) on Fluency, Lexical Resource, Grammar & Pronunciation.',
     tasks: [
       { key: 'p1', label: 'Part 1 · Interview', q: '4–5 min', icon: <UserRound className="w-4 h-4" />, section: 'Part 1 - Introduction and Interview' },
       { key: 'p2', label: 'Part 2 · Long Turn', q: '3–4 min', icon: <Mic2 className="w-4 h-4" />, section: 'Part 2 - Long Turn' },

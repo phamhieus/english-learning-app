@@ -60,6 +60,17 @@ const WritingList = () => {
   const conf = WRITING_TASKS[activeExam];
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
+  // TOEIC Writing Part 3 (Opinion Essay) has its own module with a planning
+  // panel and TOEIC-specific scoring — route there instead of the generic editor.
+  const isToeicEssay = activeExam === 'TOEIC' && activeTask.key === 'essay';
+  const startPractice = (practice: Practice) => {
+    if (isToeicEssay) {
+      navigate('/writing/toeic-p3/session', { state: { practice } });
+    } else {
+      navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+    }
+  };
+
   const [shuffleSeed, setShuffleSeed] = useState(0);
 
   const allPractices: Practice[] = useMemo(() => {
@@ -160,6 +171,15 @@ const WritingList = () => {
         <span className="text-slate-400 dark:text-slate-500">
           · {practices.length < allPractices.length ? `${practices.length} of ${allPractices.length}` : practices.length} prompts
         </span>
+        {isToeicEssay && (
+          <button
+            type="button"
+            onClick={() => navigate('/writing/toeic-p3')}
+            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+          >
+            <FileText className="w-3.5 h-3.5" /> Part 3 Guide
+          </button>
+        )}
         {practices.length < allPractices.length && (
           <button
             type="button"
@@ -178,13 +198,13 @@ const WritingList = () => {
               key={practice.id}
               role="button"
               tabIndex={0}
-              onClick={() => navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } })}
+              onClick={() => startPractice(practice)}
               onMouseEnter={() => practice.image && preloadImage(practice.image)}
               onFocus={() => practice.image && preloadImage(practice.image)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+                  startPractice(practice);
                 }
               }}
               className="gs-wr-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
@@ -230,7 +250,7 @@ const WritingList = () => {
               <button
                 onClick={(event) => {
                   event.stopPropagation();
-                  navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+                  startPractice(practice);
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 hover:bg-orange-600 hover:text-white dark:hover:bg-orange-500 py-3 rounded-xl font-semibold transition-colors"
               >

@@ -26,6 +26,7 @@ import PictureDescriptionList from './screens/PictureDescriptionList';
 import PictureDescriptionPractice from './screens/PictureDescriptionPractice';
 import PictureDescriptionResult from './screens/PictureDescriptionResult';
 import { videoShadowingRoutes } from './features/video-shadowing/routes';
+import { toeicWritingRoutes } from './features/toeic-writing/routes';
 import IeltsSpeakingP1Lobby from './features/ielts-speaking/pages/IeltsSpeakingP1Lobby';
 import IeltsSpeakingP1Session from './features/ielts-speaking/pages/IeltsSpeakingP1Session';
 import IeltsSpeakingP1Result from './features/ielts-speaking/pages/IeltsSpeakingP1Result';
@@ -57,6 +58,7 @@ function App() {
                   <Route path="/writing" element={<WritingList />} />
                   <Route path="/writing/editor" element={<WritingEditor />} />
                   <Route path="/writing/result" element={<WritingResult />} />
+                  {toeicWritingRoutes()}
                   <Route path="/shadowing/virtual-conversation" element={<VirtualConversation />} />
 
                   <Route path="/shadowing" element={<ShadowingList />} />

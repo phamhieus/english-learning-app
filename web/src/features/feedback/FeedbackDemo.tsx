@@ -7,6 +7,7 @@ import { useState } from 'react';
 import {
   mockIeltsWritingTask1,
   mockIeltsWritingTask2,
+  mockToeicWritingEssay,
   mockIeltsSpeakingP2,
   mockToeicSpeakingPicture,
   mockShadowing,
@@ -15,11 +16,12 @@ import {
 import type { FeedbackResult } from './types/feedback.types';
 import { FeedbackResultPage } from './FeedbackResultPage';
 
-type DemoKey = 'ielts-t1' | 'ielts-t2' | 'ielts-sp' | 'toeic-pic' | 'shadow' | 'conv';
+type DemoKey = 'ielts-t1' | 'ielts-t2' | 'toeic-essay' | 'ielts-sp' | 'toeic-pic' | 'shadow' | 'conv';
 
 const DEMOS: Record<DemoKey, { label: string; data: FeedbackResult }> = {
   'ielts-t1': { label: 'IELTS Writing Task 1 · Map', data: mockIeltsWritingTask1 },
   'ielts-t2': { label: 'IELTS Writing Task 2 · Opinion Essay', data: mockIeltsWritingTask2 },
+  'toeic-essay': { label: 'TOEIC Writing · Opinion Essay', data: mockToeicWritingEssay },
   'ielts-sp': { label: 'IELTS Speaking Part 2', data: mockIeltsSpeakingP2 },
   'toeic-pic': { label: 'TOEIC Speaking · Picture', data: mockToeicSpeakingPicture },
   shadow: { label: 'Shadowing', data: mockShadowing },

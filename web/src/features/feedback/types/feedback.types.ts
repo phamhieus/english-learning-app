@@ -2,6 +2,7 @@
 export type FeedbackModule =
   | 'ielts-writing-task-1'
   | 'ielts-writing-task-2'
+  | 'toeic-writing-essay'
   | 'ielts-speaking'
   | 'toeic-speaking-read-aloud'
   | 'toeic-speaking-picture-description'
@@ -143,6 +144,17 @@ export const MODULE_CONFIG: Record<FeedbackModule, FeedbackModuleConfig> = {
     retryRoute: '/writing/editor',
     nextRoute: '/writing',
     scoreUnit: 'band',
+  },
+  'toeic-writing-essay': {
+    module: 'toeic-writing-essay',
+    label: 'TOEIC Writing · Opinion Essay',
+    showBandScore: false,
+    showTranscript: false,
+    showAudioAnalysis: false,
+    showImprovedSample: true,
+    retryRoute: '/writing/toeic-p3/session',
+    nextRoute: '/writing/toeic-p3',
+    scoreUnit: 'toeic',
   },
   'ielts-speaking': {
     module: 'ielts-speaking',

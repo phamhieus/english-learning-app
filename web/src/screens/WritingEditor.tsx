@@ -54,10 +54,20 @@ const WritingEditor = () => {
     : isChartTask ? 150
     : activeExam === 'IELTS' ? 150
     : 100;
+  // Only used when a picture-writing prompt arrives without an image. Build the
+  // LoremFlickr tags from the prompt's meaningful words (drop articles/fillers)
+  // so the placeholder still matches the scene rather than the word "a"/"the".
+  const promptKeywords = practice.title
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, '')
+    .split(/\s+/)
+    .filter((w: string) => w && !['a', 'an', 'the', 'on', 'in', 'at', 'of', 'and', 'to', 'is', 'are'].includes(w))
+    .slice(0, 3)
+    .join(',');
   const promptImage =
     practice.image ||
     (isPictureWriting
-      ? `https://loremflickr.com/800/520/${encodeURIComponent(practice.title.split(' ').slice(0, 3).join(','))}?lock=${practice.id}`
+      ? `https://loremflickr.com/800/520/${encodeURIComponent(promptKeywords || 'office,people')}?lock=${practice.id}`
       : '');
   // Revising returns to the same task with a blank editor — the old answer is cleared.
   const [text, setText] = useState('');

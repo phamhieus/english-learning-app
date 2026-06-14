@@ -3,7 +3,7 @@ import {
   Wand2, Type, Pilcrow, MessagesSquare, Clapperboard,
   Play, Check, Activity, Upload, Link, Sparkles, Plus, FileText,
   Quote, Clock, AlignLeft, CheckCircle2, Circle, Search,
-  BadgeCheck, Folder,
+  BadgeCheck, Folder, Shuffle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
@@ -161,9 +161,9 @@ const LessonCard = ({ lesson, idx: _idx, mode }: { lesson: ShadowingLesson; idx:
           </span>
         </div>
 
-        <h3 className="text-lg font-bold leading-snug mb-3">{lesson.title}</h3>
+        <h3 className="text-lg font-bold leading-snug mb-3 line-clamp-2 min-h-[3.25rem]">{lesson.title}</h3>
 
-        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 mt-auto">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400 mb-4 mt-auto">
           <span className="flex items-center gap-1.5">
             {mode === 'sentence' ? <Quote className="w-4 h-4" /> : mode === 'dialogue' ? <MessagesSquare className="w-4 h-4" /> : <AlignLeft className="w-4 h-4" />}
             {lesson.totalSegments} {mode === 'sentence' ? 'sentences' : mode === 'dialogue' ? 'turns' : 'segments'}
@@ -622,11 +622,21 @@ const VideoMode = () => {
 const ShadowingListPage = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState('sentence');
+  const [shuffleSeed, setShuffleSeed] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const lessons: ShadowingLesson[] = ['sentence', 'paragraph', 'dialogue'].includes(mode)
-    ? getLessonsByMode(mode as ShadowingMode)
-    : [];
+  // The lesson banks now hold ~300 sets per mode — show a random sample of 30 so
+  // the grid stays fast; "Shuffle" draws a fresh set (mirrors the Writing list).
+  const allLessons: ShadowingLesson[] = useMemo(
+    () => (['sentence', 'paragraph', 'dialogue'].includes(mode) ? getLessonsByMode(mode as ShadowingMode) : []),
+    [mode],
+  );
+
+  const lessons: ShadowingLesson[] = useMemo(() => {
+    void shuffleSeed;
+    if (allLessons.length <= 30) return allLessons;
+    return [...allLessons].sort(() => 0.5 - Math.random()).slice(0, 30);
+  }, [allLessons, shuffleSeed]);
 
   const active = SHADOW_MODES.find(m => m.key === mode) ?? SHADOW_MODES[0];
 
@@ -644,7 +654,7 @@ const ShadowingListPage = () => {
       stagger: { amount: 0.4, from: 'start' },
       duration: 0.45, ease: 'back.out(1.4)',
     });
-  }, { scope: containerRef, dependencies: [mode] });
+  }, { scope: containerRef, dependencies: [mode, shuffleSeed] });
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
@@ -729,7 +739,20 @@ const ShadowingListPage = () => {
       <div className="flex items-center gap-2 mb-5">
         <span className="text-indigo-500">{active.icon}</span>
         <h2 className="text-xl font-bold">{active.label} Shadowing</h2>
-        {lessons.length > 0 && <span className="text-sm text-slate-400 dark:text-slate-500">· {lessons.length} sets</span>}
+        {allLessons.length > 0 && (
+          <span className="text-sm text-slate-400 dark:text-slate-500">
+            · {lessons.length < allLessons.length ? `${lessons.length} of ${allLessons.length}` : lessons.length} sets
+          </span>
+        )}
+        {lessons.length < allLessons.length && (
+          <button
+            type="button"
+            onClick={() => setShuffleSeed((s) => s + 1)}
+            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+          >
+            <Shuffle className="w-3.5 h-3.5" /> Shuffle
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -738,7 +761,7 @@ const ShadowingListPage = () => {
       ) : mode === 'video' ? (
         <VideoMode />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-4 auto-rows-fr items-stretch">
           {lessons.map((l, i) => <LessonCard key={l.id} lesson={l} idx={i} mode={mode} />)}
         </div>
       )}

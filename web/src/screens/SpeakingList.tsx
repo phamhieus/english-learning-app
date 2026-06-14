@@ -67,6 +67,26 @@ const SpeakingList = () => {
     navigate('/speaking/ielts-p1', selectedTopic ? { state: { selectedTopic } } : undefined);
   };
 
+  // Route a TOEIC/IELTS practice card to the correct screen for its task type.
+  const startPractice = (practice: Practice) => {
+    if (activeTaskKey === 'p1') {
+      openIeltsPart1Lobby(practice.title);
+      return;
+    }
+    if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
+      openIeltsPractice(activeTaskKey, practice.title);
+      return;
+    }
+    const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
+    // Q5-7 / Q8-10 / Q11 are open-response tasks with their own question flow.
+    if (activeTaskKey === 'resp' || activeTaskKey === 'info' || activeTaskKey === 'op') {
+      navigate('/speaking/respond', { state });
+      return;
+    }
+    const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
+    navigate(route, { state });
+  };
+
   const openIeltsPractice = (taskKey: string, selectedTopic?: string) => {
     if (taskKey === 'p1') {
       openIeltsPart1Lobby(selectedTopic);
@@ -265,33 +285,11 @@ const SpeakingList = () => {
               key={practice.id}
               role="button"
               tabIndex={0}
-              onClick={() => {
-                if (activeTaskKey === 'p1') {
-                  openIeltsPart1Lobby(practice.title);
-                  return;
-                }
-                if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
-                  openIeltsPractice(activeTaskKey, practice.title);
-                  return;
-                }
-                const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
-                const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
-                navigate(route, { state });
-              }}
+              onClick={() => startPractice(practice)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  if (activeTaskKey === 'p1') {
-                    openIeltsPart1Lobby(practice.title);
-                    return;
-                  }
-                  if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
-                    openIeltsPractice(activeTaskKey, practice.title);
-                    return;
-                  }
-                  const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
-                  const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
-                  navigate(route, { state });
+                  startPractice(practice);
                 }
               }}
               className="gs-sp-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
@@ -324,17 +322,7 @@ const SpeakingList = () => {
               <button
                 onClick={(event) => {
                   event.stopPropagation();
-                  if (activeTaskKey === 'p1') {
-                    openIeltsPart1Lobby(practice.title);
-                    return;
-                  }
-                  if (activeTaskKey === 'p2' || activeTaskKey === 'p3') {
-                    openIeltsPractice(activeTaskKey, practice.title);
-                    return;
-                  }
-                  const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
-                  const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
-                  navigate(route, { state });
+                  startPractice(practice);
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 py-3 rounded-xl font-semibold transition-colors"
               >

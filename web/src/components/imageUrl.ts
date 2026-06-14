@@ -20,8 +20,19 @@ export function resizeUnsplashUrl(url: string, width: number, height: number, qu
   }
 }
 
+/**
+ * Rewrite a LoremFlickr URL (`/{w}/{h}/{tags}?lock=…`) to a specific size while
+ * preserving the tags and `lock`, so the thumbnail shows the *same* photo as the
+ * full image. Falls back to the original URL for any non-LoremFlickr source.
+ */
+export function resizeLoremFlickrUrl(url: string, width: number, height: number): string {
+  if (!url || !url.includes('loremflickr.com')) return url;
+  return url.replace(/(loremflickr\.com\/)\d+\/\d+/, `$1${width}/${height}`);
+}
+
 /** Small thumbnail used by list cards (~320×180). */
 export function thumbnailUrl(url: string): string {
+  if (url.includes('loremflickr.com')) return resizeLoremFlickrUrl(url, 320, 180);
   return resizeUnsplashUrl(url, 320, 180);
 }
 

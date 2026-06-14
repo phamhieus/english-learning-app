@@ -12,6 +12,8 @@ import SpeakingList from './screens/SpeakingList';
 import SpeakingRecording from './screens/SpeakingRecording';
 import MockDialogue from './screens/MockDialogue';
 import SpeakingResult from './screens/SpeakingResult';
+import SpeakingResponse from './screens/SpeakingResponse';
+import SpeakingResponseResult from './screens/SpeakingResponseResult';
 import WritingList from './screens/WritingList';
 import WritingEditor from './screens/WritingEditor';
 import WritingResult from './screens/WritingResult';
@@ -25,6 +27,9 @@ import VirtualConversation from './screens/VirtualConversation';
 import PictureDescriptionList from './screens/PictureDescriptionList';
 import PictureDescriptionPractice from './screens/PictureDescriptionPractice';
 import PictureDescriptionResult from './screens/PictureDescriptionResult';
+import SentenceWritingList from './screens/SentenceWritingList';
+import SentenceWritingPractice from './screens/SentenceWritingPractice';
+import SentenceWritingResult from './screens/SentenceWritingResult';
 import { videoShadowingRoutes } from './features/video-shadowing/routes';
 import { toeicWritingRoutes } from './features/toeic-writing/routes';
 import IeltsSpeakingP1Lobby from './features/ielts-speaking/pages/IeltsSpeakingP1Lobby';
@@ -54,10 +59,15 @@ function App() {
                   <Route path="/speaking/record" element={<SpeakingRecording />} />
                   <Route path="/shadowing/mock-dialogue" element={<MockDialogue />} />
                   <Route path="/speaking/result" element={<SpeakingResult />} />
+                  <Route path="/speaking/respond" element={<SpeakingResponse />} />
+                  <Route path="/speaking/respond/result" element={<SpeakingResponseResult />} />
 
                   <Route path="/writing" element={<WritingList />} />
                   <Route path="/writing/editor" element={<WritingEditor />} />
                   <Route path="/writing/result" element={<WritingResult />} />
+                  <Route path="/writing/sentence" element={<SentenceWritingList />} />
+                  <Route path="/writing/sentence/practice" element={<SentenceWritingPractice />} />
+                  <Route path="/writing/sentence/result" element={<SentenceWritingResult />} />
                   {toeicWritingRoutes()}
                   <Route path="/shadowing/virtual-conversation" element={<VirtualConversation />} />
 

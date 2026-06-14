@@ -655,6 +655,207 @@ Scoring guidelines:
   }
 };
 
+// ── TOEIC Speaking Q5-7 / Q8-10 / Q11 (open-response tasks) ─────────────────
+
+export type SpeakingResponseTask = 'resp' | 'info' | 'op';
+
+export interface SpeakingTaskContent {
+  /** Narrator scenario read before the questions (Q5-7 & Q8-10). */
+  scenario?: string;
+  /** Reference information for Q8-10 ("Respond Using Information"). */
+  info?: { title: string; lines: string[] };
+  /** Questions to answer, in order. 3 for resp/info, 1 for op. */
+  questions: string[];
+  /** Optional model answers, one per question, shown on the results screen. */
+  sampleAnswers?: string[];
+}
+
+/**
+ * Generate exam-accurate content for the three open-response TOEIC Speaking
+ * tasks. Unlike Read Aloud there is no target text to read — the learner must
+ * answer questions, so this returns a scenario + questions (+ an info block for
+ * Q8-10), seeded by a fixed topic title.
+ */
+export const generateSpeakingTaskContent = async (
+  settings: AppSettings,
+  taskKey: SpeakingResponseTask,
+  title: string,
+  level: string,
+): Promise<SpeakingTaskContent> => {
+  const common = `You write authentic TOEIC Speaking test material. Topic seed: "${title}". Learner level: ${level}.
+Return STRICT JSON only — no markdown, no commentary.`;
+
+  let systemInstruction: string;
+  if (taskKey === 'resp') {
+    systemInstruction = `${common}
+Create a "Respond to Questions" task (Questions 5-7). A narrator sets up a simple everyday situation (e.g. a phone survey, a friend asking, a market-research interview) related to the topic, then asks THREE questions.
+JSON schema:
+{
+  "scenario": "string (1-2 sentence narrator set-up, e.g. 'Imagine that a friend is planning ... You are talking on the phone about ...')",
+  "questions": ["string (Q5 - simple factual)", "string (Q6 - simple factual)", "string (Q7 - asks for an opinion/explanation, can be longer)"],
+  "sampleAnswers": ["string (natural 1-2 sentence model answer)", "string", "string (2-3 sentence model)"]
+}
+Exactly 3 questions and 3 sampleAnswers about the topic. Questions must be answerable from personal experience, no reference material.`;
+  } else if (taskKey === 'info') {
+    systemInstruction = `${common}
+Create a "Respond Using Information" task (Questions 8-10). Provide a short piece of reference material (a schedule, agenda, itinerary, or table) about the topic, a caller scenario, then THREE questions that can be answered ONLY from that material.
+JSON schema:
+{
+  "scenario": "string (1-2 sentence set-up, e.g. 'A participant is calling about the ... Using the information provided, answer their questions.')",
+  "info": { "title": "string (e.g. 'Annual Sales Conference - Schedule')", "lines": ["string", "string", "string", "string", "string"] },
+  "questions": ["string (Q8 - one factual detail)", "string (Q9 - one factual detail)", "string (Q10 - asks to summarise/list 2+ details)"],
+  "sampleAnswers": ["string (model answer using the info)", "string", "string"]
+}
+Provide 4-7 info lines like "9:00 a.m. - Registration (Main Lobby)". Exactly 3 questions and 3 sampleAnswers. Every question must be answerable strictly from the info lines.`;
+  } else {
+    systemInstruction = `${common}
+Create an "Express an Opinion" task (Question 11). Provide ONE opinion prompt about the topic (an agree/disagree statement or a "which do you prefer and why" question) suitable for a 60-second spoken response.
+JSON schema:
+{
+  "questions": ["string (the single opinion question, ending with a clear ask such as 'Give reasons for your opinion.')"],
+  "sampleAnswers": ["string (a model ~60-second opinion answer: clear stance + 2 supporting reasons with examples)"]
+}
+Exactly 1 question and 1 sampleAnswer.`;
+  }
+
+  try {
+    const responseText = await callAI(settings, systemInstruction, `Generate the task now for topic: "${title}".`);
+    return JSON.parse(responseText) as SpeakingTaskContent;
+  } catch (e) {
+    console.error('Failed to generate speaking task content:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
+export interface SpeakingResponseFeedback {
+  score: number;
+  contentScore: number;
+  grammarScore: number;
+  vocabularyScore: number;
+  fluencyScore: number;
+  feedback: string;
+  improvementTips: string[];
+  perQuestion: { relevant: boolean; comment: string }[];
+}
+
+/**
+ * Grade an open-response TOEIC Speaking task (Q5-7, Q8-10 or Q11). There is no
+ * target text — answers are judged on relevance to each question plus grammar,
+ * vocabulary and fluency, not word-for-word matching.
+ */
+export const evaluateSpeakingResponses = async (
+  settings: AppSettings,
+  taskKey: SpeakingResponseTask,
+  items: { question: string; answer: string }[],
+  context?: { scenario?: string; info?: { title: string; lines: string[] } },
+): Promise<SpeakingResponseFeedback> => {
+  const taskName =
+    taskKey === 'resp' ? 'Respond to Questions (Q5-7)'
+      : taskKey === 'info' ? 'Respond Using Information (Q8-10)'
+        : 'Express an Opinion (Q11)';
+
+  const systemInstruction = `You are an official TOEIC Speaking examiner grading "${taskName}".
+The candidate spoke their answers; speech was transcribed via Speech-to-Text, so ignore minor transcription artefacts and punctuation.
+${taskKey === 'info' ? 'Each answer must match the reference information that was provided. Penalise answers that contradict or ignore it.' : ''}
+${taskKey === 'op' ? 'Judge whether the candidate states a clear opinion and supports it with reasons/examples within roughly 60 seconds of speech.' : ''}
+Do NOT compare the answer word-for-word to any model — judge relevance to the question and the quality of the English.
+Return STRICT JSON only matching:
+{
+  "score": number (0-100 overall),
+  "contentScore": number (0-100, relevance & completeness of answers),
+  "grammarScore": number (0-100),
+  "vocabularyScore": number (0-100),
+  "fluencyScore": number (0-100, coherence & natural flow of the transcribed speech),
+  "feedback": "string (2-3 sentences overall)",
+  "improvementTips": ["string (actionable tips)"],
+  "perQuestion": [{ "relevant": boolean, "comment": "string (one short sentence on that answer)" }]
+}
+"perQuestion" must have exactly one entry per question, in order. If an answer is empty or off-topic, mark relevant=false and score content low.`;
+
+  const ctx = context?.scenario ? `Scenario: ${context.scenario}\n` : '';
+  const info = context?.info
+    ? `Reference information (${context.info.title}):\n${context.info.lines.join('\n')}\n`
+    : '';
+  const qa = items
+    .map((it, i) => `Q${i + 1}: ${it.question}\nAnswer: "${it.answer || '(no speech detected)'}"`)
+    .join('\n\n');
+  const userContent = `${ctx}${info}\n${qa}`;
+
+  try {
+    const responseText = await callAI(settings, systemInstruction, userContent);
+    return JSON.parse(responseText) as SpeakingResponseFeedback;
+  } catch (e) {
+    console.error('Failed to parse speaking response evaluation:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
+export interface SentenceWritingFeedback {
+  score: number;
+  toeicScore: number;
+  grammarScore: number;
+  relevanceScore: number;
+  usedWord1: boolean;
+  usedWord2: boolean;
+  feedback: string;
+  correctedSentence: string;
+  sampleSentence: string;
+  improvementTips: string[];
+}
+
+/**
+ * Grade a TOEIC Writing Q1-5 ("Write a Sentence Based on a Picture") response.
+ * The learner must write ONE sentence about the picture using BOTH given
+ * words/phrases (forms/order may change). Official scale is 0-3.
+ */
+export const evaluateSentenceWriting = async (
+  settings: AppSettings,
+  imageTitle: string,
+  words: [string, string],
+  userSentence: string,
+): Promise<SentenceWritingFeedback> => {
+  const systemInstruction = `You are an official TOEIC Writing examiner grading "Write a Sentence Based on a Picture" (Questions 1-5).
+The picture shows: "${imageTitle}".
+The candidate had to write ONE sentence about the picture and MUST use BOTH of these words/phrases: "${words[0]}" and "${words[1]}".
+They may change the form of the words (tense, plural, part of speech) and use them in any order.
+
+Official TOEIC scoring for this task (0-3):
+- 3: ONE sentence, no grammatical errors, uses BOTH words correctly, clearly relevant to the picture.
+- 2: Uses both words but has 1-2 minor grammatical errors, OR relevance to the picture is weak.
+- 1: Uses only one of the words, OR has frequent grammar errors, OR is more than one sentence.
+- 0: Blank, uses neither word, in a language other than English, or completely unrelated.
+
+Return STRICT JSON matching this schema (no markdown wrappers):
+{
+  "score": number (0-100, derived from the 0-3 score: 3->100, 2->75, 1->45, 0->10, adjust slightly for quality),
+  "toeicScore": number (0, 1, 2 or 3),
+  "grammarScore": number (0-100),
+  "relevanceScore": number (0-100, how well the sentence matches the picture),
+  "usedWord1": boolean (was "${words[0]}" used, in any valid form?),
+  "usedWord2": boolean (was "${words[1]}" used, in any valid form?),
+  "feedback": "string (2-3 sentences of friendly, specific feedback)",
+  "correctedSentence": "string (the candidate's sentence rewritten correctly; empty string if already perfect)",
+  "sampleSentence": "string (one model high-scoring sentence using both words)",
+  "improvementTips": ["string (specific, actionable tips)"]
+}
+
+If the candidate's sentence is empty: toeicScore 0, score below 15, both usedWord flags false.`;
+
+  const userContent = `Picture: ${imageTitle}
+Required words: "${words[0]}" and "${words[1]}"
+
+Candidate's sentence:
+"${userSentence || '(no answer)'}"`;
+
+  try {
+    const responseText = await callAI(settings, systemInstruction, userContent);
+    return JSON.parse(responseText);
+  } catch (e) {
+    console.error('Failed to parse sentence writing evaluation:', e);
+    throw new Error('Invalid response from AI.', { cause: e });
+  }
+};
+
 export const generatePictureDescriptions = async (
   settings: AppSettings,
   category: string

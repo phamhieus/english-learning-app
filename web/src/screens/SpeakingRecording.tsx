@@ -268,7 +268,7 @@ const SpeakingRecording = () => {
               {[1, 2, 3, 4, 5, 4, 3, 2, 5, 3, 1].map((h, i) => (
                 <div 
                   key={i} 
-                  className="w-1.5 bg-indigo-50 rounded-full animate-pulse"
+                  className="w-1.5 bg-indigo-500 rounded-full animate-pulse"
                   style={{ height: `${h * 12}px`, animationDelay: `${i * 0.1}s` }}
                 />
               ))}

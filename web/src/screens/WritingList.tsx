@@ -9,6 +9,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { getExamTopics } from '../services/localData';
 import { samplePictures } from '../features/picture-description/data/sample-images';
+import { classifyTheme, themeLabel } from '../features/toeic-writing/utils/essayThemes';
 import type { Practice } from '../services/storage';
 
 type Exam = 'TOEIC' | 'IELTS';
@@ -91,16 +92,26 @@ const WritingList = () => {
     return getExamTopics(activeExam, 'Writing', activeTask.section);
   }, [activeExam, activeTask.key, activeTask.section]);
 
+  // Resolves the topic-group a prompt belongs to. Most tasks carry an explicit
+  // `topicGroup`, but the TOEIC Part 3 (Opinion Essay) bank only has one coarse
+  // group, so we infer a finer subject theme from the prompt wording — giving
+  // Part 3 the same "Choose a topic" menu as IELTS Task 1 / Task 2.
+  const groupOf = (practice: Practice): string | undefined =>
+    isToeicEssay ? themeLabel(classifyTheme(practice.title)) : practice.topicGroup;
+
   // Topic groups available for the active task (e.g. IELTS Task 2 essay themes,
-  // Task 1 General letter types), sorted by how many prompts each holds.
+  // Task 1 General letter types, TOEIC Part 3 subject themes), sorted by how
+  // many prompts each holds.
   const topicGroups: [string, number][] = useMemo(() => {
     const counts = new Map<string, number>();
     for (const practice of allPractices) {
-      if (!practice.topicGroup) continue;
-      counts.set(practice.topicGroup, (counts.get(practice.topicGroup) ?? 0) + 1);
+      const group = groupOf(practice);
+      if (!group) continue;
+      counts.set(group, (counts.get(group) ?? 0) + 1);
     }
     return [...counts.entries()].sort((a, b) => b[1] - a[1]);
-  }, [allPractices]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allPractices, isToeicEssay]);
 
   // Only worth showing a topic picker when the task spans 2+ groups.
   const showTopicChips = topicGroups.length >= 2;
@@ -109,8 +120,9 @@ const WritingList = () => {
     () =>
       activeGroup === 'all' || !showTopicChips
         ? allPractices
-        : allPractices.filter((practice) => practice.topicGroup === activeGroup),
-    [allPractices, activeGroup, showTopicChips],
+        : allPractices.filter((practice) => groupOf(practice) === activeGroup),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allPractices, activeGroup, showTopicChips, isToeicEssay],
   );
 
   // The IELTS banks now hold 300+ prompts per part — show a random sample so
@@ -174,7 +186,11 @@ const WritingList = () => {
             return (
               <button
                 key={t.key}
-                onClick={() => setActiveTaskKey(t.key)}
+                onClick={() =>
+                  activeExam === 'TOEIC' && t.key === 'sent'
+                    ? navigate('/writing/sentence')
+                    : setActiveTaskKey(t.key)
+                }
                 className={cn(
                   'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border shrink-0 whitespace-nowrap',
                   on

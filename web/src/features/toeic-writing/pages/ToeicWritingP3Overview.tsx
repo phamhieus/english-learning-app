@@ -1,10 +1,24 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, ChevronRight, Clock, FileText, PenTool, Shuffle, Target } from 'lucide-react';
+import {
+  BookOpen, Briefcase, Bus, ChevronRight, Clock, Cpu, FileText, GraduationCap,
+  LayoutGrid, PenTool, ShoppingBag, Shuffle, Target, Wallet, type LucideIcon,
+} from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { getExamTopics } from '../../../services/localData';
 import type { Practice } from '../../../services/storage';
+import type { EssayTheme } from '../types/toeic-writing.types';
 import { classifyQuestionType, questionTypeLabel } from '../utils/essayAnalysis';
+import { ESSAY_THEMES, classifyTheme } from '../utils/essayThemes';
+
+const THEME_ICONS: Record<EssayTheme, LucideIcon> = {
+  workplace: Briefcase,
+  'business-consumer': ShoppingBag,
+  technology: Cpu,
+  'education-career': GraduationCap,
+  money: Wallet,
+  'city-environment': Bus,
+};
 
 const STATS: [string, string][] = [
   ['1', 'question'],
@@ -29,20 +43,53 @@ const RUBRIC = [
 const ToeicWritingP3Overview = () => {
   const navigate = useNavigate();
   const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [activeTheme, setActiveTheme] = useState<EssayTheme | 'all'>('all');
 
   const allPrompts: Practice[] = useMemo(
     () => getExamTopics('TOEIC', 'Writing', 'Write an Opinion Essay'),
     [],
   );
 
+  // How many prompts fall under each theme — drives the topic chips + counts.
+  const themeCounts = useMemo(() => {
+    const counts = {} as Record<EssayTheme, number>;
+    for (const practice of allPrompts) {
+      const theme = classifyTheme(practice.title);
+      counts[theme] = (counts[theme] ?? 0) + 1;
+    }
+    return counts;
+  }, [allPrompts]);
+
+  const themedPrompts: Practice[] = useMemo(
+    () =>
+      activeTheme === 'all'
+        ? allPrompts
+        : allPrompts.filter((practice) => classifyTheme(practice.title) === activeTheme),
+    [allPrompts, activeTheme],
+  );
+
   const prompts: Practice[] = useMemo(() => {
     void shuffleSeed;
-    if (allPrompts.length <= 12) return allPrompts;
-    return [...allPrompts].sort(() => 0.5 - Math.random()).slice(0, 12);
-  }, [allPrompts, shuffleSeed]);
+    if (themedPrompts.length <= 12) return themedPrompts;
+    return [...themedPrompts].sort(() => 0.5 - Math.random()).slice(0, 12);
+  }, [themedPrompts, shuffleSeed]);
 
   const startSession = (practice: Practice) =>
     navigate('/writing/toeic-p3/session', { state: { practice } });
+
+  const chipClass = (active: boolean) =>
+    cn(
+      'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors',
+      active
+        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+        : 'glass-card border-transparent text-slate-600 dark:text-slate-300 hover:border-blue-200 dark:hover:border-blue-800/60',
+    );
+
+  const countClass = (active: boolean) =>
+    cn(
+      'px-1.5 py-0.5 rounded-md text-[10px] tabular-nums',
+      active ? 'bg-white/20' : 'bg-slate-200/70 text-slate-500 dark:bg-slate-700/70 dark:text-slate-300',
+    );
 
   return (
     <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-300">
@@ -112,14 +159,38 @@ const ToeicWritingP3Overview = () => {
         </div>
       </div>
 
+      {/* Topic picker */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3 text-sm">
+          <LayoutGrid className="w-4 h-4 text-blue-500" />
+          <span className="font-bold text-slate-700 dark:text-slate-200">Choose a topic</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => setActiveTheme('all')} className={chipClass(activeTheme === 'all')}>
+            <LayoutGrid className="w-3.5 h-3.5" /> All topics
+            <span className={countClass(activeTheme === 'all')}>{allPrompts.length}</span>
+          </button>
+          {ESSAY_THEMES.filter((theme) => (themeCounts[theme.id] ?? 0) > 0).map((theme) => {
+            const Icon = THEME_ICONS[theme.id];
+            const active = activeTheme === theme.id;
+            return (
+              <button key={theme.id} type="button" onClick={() => setActiveTheme(theme.id)} className={chipClass(active)}>
+                <Icon className="w-3.5 h-3.5" /> {theme.label}
+                <span className={countClass(active)}>{themeCounts[theme.id]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Prompt picker */}
       <div className="flex items-center gap-2 mb-4 text-sm">
         <PenTool className="w-4 h-4 text-blue-500" />
         <span className="font-bold text-slate-700 dark:text-slate-200">Choose a prompt</span>
         <span className="text-slate-400 dark:text-slate-500">
-          · {prompts.length < allPrompts.length ? `${prompts.length} of ${allPrompts.length}` : prompts.length}
+          · {prompts.length < themedPrompts.length ? `${prompts.length} of ${themedPrompts.length}` : prompts.length}
         </span>
-        {prompts.length < allPrompts.length && (
+        {prompts.length < themedPrompts.length && (
           <button
             type="button"
             onClick={() => setShuffleSeed((s) => s + 1)}

@@ -10,6 +10,19 @@ export type EssayQuestionType =
   | 'preference'
   | 'general-opinion';
 
+/**
+ * Subject themes used to group the Q8 opinion-essay prompts so learners can
+ * pick a topic area to practise. Inferred from the prompt wording by
+ * `classifyTheme` (the prompt bank only carries one coarse topicGroup).
+ */
+export type EssayTheme =
+  | 'workplace'
+  | 'business-consumer'
+  | 'technology'
+  | 'education-career'
+  | 'money'
+  | 'city-environment';
+
 /** Where the writer stands on the statement — drives the planning panel. */
 export type EssayStance = 'agree' | 'disagree' | 'undecided';
 

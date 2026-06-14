@@ -60,7 +60,19 @@ const WritingList = () => {
   const conf = WRITING_TASKS[activeExam];
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
+  // TOEIC Writing Part 3 (Opinion Essay) has its own module with a planning
+  // panel and TOEIC-specific scoring — route there instead of the generic editor.
+  const isToeicEssay = activeExam === 'TOEIC' && activeTask.key === 'essay';
+  const startPractice = (practice: Practice) => {
+    if (isToeicEssay) {
+      navigate('/writing/toeic-p3/session', { state: { practice } });
+    } else {
+      navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+    }
+  };
+
   const [shuffleSeed, setShuffleSeed] = useState(0);
+  const [activeGroup, setActiveGroup] = useState<string>('all');
 
   const allPractices: Practice[] = useMemo(() => {
     // Describe a Picture (TOEIC Writing) reuses the same curated photo set as
@@ -79,17 +91,44 @@ const WritingList = () => {
     return getExamTopics(activeExam, 'Writing', activeTask.section);
   }, [activeExam, activeTask.key, activeTask.section]);
 
+  // Topic groups available for the active task (e.g. IELTS Task 2 essay themes,
+  // Task 1 General letter types), sorted by how many prompts each holds.
+  const topicGroups: [string, number][] = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const practice of allPractices) {
+      if (!practice.topicGroup) continue;
+      counts.set(practice.topicGroup, (counts.get(practice.topicGroup) ?? 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  }, [allPractices]);
+
+  // Only worth showing a topic picker when the task spans 2+ groups.
+  const showTopicChips = topicGroups.length >= 2;
+
+  const groupedPractices: Practice[] = useMemo(
+    () =>
+      activeGroup === 'all' || !showTopicChips
+        ? allPractices
+        : allPractices.filter((practice) => practice.topicGroup === activeGroup),
+    [allPractices, activeGroup, showTopicChips],
+  );
+
   // The IELTS banks now hold 300+ prompts per part — show a random sample so
   // the grid stays fast; "Shuffle" draws a fresh set.
   const practices: Practice[] = useMemo(() => {
     void shuffleSeed;
-    if (allPractices.length <= 24) return allPractices;
-    return [...allPractices].sort(() => 0.5 - Math.random()).slice(0, 24);
-  }, [allPractices, shuffleSeed]);
+    if (groupedPractices.length <= 24) return groupedPractices;
+    return [...groupedPractices].sort(() => 0.5 - Math.random()).slice(0, 24);
+  }, [groupedPractices, shuffleSeed]);
 
   useEffect(() => {
     setActiveTaskKey(WRITING_TASKS[activeExam].tasks[0].key);
   }, [activeExam]);
+
+  // Reset the topic filter whenever the exam or task changes.
+  useEffect(() => {
+    setActiveGroup('all');
+  }, [activeExam, activeTaskKey]);
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -154,13 +193,56 @@ const WritingList = () => {
         </div>
       </div>
 
+      {showTopicChips && (
+        <div className="mb-5">
+          <div className="flex items-center gap-2 mb-2.5 text-xs font-bold uppercase tracking-wider text-slate-400">
+            <FileText className="w-3.5 h-3.5" /> Choose a topic
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {([['all', allPractices.length], ...topicGroups] as [string, number][]).map(([group, count]) => {
+              const on = activeGroup === group;
+              return (
+                <button
+                  key={group}
+                  type="button"
+                  onClick={() => setActiveGroup(group)}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors',
+                    on
+                      ? 'bg-orange-500 text-white border-orange-500 shadow-sm shadow-orange-500/20'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-700',
+                  )}
+                >
+                  {group === 'all' ? 'All topics' : group}
+                  <span className={cn(
+                    'px-1.5 py-0.5 rounded-md text-[10px] tabular-nums',
+                    on ? 'bg-white/20' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300',
+                  )}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 mb-4 text-sm">
         <span className="text-orange-500">{activeTask.icon}</span>
         <span className="font-bold text-slate-700 dark:text-slate-200">{activeTask.label}</span>
         <span className="text-slate-400 dark:text-slate-500">
-          · {practices.length < allPractices.length ? `${practices.length} of ${allPractices.length}` : practices.length} prompts
+          · {practices.length < groupedPractices.length ? `${practices.length} of ${groupedPractices.length}` : practices.length} prompts
         </span>
-        {practices.length < allPractices.length && (
+        {isToeicEssay && (
+          <button
+            type="button"
+            onClick={() => navigate('/writing/toeic-p3')}
+            className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+          >
+            <FileText className="w-3.5 h-3.5" /> Part 3 Guide
+          </button>
+        )}
+        {practices.length < groupedPractices.length && (
           <button
             type="button"
             onClick={() => setShuffleSeed((s) => s + 1)}
@@ -178,13 +260,13 @@ const WritingList = () => {
               key={practice.id}
               role="button"
               tabIndex={0}
-              onClick={() => navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } })}
+              onClick={() => startPractice(practice)}
               onMouseEnter={() => practice.image && preloadImage(practice.image)}
               onFocus={() => practice.image && preloadImage(practice.image)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+                  startPractice(practice);
                 }
               }}
               className="gs-wr-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
@@ -230,7 +312,7 @@ const WritingList = () => {
               <button
                 onClick={(event) => {
                   event.stopPropagation();
-                  navigate('/writing/editor', { state: { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label } });
+                  startPractice(practice);
                 }}
                 className="w-full flex items-center justify-center gap-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 hover:bg-orange-600 hover:text-white dark:hover:bg-orange-500 py-3 rounded-xl font-semibold transition-colors"
               >

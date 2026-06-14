@@ -120,6 +120,9 @@ export const getExamTopics = (
         if (img) {
           practice.image = img;
         }
+        if (topic.topicGroup) {
+          practice.topicGroup = topic.topicGroup;
+        }
         practices.push(practice);
       });
     }

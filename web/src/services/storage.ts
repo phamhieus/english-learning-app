@@ -7,6 +7,8 @@ export interface Practice {
   type: string;
   focus?: string;
   image?: string;
+  /** Subject grouping from the topic bank (e.g. "Education", "Formal Letter"). */
+  topicGroup?: string;
 }
 
 export interface HistoryItem {

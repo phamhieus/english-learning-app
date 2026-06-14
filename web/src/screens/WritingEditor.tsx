@@ -9,7 +9,7 @@ import { evaluateWriting, generateTeacherFeedback } from '../services/ai';
 import { getWritingTaskTiming } from '../services/examTiming';
 import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
-import ChartPrompt from '../features/writing/IELTSChart';
+import ChartPrompt, { describeChartData } from '../features/writing/IELTSChart';
 
 const pictureVocab = ['foreground', 'background', 'people', 'objects', 'atmosphere'];
 const colorWords = ['black', 'white', 'blue', 'red', 'green', 'yellow', 'orange', 'grey', 'gray', 'brown', 'bright', 'dark'];
@@ -190,16 +190,20 @@ const WritingEditor = () => {
         ? `${practice.title}\nWrite a picture description paragraph.`
         : practice.title;
 
+      // Task 1 charts are drawn from known data, so hand the grader the exact
+      // figures to fact-check the candidate's report against.
+      const chartData = isChartTask ? describeChartData(practice.title) : undefined;
+
       // Run both evaluations in parallel: legacy (for WritingResult) + rich teacher feedback
       const feedbackModule = activeExam === 'IELTS'
         ? (taskKey === 't2' ? 'ielts-writing-task-2' : 'ielts-writing-task-1')
         : 'ielts-writing-task-1'; // TOEIC uses the same page structure
 
       const [result, teacherFeedback] = await Promise.all([
-        evaluateWriting(settings, prompt, text, taskKey),
+        evaluateWriting(settings, prompt, text, taskKey, chartData),
         generateTeacherFeedback(settings, feedbackModule as import('../features/feedback/types/feedback.types').FeedbackModule, {
           originalAnswer: text,
-          prompt,
+          prompt: chartData ? `${prompt}\n\n${chartData}` : prompt,
           taskKey,
         }).catch(() => null), // teacher feedback is non-critical
       ]);

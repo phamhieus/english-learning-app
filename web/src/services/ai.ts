@@ -415,12 +415,19 @@ function calibrateIeltsWritingResult(result: WritingFeedback, text: string, task
   };
 }
 
-export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = ''): Promise<WritingFeedback> => {
+export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = '', chartData?: string): Promise<WritingFeedback> => {
   const exam = settings.primaryExam;
   const scoringInstruction = buildScoringInstruction(exam, taskKey, prompt);
 
+  // For Task 1 visuals the app renders the chart from known data (not an image),
+  // so we hand the grader the EXACT figures. It can then fact-check the
+  // candidate's reported numbers, trends, and comparisons rather than guessing.
+  const chartReference = chartData
+    ? `\nThe candidate was shown a Task 1 visual containing EXACTLY this data:\n${chartData}\nFact-check every figure, trend, and comparison the candidate makes against this data. Treat any wrong number, misread trend (e.g. saying "rose" when it fell), or invented/extrapolated data point as a Task Achievement error: deduct accordingly, and list each inaccuracy specifically in "corrections" and "overallFeedback".`
+    : '';
+
   const systemInstruction = `You are an expert ${exam} English writing coach. Evaluate the user's writing based on the given prompt and task type.
-${scoringInstruction}
+${scoringInstruction}${chartReference}
 Return your evaluation strictly as a JSON object matching this schema:
 {
   "score": number (0-100 overall score),

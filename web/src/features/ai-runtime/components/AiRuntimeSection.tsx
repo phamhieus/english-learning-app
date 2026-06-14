@@ -25,6 +25,7 @@ import {
   type InstalledAiAvailability,
   type InstalledAiTool,
 } from '../../../services/local-ai-helper';
+import { isNativeBridgeAvailable } from '../../../services/native-bridge';
 
 const TOOL_ICON: Record<string, typeof Terminal> = {
   'codex-cli': Terminal,
@@ -190,12 +191,18 @@ export function AiRuntimeSection({ cloudConfig }: { cloudConfig: ReactNode }) {
     selectedInstalledToolId, setSelectedInstalledToolId,
   } = useSettings();
 
+  // Installed AI is only offered inside the Uno desktop app, which exposes the
+  // native WebView bridge. On the plain web build we hide the whole runtime
+  // picker and show only the Cloud AI provider config.
+  const isApp = isNativeBridgeAvailable();
+
   const [availability, setAvailability] = useState<InstalledAiAvailability>('checking');
   const [tools, setTools] = useState<InstalledAiTool[]>([]);
   // Bumping the sequence re-runs the helper check effect below.
   const [checkSeq, setCheckSeq] = useState(0);
 
   useEffect(() => {
+    if (!isApp) return;
     let cancelled = false;
     const load = async () => {
       try {
@@ -213,7 +220,13 @@ export function AiRuntimeSection({ cloudConfig }: { cloudConfig: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [checkSeq]);
+  }, [checkSeq, isApp]);
+
+  // On web, never leave the runtime stuck on "installed" (e.g. carried over in
+  // localStorage) — force Cloud AI so requests always have a working runtime.
+  useEffect(() => {
+    if (!isApp && aiRuntimeType !== 'cloud') setAiRuntimeType('cloud');
+  }, [isApp, aiRuntimeType, setAiRuntimeType]);
 
   // "Check again" — flips back to the checking state before re-querying.
   const runCheck = useCallback(() => {
@@ -231,6 +244,11 @@ export function AiRuntimeSection({ cloudConfig }: { cloudConfig: ReactNode }) {
   // Warn and wait for explicit confirmation — never switch silently.
   const showSelectedToolWarning =
     checkDone && aiRuntimeType === 'installed' && (!canSelectInstalled || (!!selectedInstalledToolId && !isSavedToolReady));
+
+  // Web build: only the Cloud AI provider config, no runtime picker.
+  if (!isApp) {
+    return <>{cloudConfig}</>;
+  }
 
   const notReadyAction = (label: string) => () =>
     toast.info(`${label} is not available yet — the Install AI screen ships in a later update.`);

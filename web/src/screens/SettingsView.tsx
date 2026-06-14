@@ -202,8 +202,8 @@ const SettingsView = () => {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {([
-              { value: 'IELTS' as const, title: 'IELTS', sub: 'Band 0-9 · Speaking parts 1-3 · Writing tasks 1-2', accent: 'cyan' },
-              { value: 'TOEIC' as const, title: 'TOEIC', sub: 'Speaking 11 questions · Writing 8 questions', accent: 'blue' },
+              { value: 'IELTS' as const, title: 'IELTS', sub: 'Speaking parts 1-3 · Writing tasks 1-2', accent: 'cyan' },
+              { value: 'TOEIC' as const, title: 'TOEIC', sub: 'Speaking · Writing', accent: 'blue' },
             ]).map((opt) => {
               const active = primaryExam === opt.value;
               return (

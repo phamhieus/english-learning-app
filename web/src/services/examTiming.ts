@@ -51,8 +51,8 @@ export const IELTS_SPEAKING_TIMING = {
   p3: { minutesLabel: '4–5 min' },
 } as const;
 
-export const IELTS_P2_PREP_SECONDS = IELTS_SPEAKING_TIMING.p2.prepSeconds;
-export const IELTS_P2_LONG_TURN_SECONDS = IELTS_SPEAKING_TIMING.p2.longTurnSeconds;
+export const IELTS_P2_PREP_SECONDS: number = IELTS_SPEAKING_TIMING.p2.prepSeconds;
+export const IELTS_P2_LONG_TURN_SECONDS: number = IELTS_SPEAKING_TIMING.p2.longTurnSeconds;
 
 export interface WritingTaskTiming {
   /** Total seconds allowed for the task. */

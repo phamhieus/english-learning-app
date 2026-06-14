@@ -26,16 +26,73 @@ const CH = CB - CT;  // 214
 interface ChartProps { title: string; learning?: boolean; }
 
 // ---------------------------------------------------------------------------
-// Bar Chart
+// Datasets — single source of truth for BOTH the rendered SVG and the grader.
+// The AI scorer is given the exact figures below (see describeChartData), so it
+// never has to "read" the chart image; data accuracy is guaranteed.
 // ---------------------------------------------------------------------------
-const BarChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
-  const rows = [
+export const BAR_CHART = {
+  defaultTitle: 'Social media usage (%) by country, 2015 and 2020',
+  unit: 'Percentage (%)',
+  groups: ['2015', '2020'] as const,
+  rows: [
     { cat: 'USA',    v1: 72, v2: 82 },
     { cat: 'UK',     v1: 58, v2: 68 },
     { cat: 'Japan',  v1: 65, v2: 71 },
     { cat: 'Brazil', v1: 43, v2: 55 },
     { cat: 'India',  v1: 31, v2: 48 },
-  ];
+  ],
+} as const;
+
+export const LINE_CHART = {
+  defaultTitle: 'Tourist arrivals in three countries, 1990–2015',
+  unit: 'Millions',
+  years: [1990, 1995, 2000, 2005, 2010, 2015],
+  series: [
+    { name: 'Country A', data: [5,  8,  12, 18, 22, 24] },
+    { name: 'Country B', data: [10, 13, 10,  8, 11, 14] },
+    { name: 'Country C', data: [3,   4,  6,  9,  7, 10] },
+  ],
+};
+
+export const PIE_CHART = {
+  defaultTitle: 'Household expenditure in Australia (%)',
+  slices: [
+    { label: 'Housing',   pct: 30 },
+    { label: 'Food',      pct: 25 },
+    { label: 'Transport', pct: 20 },
+    { label: 'Health',    pct: 15 },
+    { label: 'Other',     pct: 10 },
+  ],
+} as const;
+
+export const TABLE_CHART = {
+  defaultTitle: 'Water consumption per capita (litres/day)',
+  note: 'litres per person per day',
+  headers: ['Country', '2000', '2005', '2010', '2015'],
+  rows: [
+    ['Japan',     '185', '192', '198', '205'],
+    ['UK',        '143', '155', '161', '168'],
+    ['Australia', '210', '225', '231', '248'],
+    ['Canada',    '167', '174', '180', '195'],
+  ],
+} as const;
+
+export const PROCESS_CHART = {
+  defaultTitle: 'The process of glass recycling',
+  steps: ['Raw materials', 'Sorting & cleaning', 'Crushing & melting', 'Moulding & shaping', 'Quality check', 'Final product'],
+} as const;
+
+export const MAP_CHART = {
+  defaultTitle: 'Town plan: 1980 and 2020',
+  before: { year: '1980', features: ['Farm land', 'Housing', 'School', 'Main Road', 'River'] },
+  after: { year: '2020', features: ['Shopping Centre (replaced farm land)', 'Apartments (replaced housing)', 'School (unchanged)', 'Dual Carriageway (widened Main Road)', 'River (unchanged)'] },
+} as const;
+
+// ---------------------------------------------------------------------------
+// Bar Chart
+// ---------------------------------------------------------------------------
+const BarChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
+  const rows = BAR_CHART.rows;
   const maxY = 100;
   const yTicks = [0, 20, 40, 60, 80, 100];
   const ys = (v: number) => CB - (v / maxY) * CH;
@@ -48,7 +105,7 @@ const BarChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
     <>
       <rect width="500" height="310" fill="white" />
       <text x="250" y="16" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#111">
-        {title || 'Social media usage (%) by country, 2015 and 2020'}
+        {title || BAR_CHART.defaultTitle}
       </text>
       <text x="14" y={CT + CH / 2} textAnchor="middle" fontSize="9" fill="#555"
         transform={`rotate(-90,14,${CT + CH / 2})`}>Percentage (%)</text>
@@ -98,12 +155,9 @@ const BarChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
 // Line Graph
 // ---------------------------------------------------------------------------
 const LineChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
-  const years = [1990, 1995, 2000, 2005, 2010, 2015];
-  const series = [
-    { name: 'Country A', data: [5,  8,  12, 18, 22, 24], dash: '',    color: CC[0] },
-    { name: 'Country B', data: [10, 13, 10,  8, 11, 14], dash: '6 3', color: CC[1] },
-    { name: 'Country C', data: [3,   4,  6,  9,  7, 10], dash: '2 5', color: CC[2] },
-  ];
+  const years = LINE_CHART.years;
+  const DASHES = ['', '6 3', '2 5'];
+  const series = LINE_CHART.series.map((s, i) => ({ ...s, dash: DASHES[i] ?? '', color: CC[i % CC.length] }));
   const maxY = 25;
   const yTicks = [0, 5, 10, 15, 20, 25];
   const xs = (i: number) => CL + (i / (years.length - 1)) * CW;
@@ -165,13 +219,7 @@ const LineChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
 // ---------------------------------------------------------------------------
 const PieChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
   const pcx = 185; const pcy = 160; const r = 105;
-  const slices = [
-    { label: 'Housing',   pct: 30, color: CC[0] },
-    { label: 'Food',      pct: 25, color: CC[1] },
-    { label: 'Transport', pct: 20, color: CC[2] },
-    { label: 'Health',    pct: 15, color: CC[3] },
-    { label: 'Other',     pct: 10, color: CC[4] },
-  ];
+  const slices = PIE_CHART.slices.map((s, i) => ({ ...s, color: CC[i % CC.length] }));
   const maxPct = Math.max(...slices.map(s => s.pct));
   let angle = -Math.PI / 2;
   const rendered = slices.map((s) => {
@@ -190,7 +238,7 @@ const PieChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
     <>
       <rect width="500" height="310" fill="white" />
       <text x="250" y="16" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#111">
-        {title || 'Household expenditure in Australia (%)'}
+        {title || PIE_CHART.defaultTitle}
       </text>
       {rendered.map(({ d, color, label, pct, midAngle }) => {
         const isMax = learning && pct === maxPct;
@@ -218,25 +266,20 @@ const PieChartSVG: React.FC<ChartProps> = ({ title, learning }) => {
 // Table
 // ---------------------------------------------------------------------------
 const TableChartSVG: React.FC<ChartProps> = ({ title }) => {
-  const headers = ['Country', '2000', '2005', '2010', '2015'];
+  const headers = TABLE_CHART.headers;
   const cW = [116, 77, 77, 77, 77]; // sum = 424 = CW
   const colX: number[] = [];
   let cx = CL;
   cW.forEach(w => { colX.push(cx); cx += w; });
   const rowH = 38;
-  const dataRows = [
-    ['Japan',     '185', '192', '198', '205'],
-    ['UK',        '143', '155', '161', '168'],
-    ['Australia', '210', '225', '231', '248'],
-    ['Canada',    '167', '174', '180', '195'],
-  ];
+  const dataRows = TABLE_CHART.rows;
   const tableH = (dataRows.length + 1) * rowH;
 
   return (
     <>
       <rect width="500" height="310" fill="white" />
       <text x="250" y="16" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#111">
-        {title || 'Water consumption per capita (litres/day)'}
+        {title || TABLE_CHART.defaultTitle}
       </text>
       <rect x={CL} y={CT} width={CW} height={rowH} fill={CC[0]} />
       {headers.map((h, i) => (
@@ -260,7 +303,7 @@ const TableChartSVG: React.FC<ChartProps> = ({ title }) => {
         <line key={i} x1={CL} y1={y} x2={CR} y2={y} stroke="#b8c9e0" strokeWidth="1" />
       ))}
       <rect x={CL} y={CT} width={CW} height={tableH} fill="none" stroke={CC[0]} strokeWidth="1.5" />
-      <text x={CL} y={CT + tableH + 16} fontSize="9" fill="#666" fontStyle="italic">* litres per person per day</text>
+      <text x={CL} y={CT + tableH + 16} fontSize="9" fill="#666" fontStyle="italic">* {TABLE_CHART.note}</text>
     </>
   );
 };
@@ -298,7 +341,7 @@ const ProcessChartSVG: React.FC<ChartProps> = ({ title }) => {
     <>
       <rect width="500" height="310" fill="white" />
       <text x="250" y="16" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#111">
-        {title || 'The process of glass recycling'}
+        {title || PROCESS_CHART.defaultTitle}
       </text>
       <defs>
         <marker id="ielts-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -332,7 +375,7 @@ const MapChartSVG: React.FC<ChartProps> = ({ title }) => {
     <>
       <rect width="500" height="310" fill="white" />
       <text x="250" y="16" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#111">
-        {title || 'Town plan: 1980 and 2020'}
+        {title || MAP_CHART.defaultTitle}
       </text>
       <text x={CL + hc} y={CT - 6} textAnchor="middle" fontSize="10" fontWeight="bold" fill="#444">1980</text>
       <text x={midX + hc} y={CT - 6} textAnchor="middle" fontSize="10" fontWeight="bold" fill="#444">2020</text>
@@ -392,6 +435,44 @@ export const CHART_TYPE_LABELS: Record<ChartType, string> = {
   table:   'Table',
   process: 'Process Diagram',
   map:     'Map / Plan',
+};
+
+// ---------------------------------------------------------------------------
+// Data serialiser — turns the exact rendered figures into compact text so the
+// AI grader can verify the candidate's report against the real data instead of
+// trying to "see" the chart. Works with any provider (no vision needed).
+// ---------------------------------------------------------------------------
+export const describeChartData = (title: string): string => {
+  const type = detectChartType(title);
+  switch (type) {
+    case 'bar': {
+      const { unit, groups, rows } = BAR_CHART;
+      const lines = rows.map(r => `  ${r.cat}: ${groups[0]} = ${r.v1}, ${groups[1]} = ${r.v2}`);
+      return `Visual type: Grouped bar chart. Unit: ${unit}. Compared groups: ${groups.join(' vs ')}.\n${lines.join('\n')}`;
+    }
+    case 'line': {
+      const { unit, years, series } = LINE_CHART;
+      const lines = series.map(s => `  ${s.name}: ${s.data.map((v, i) => `${years[i]}=${v}`).join(', ')}`);
+      return `Visual type: Line graph. Unit: ${unit}. Time points: ${years.join(', ')}.\n${lines.join('\n')}`;
+    }
+    case 'pie': {
+      const lines = PIE_CHART.slices.map(s => `  ${s.label}: ${s.pct}%`);
+      return `Visual type: Pie chart (shares of a whole, total 100%).\n${lines.join('\n')}`;
+    }
+    case 'table': {
+      const { headers, rows, note } = TABLE_CHART;
+      const body = rows.map(r => `  ${r.join(' | ')}`).join('\n');
+      return `Visual type: Table (${note}).\n  ${headers.join(' | ')}\n${body}`;
+    }
+    case 'process': {
+      const lines = PROCESS_CHART.steps.map((s, i) => `  ${i + 1}. ${s}`);
+      return `Visual type: Process diagram (sequential stages, in order).\n${lines.join('\n')}`;
+    }
+    case 'map': {
+      const { before, after } = MAP_CHART;
+      return `Visual type: Map / plan comparison across two time periods.\n  ${before.year}: ${before.features.join('; ')}\n  ${after.year}: ${after.features.join('; ')}`;
+    }
+  }
 };
 
 // Vocabulary shown in Learning Mode (WritingResult)

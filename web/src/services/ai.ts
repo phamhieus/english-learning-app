@@ -153,11 +153,29 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
 
 const buildScoringInstruction = (exam: string, taskKey: string, prompt: string): string => {
   if (exam === 'TOEIC') {
-    return `Target exam: TOEIC Writing.
+    const toeicBase = `Target exam: TOEIC Writing.
 Use TOEIC Speaking/Writing style scoring. The overall "score" is 0-100 for the app UI.
 The "bandScore" field must be a TOEIC scaled writing score string from 0-200, for example "160/200". Do not return IELTS bands.
 Sub-score fields should be TOEIC-style 0-100 strings, for example "82/100".
 Score conservatively like a real test rater: do not give high scores to short, generic, off-task, poorly organized, or template-like responses.`;
+
+    if (taskKey === 'essay') {
+      return `${toeicBase}
+Task type: TOEIC Writing Part 3 / Question 8 (Write an Opinion Essay).
+Apply the official ETS 0-5 holistic scale, then map it onto the app fields:
+  - 5 → strong, well-organised essay with a clear opinion, varied vocabulary, and almost no grammar errors → bandScore ~170-200/200.
+  - 4 → adequate arguments supported by examples, logical organisation, minor errors → bandScore ~140-165/200.
+  - 3 → opinion present but limited examples, unclear organisation, basic vocabulary → bandScore ~110-135/200.
+  - 2 → minimal examples, weak vocabulary, frequent grammar errors → bandScore ~70-105/200.
+  - 1 → largely off-topic or severely limited → bandScore ~30-65/200.
+  - 0 → no response or completely irrelevant → bandScore "0/200".
+Minimum recommended length is 300 words. Deduct clearly for essays under 300 words, and cap short essays (under ~200 words) at a 3.
+Reward: a clear thesis stating the writer's position; two developed body paragraphs (point → explanation → specific example); logical connectors; a conclusion that restates the opinion.
+Penalise: no clear position, listing without development, missing examples, memorised templates, off-topic content, fewer than 4 paragraphs.
+In overallFeedback, state the 0-5 band the essay would earn and the single most impactful improvement.`;
+    }
+
+    return toeicBase;
   }
 
   const base = `Target exam: IELTS Writing.
@@ -1090,6 +1108,13 @@ You are an expert IELTS examiner providing detailed teacher-style feedback on an
 Apply the official IELTS Task 2 rubric: Task Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy.
 Task 2 criterion is called "Task Response" (not "Task Achievement").
 Check for: clear consistent position, fully developed arguments, specific examples, logical paragraphing, appropriate conclusion.`,
+    'toeic-writing-essay': `
+You are an expert TOEIC Writing rater providing detailed teacher-style feedback on a Part 3 / Question 8 opinion essay.
+Apply the official ETS 0-5 holistic scale. Do NOT use IELTS bands. Use scoreLabel like "4/5" and a 0-5 overallScore.
+Score on four criteria: Opinion & Support (clear position, reasons, specific examples), Organisation (intro, two developed body paragraphs, conclusion, connectors), Vocabulary (range and accuracy), Grammar.
+A 5 needs a clear thesis, fully developed reasons with concrete examples, varied vocabulary, and almost no grammar errors.
+Penalise: no clear position, listing without development, missing examples, memorised templates, off-topic content, and essays under 300 words.
+In teacherComment, state the 0-5 band and the single most impactful next step.`,
     'ielts-speaking': `
 You are an expert IELTS Speaking examiner providing detailed teacher-style feedback.
 Apply the official IELTS Speaking rubric: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation.

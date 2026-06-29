@@ -306,7 +306,7 @@ const FreeMode = () => {
           <Wand2 className="w-5 h-5 text-fuchsia-500" /> Create from any text
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-          Paste a paragraph, script, or song lyric. Lingua reads it aloud, splits it into segments, and scores your shadowing.
+          Paste a paragraph, script, or song lyric. Ovvie reads it aloud, splits it into segments, and scores your shadowing.
         </p>
         <textarea
           value={text}

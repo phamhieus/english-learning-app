@@ -134,7 +134,7 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
       >
         <img
           src="/icon.svg"
-          alt="Lingua"
+          alt="Ovvie"
           className={cn(
             'shrink-0 drop-shadow-[0_6px_16px_rgba(156,102,250,0.3)] animate-[sb-bob_4s_ease-in-out_infinite]',
             'transition-[width,height] duration-300',
@@ -148,7 +148,7 @@ export const Sidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
           aria-hidden={isCollapsed}
         >
           <h1 className="font-bold text-xl leading-tight tracking-tight text-[var(--foreground)] whitespace-nowrap">
-            Lingua
+            Ovvie
           </h1>
           <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold tracking-[0.18em] uppercase whitespace-nowrap">
             AI Native

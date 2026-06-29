@@ -423,7 +423,7 @@ function MyVideosEmptyState({ onAdd }: { onAdd: () => void }) {
       </div>
       <h2 className="text-2xl font-bold mb-2">No videos yet</h2>
       <p className="text-slate-500 dark:text-slate-400 max-w-md mb-7 leading-relaxed">
-        Upload your own English video to create a shadowing lesson — Lingua will automatically transcribe and segment the audio for you to practice.
+        Upload your own English video to create a shadowing lesson — Ovvie will automatically transcribe and segment the audio for you to practice.
       </p>
       <button onClick={onAdd} className="h-12 px-6 bg-indigo-600 text-white rounded-2xl font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
         <Upload className="w-5 h-5" /> Upload Video

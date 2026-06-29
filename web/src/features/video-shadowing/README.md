@@ -11,7 +11,7 @@ Built and working now:
 
 - Library (VOA + My Videos), VOA Lesson Detail, Add Video (Upload / Paste link),
   Script Processing, Review Segments, Practice, Result — all wired into routing
-  and matching the Lingua design (light + dark).
+  and matching the Ovvie design (light + dark).
 - Local storage layer: IndexedDB metadata + OPFS file storage (with an
   IndexedDB-blob fallback when OPFS is unavailable). Cascade cleanup on delete.
 - Subtitle import (`.srt` / `.vtt`) → segments. **Upload video + subtitle is a

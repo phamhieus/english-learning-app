@@ -210,9 +210,9 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         {/* Animated icon — SVG loaded inline so .eye/.mouth/.sparkle classes work */}
         <div ref={markRef} className="lg-mark" />
 
-        {/* Wordmark: "Lingua" with purple dot on the i */}
+        {/* Wordmark: "Ovvie" with purple dot on the i */}
         <div className="lg-wordmark">
-          L<span className="i-wrap">i<span className="i-dot" /></span>ngua
+          Ovv<span className="i-wrap">i<span className="i-dot" /></span>e
         </div>
 
         {/* Loading indicator */}

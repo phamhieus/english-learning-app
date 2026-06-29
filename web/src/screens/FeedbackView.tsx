@@ -41,7 +41,7 @@ const FeedbackView = () => {
 
   const activeType = types.find((t) => t.key === type) || types[0];
 
-  const defaultSubject = `[Lingua · Feedback] ${activeType.label}`;
+  const defaultSubject = `[Ovvie · Feedback] ${activeType.label}`;
   const effectiveSubject = subject.trim() || defaultSubject;
   const body = useMemo(() => {
     const lines = [
@@ -50,7 +50,7 @@ const FeedbackView = () => {
       '—',
       `Type: ${activeType.label}`,
       email ? `Reply to: ${email}` : null,
-      'Sent from Lingua · AI Native',
+      'Sent from Ovvie · AI Native',
     ].filter(Boolean);
     return lines.join('\n');
   }, [msg, email, activeType.label]);
@@ -70,7 +70,7 @@ const FeedbackView = () => {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold mb-1.5">Send Feedback</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-xl">
-              Lingua gets better every day because of you. Share ideas, report bugs, or just say something kind — we read everything.
+              Ovvie gets better every day because of you. Share ideas, report bugs, or just say something kind — we read everything.
             </p>
           </div>
         </div>
@@ -120,7 +120,7 @@ const FeedbackView = () => {
               placeholder={
                 type === 'bug'
                   ? 'Which screen did the bug occur on? What steps triggered it?'
-                  : 'What would you like Lingua to improve? The more specific, the better.'
+                  : 'What would you like Ovvie to improve? The more specific, the better.'
               }
               className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-4 outline-none text-[15px] leading-relaxed resize-none focus:bg-white dark:focus:bg-slate-800 focus:border-indigo-400 dark:focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />

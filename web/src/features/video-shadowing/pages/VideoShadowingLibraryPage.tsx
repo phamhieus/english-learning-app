@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, BadgeCheck, Folder, Upload, Clapperboard, Sparkles, Loader2, Play, AlertTriangle, Rocket } from 'lucide-react';
+import { Search, BadgeCheck, Folder, Clapperboard, Sparkles, Loader2, Play, AlertTriangle, Rocket } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useToast } from '../../../components/useToast';
 import { useVideoShadowingLibrary } from '../hooks/useVideoShadowingLibrary';
@@ -173,12 +173,6 @@ export default function VideoShadowingLibraryPage() {
               className="w-full sm:w-56 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-500/40"
             />
           </div>
-          <button
-            onClick={() => navigate('/video-shadowing/add')}
-            className="h-10 px-4 bg-indigo-600 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 transition shrink-0"
-          >
-            <Plus className="w-4 h-4" /> Add
-          </button>
         </div>
       </div>
 
@@ -238,7 +232,7 @@ export default function VideoShadowingLibraryPage() {
       {/* Grid / loading / empty state */}
       {tab === 'mine' ? (
         myLessons.length === 0 ? (
-          <MyVideosEmptyState onAdd={() => navigate('/video-shadowing/add')} />
+          <MyVideosEmptyState />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
             {myLessons.map((l) => (
@@ -410,25 +404,17 @@ function LiveItemCard({
   );
 }
 
-function MyVideosEmptyState({ onAdd }: { onAdd: () => void }) {
+function MyVideosEmptyState() {
   return (
     <div className="glass-card rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center py-20 px-8 mt-2">
-      <div className="relative mb-7">
-        <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-500/20 dark:to-purple-500/20 flex items-center justify-center">
-          <Clapperboard className="w-14 h-14 text-indigo-500/90" />
-        </div>
-        <div className="absolute -right-3 -bottom-3 w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 rotate-6">
-          <Upload className="w-6 h-6" />
-        </div>
+      <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-500/20 dark:to-purple-500/20 flex items-center justify-center mb-7">
+        <Clapperboard className="w-14 h-14 text-indigo-500/90" />
       </div>
       <h2 className="text-2xl font-bold mb-2">No videos yet</h2>
-      <p className="text-slate-500 dark:text-slate-400 max-w-md mb-7 leading-relaxed">
-        Upload your own English video to create a shadowing lesson — Ovvie will automatically transcribe and segment the audio for you to practice.
+      <p className="text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
+        Videos you practice from the <span className="font-semibold">Library</span> and{' '}
+        <span className="font-semibold">NASA</span> tabs will be saved here.
       </p>
-      <button onClick={onAdd} className="h-12 px-6 bg-indigo-600 text-white rounded-2xl font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 transition">
-        <Upload className="w-5 h-5" /> Upload Video
-      </button>
-      <p className="text-xs text-slate-400 mt-4">MP4, MOV, WebM · up to 300MB · .srt/.vtt subtitles are optional</p>
     </div>
   );
 }

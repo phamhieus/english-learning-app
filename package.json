@@ -1,0 +1,22 @@
+{
+  "name": "english-learning-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "build:uno": "npm --prefix web run build:uno",
+    "lint": "npm --prefix web run lint",
+    "test": "npm --prefix web run test",
+    "test:watch": "npm --prefix web run test:watch",
+    "curate:archive": "npm --prefix web run curate:archive",
+    "proxy": "npm --prefix web run proxy",
+    "proxy:dev": "npm --prefix web run proxy:dev",
+    "proxy:deploy": "npm --prefix web run proxy:deploy",
+    "preview": "npm --prefix web run preview",
+    "fetch:voa": "npm --prefix web run fetch:voa",
+    "deploy": "npm --prefix web run deploy",
+    "install:web": "npm --prefix web install",
+    "postinstall": "npm --prefix web install"
+  }
+}

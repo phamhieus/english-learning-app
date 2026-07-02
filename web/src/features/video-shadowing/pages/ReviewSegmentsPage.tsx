@@ -124,7 +124,7 @@ export default function ReviewSegmentsPage() {
           </div>
 
           <div className="flex justify-between items-center">
-            <button onClick={() => navigate('/video-shadowing/add')} className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+            <button onClick={() => navigate('/video-shadowing')} className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
             <div className="flex gap-2">

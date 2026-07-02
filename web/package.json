@@ -3,6 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "overrides": {
+    "onnxruntime-node": "npm:@favware/skip-dependency@latest",
+    "sharp": "npm:@favware/skip-dependency@latest"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -31,6 +38,7 @@
     "gsap": "^3.15.0",
     "hls.js": "^1.6.16",
     "lucide-react": "^1.16.0",
+    "onnxruntime-common": "1.22.0-dev.20250409-89f8206ba4",
     "openai": "^6.39.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

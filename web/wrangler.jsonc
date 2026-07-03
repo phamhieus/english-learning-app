@@ -2,20 +2,15 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "english-app",
   "compatibility_date": "2026-06-08",
-  // `wrangler deploy` runs this first, so a bare deploy (e.g. Cloudflare Workers
-  // Builds' default deploy command) self-builds — no separate CI build step
-  // needed. Do NOT remove: without it, CI deploys the unbuilt source dir.
-  "build": {
-    "command": "npm run build"
-  },
   "observability": {
     "enabled": true
   },
   "assets": {
-    // Explicit so `wrangler deploy` always uploads the built app, even without
-    // the @cloudflare/vite-plugin redirect (which only exists after a local
-    // build in this dir). Without it wrangler defaults to the config's own dir
-    // (web/) and hits the 25 MiB limit on public/ffmpeg/ffmpeg-core.wasm.
+    // Safety net: point wrangler at the build output. IMPORTANT: `wrangler
+    // deploy` must be preceded by `vite build` (use `npm run deploy`) — the
+    // @cloudflare/vite-plugin build is what generates the real deploy config.
+    // Deploying without building scans the raw web/ dir and hits the 25 MiB
+    // limit on public/ffmpeg/ffmpeg-core.wasm.
     "directory": "./dist",
     "not_found_handling": "single-page-application"
   },

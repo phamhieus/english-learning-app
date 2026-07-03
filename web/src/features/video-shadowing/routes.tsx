@@ -1,6 +1,5 @@
 import { Route } from 'react-router-dom';
 import VideoShadowingLibraryPage from './pages/VideoShadowingLibraryPage';
-import AddVideoShadowingPage from './pages/AddVideoShadowingPage';
 import ScriptProcessingPage from './pages/ScriptProcessingPage';
 import ReviewSegmentsPage from './pages/ReviewSegmentsPage';
 import VoaLessonDetailPage from './pages/VoaLessonDetailPage';
@@ -16,7 +15,6 @@ export function videoShadowingRoutes() {
   return (
     <>
       <Route path="/video-shadowing" element={<VideoShadowingLibraryPage />} />
-      <Route path="/video-shadowing/add" element={<AddVideoShadowingPage />} />
       <Route path="/video-shadowing/processing/:lessonId" element={<ScriptProcessingPage />} />
       <Route path="/video-shadowing/lessons/:lessonId" element={<VoaLessonDetailPage />} />
       <Route path="/video-shadowing/lessons/:lessonId/review" element={<ReviewSegmentsPage />} />

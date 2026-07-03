@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import {
   Wand2, Type, Pilcrow, MessagesSquare, Clapperboard,
-  Play, Check, Activity, Upload, Link, Sparkles, Plus, FileText,
+  Play, Check, Activity, Upload, Link, Sparkles, FileText,
   Quote, Clock, AlignLeft, CheckCircle2, Circle, Search,
   BadgeCheck, Folder, Shuffle,
 } from 'lucide-react';
@@ -482,12 +482,6 @@ const VideoMode = () => {
             Choose a VOA clip or one of your own videos, then shadow sentence by sentence.
           </p>
         </div>
-        <button
-          onClick={() => navigate('/video-shadowing/add')}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:scale-105 transition-transform"
-        >
-          <Plus className="w-4 h-4" /> Add Video
-        </button>
       </div>
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -566,22 +560,14 @@ const VideoMode = () => {
       ) : visibleCount === 0 ? (
         <div key={listKey} className="glass-card rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center py-14 px-8 animate-in fade-in zoom-in-95 duration-300">
           <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 text-orange-500 rounded-2xl flex items-center justify-center mb-4">
-            {tab === 'mine' ? <Upload className="w-8 h-8" /> : <Clapperboard className="w-8 h-8" />}
+            <Clapperboard className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-bold mb-2">{tab === 'mine' ? 'No videos yet' : 'No videos found'}</h3>
           <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md">
             {tab === 'mine'
-              ? 'Upload your own English video to create a shadowing lesson.'
+              ? 'Practice a video from the VOA Library — it will be saved here.'
               : 'Try another search or category.'}
           </p>
-          {tab === 'mine' && (
-            <button
-              onClick={() => navigate('/video-shadowing/add')}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/25"
-            >
-              <Upload className="w-4 h-4" /> Upload Video
-            </button>
-          )}
         </div>
       ) : (
         <div key={listKey} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
@@ -668,14 +654,6 @@ const ShadowingListPage = () => {
           </h1>
           <p className="text-slate-500 dark:text-slate-400">Choose how you want to shadow — from a single sentence to a full video.</p>
         </div>
-        {mode === 'video' && (
-          <button
-            onClick={() => navigate('/video-shadowing/add')}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:scale-105 transition-transform"
-          >
-            <Plus className="w-4 h-4" /> Add Video
-          </button>
-        )}
       </div>
 
       {/* Mode picker — mobile: horizontal scroll pills */}

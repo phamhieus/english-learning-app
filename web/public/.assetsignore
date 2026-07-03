@@ -1,0 +1,5 @@
+# ffmpeg.wasm single-thread core (~31 MB) exceeds Cloudflare's 25 MiB per-asset
+# limit. It is NOT shipped to the Cloudflare deploy — ffmpegService.ts falls back
+# to loading the core from the jsdelivr CDN at runtime. The Uno desktop build
+# keeps the same-origin copy in public/ffmpeg for offline use.
+ffmpeg/

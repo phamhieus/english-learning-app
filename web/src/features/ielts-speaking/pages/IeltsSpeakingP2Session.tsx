@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   ListTodo,
   RotateCcw,
+  SkipForward,
 } from 'lucide-react';
 import { cn } from '../../../components/classNames';
 import { useTheme } from '../../../components/useTheme';
@@ -32,6 +33,11 @@ const PREP_NOTICE_SECONDS = 40;   // amber — first gentle nudge
 const PREP_CAUTION_SECONDS = 20;  // orange — time getting short
 const PREP_WARNING_SECONDS = 10;  // red + shake + tick — urgent
 const PART2_CATEGORIES = Array.from(new Set(PART2_CUE_CARDS.map((card) => card.category)));
+
+// In a real IELTS Part 2 the examiner only asks 1–2 short rounding-off questions
+// after the long turn (asking all of them turns it into a Part 3 discussion).
+// Configurable here; clamped to 1–2 and never more than the card actually has.
+const ROUNDING_OFF_QUESTION_COUNT = 1;
 
 const IeltsSpeakingP2Session = () => {
   const { resolvedTheme } = useTheme();
@@ -58,6 +64,11 @@ const IeltsSpeakingP2Session = () => {
 
   const liveText = speech.transcript + (speech.interimTranscript ? ` ${speech.interimTranscript}` : '');
   const currentFollowUp = cueCard.roundingOffQuestions[roundingIndex];
+  // How many rounding-off questions this session actually asks (1–2, capped by the card).
+  const roundingOffTotal = Math.min(
+    Math.max(1, ROUNDING_OFF_QUESTION_COUNT),
+    cueCard.roundingOffQuestions.length,
+  );
 
   // Countdown beeps synthesised on the fly so the warning needs no audio asset.
   // Reuses a single AudioContext for the lifetime of the session.
@@ -182,6 +193,22 @@ const IeltsSpeakingP2Session = () => {
     speech.start();
   };
 
+  const goToResult = (roundingOff: IeltsP2AnswerInput[]) => {
+    speech.stop();
+    reader.stop();
+    setPhase('complete');
+    navigate('/speaking/ielts/result', {
+      state: {
+        part: 'part_2',
+        cueCard,
+        notes,
+        durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
+        longTurn: longTurnRef.current ?? longTurn,
+        roundingOff,
+      },
+    });
+  };
+
   const finishFollowUp = () => {
     if (!currentFollowUp) return;
     const nextAnswers = [
@@ -197,18 +224,8 @@ const IeltsSpeakingP2Session = () => {
     setRoundingAnswers(nextAnswers);
     speech.reset();
 
-    if (roundingIndex + 1 >= cueCard.roundingOffQuestions.length) {
-      setPhase('complete');
-      navigate('/speaking/ielts/result', {
-        state: {
-          part: 'part_2',
-          cueCard,
-          notes,
-          durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
-          longTurn: longTurnRef.current ?? longTurn,
-          roundingOff: nextAnswers,
-        },
-      });
+    if (roundingIndex + 1 >= roundingOffTotal) {
+      goToResult(nextAnswers);
       return;
     }
 
@@ -218,6 +235,13 @@ const IeltsSpeakingP2Session = () => {
     const next = cueCard.roundingOffQuestions[nextIndex];
     reader.speakSegments(makeVoiceReaderSegments([next.text]), { mode: 'single' });
     speech.start();
+  };
+
+  // Rounding-off isn't heavily assessed, so let the user skip straight to results
+  // with whatever answers they have already given.
+  const skipRoundingOff = () => {
+    speech.reset();
+    goToResult(roundingAnswers);
   };
 
   if (!selectedId) {
@@ -595,7 +619,7 @@ const IeltsSpeakingP2Session = () => {
                 IELTS
               </span>
               <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                Part 2 · Rounding-off · Q{roundingIndex + 1}/{cueCard.roundingOffQuestions.length}
+                Part 2 · Rounding-off{roundingOffTotal > 1 ? ` · Q${roundingIndex + 1}/${roundingOffTotal}` : ''}
               </span>
               {reader.status === 'playing' && (
                 <span className="flex items-center gap-1.5 text-xs text-slate-400">
@@ -608,7 +632,7 @@ const IeltsSpeakingP2Session = () => {
           <div className="shrink-0 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-              style={{ width: `${((roundingIndex + 0.5) / cueCard.roundingOffQuestions.length) * 100}%` }}
+              style={{ width: `${((roundingIndex + 0.5) / roundingOffTotal) * 100}%` }}
             />
           </div>
 
@@ -632,12 +656,18 @@ const IeltsSpeakingP2Session = () => {
             </div>
           </div>
 
-          <div className="shrink-0 pt-2">
+          <div className="shrink-0 pt-2 flex items-center gap-3">
+            <button
+              onClick={skipRoundingOff}
+              className="shrink-0 flex items-center justify-center gap-1.5 px-5 py-4 rounded-2xl font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              <SkipForward className="w-4 h-4" /> Skip
+            </button>
             <button
               onClick={finishFollowUp}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20 hover:scale-[1.01] transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20 hover:scale-[1.01] transition-all"
             >
-              {roundingIndex + 1 >= cueCard.roundingOffQuestions.length ? 'Finish Part 2' : 'Next question'}{' '}
+              {roundingIndex + 1 >= roundingOffTotal ? 'Finish Part 2' : 'Next question'}{' '}
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

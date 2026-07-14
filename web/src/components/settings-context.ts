@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-export type AIProvider = 'gemini' | 'openai' | 'deepseek' | 'grok' | 'qwen' | 'moonshot' | 'zhipu';
+export type AIProvider = 'gemini' | 'openai' | 'anthropic' | 'deepseek' | 'grok' | 'qwen' | 'moonshot' | 'zhipu';
 export type AiRuntimeType = 'cloud' | 'installed';
 export type PrimaryExam = 'TOEIC' | 'IELTS';
 export type VoiceReaderLanguage = 'en-US' | 'en-GB';
@@ -28,6 +28,7 @@ export interface AppSettings {
   primaryExam: PrimaryExam;
   geminiKey: string;
   openAiKey: string;
+  anthropicKey: string;
   deepseekKey: string;
   grokKey: string;
   qwenKey: string;
@@ -44,6 +45,7 @@ export interface SettingsContextType extends AppSettings {
   setPrimaryExam: (exam: PrimaryExam) => void;
   setGeminiKey: (key: string) => void;
   setOpenAiKey: (key: string) => void;
+  setAnthropicKey: (key: string) => void;
   setDeepseekKey: (key: string) => void;
   setGrokKey: (key: string) => void;
   setQwenKey: (key: string) => void;
@@ -59,6 +61,7 @@ export const SettingsContext = createContext<SettingsContextType | undefined>(un
 export const PROVIDER_KEY_FIELD: Record<AIProvider, keyof AppSettings> = {
   gemini: 'geminiKey',
   openai: 'openAiKey',
+  anthropic: 'anthropicKey',
   deepseek: 'deepseekKey',
   grok: 'grokKey',
   qwen: 'qwenKey',
@@ -70,6 +73,7 @@ export const PROVIDER_KEY_FIELD: Record<AIProvider, keyof AppSettings> = {
 export const PROVIDER_LABEL: Record<AIProvider, string> = {
   gemini: 'Google Gemini',
   openai: 'OpenAI',
+  anthropic: 'Anthropic (Claude)',
   deepseek: 'DeepSeek',
   grok: 'xAI (Grok)',
   qwen: 'Qwen',

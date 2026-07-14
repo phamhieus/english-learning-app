@@ -136,6 +136,29 @@
   background: transparent;
 }
 
+/* ── Autofill opt-out ─────────────────────────────────────────────────
+   Chromium repaints `input:-webkit-autofill` with its own tint (and again on
+   hover/focus/active), which no Tailwind bg class can override. The inset
+   box-shadow trick paints over it; the long background-color transition keeps
+   the tint from flashing before the shadow lands. Unlayered so it beats the
+   element's own utility classes. */
+.no-autofill-bg {
+  --autofill-bg: #f8fafc; /* slate-50 */
+}
+.dark .no-autofill-bg {
+  --autofill-bg: #0f172a; /* slate-900 */
+}
+.no-autofill-bg:-webkit-autofill,
+.no-autofill-bg:-webkit-autofill:hover,
+.no-autofill-bg:-webkit-autofill:focus,
+.no-autofill-bg:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
+  box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+  transition: background-color 100000s ease-in-out 0s;
+}
+
 /* Opt-out helper — kept unlayered so it overrides the global `*` scrollbar
    rules above (unlayered styles outrank @layer utilities regardless of
    specificity). Higher specificity than `*`, so it wins the cascade. */

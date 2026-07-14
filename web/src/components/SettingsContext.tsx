@@ -77,6 +77,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return legacy;
   });
   const [openAiKey, setOpenAiKey] = useState(localStorage.getItem('openAiKey') || '');
+  const [anthropicKey, setAnthropicKey] = useState(localStorage.getItem('anthropicKey') || '');
   const [deepseekKey, setDeepseekKey] = useState(localStorage.getItem('deepseekKey') || '');
   const [grokKey, setGrokKey] = useState(localStorage.getItem('grokKey') || '');
   const [qwenKey, setQwenKey] = useState(localStorage.getItem('qwenKey') || '');
@@ -92,13 +93,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('primaryExam', primaryExam);
     localStorage.setItem('geminiKey', geminiKey);
     localStorage.setItem('openAiKey', openAiKey);
+    localStorage.setItem('anthropicKey', anthropicKey);
     localStorage.setItem('deepseekKey', deepseekKey);
     localStorage.setItem('grokKey', grokKey);
     localStorage.setItem('qwenKey', qwenKey);
     localStorage.setItem('moonshotKey', moonshotKey);
     localStorage.setItem('zhipuKey', zhipuKey);
     localStorage.setItem('textModel', textModel);
-  }, [aiRuntimeType, selectedInstalledToolId, aiProvider, primaryExam, geminiKey, openAiKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
+  }, [aiRuntimeType, selectedInstalledToolId, aiProvider, primaryExam, geminiKey, openAiKey, anthropicKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
 
   useEffect(() => {
     localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify(userAudioSettings));
@@ -120,6 +122,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       primaryExam, setPrimaryExam,
       geminiKey, setGeminiKey,
       openAiKey, setOpenAiKey,
+      anthropicKey, setAnthropicKey,
       deepseekKey, setDeepseekKey,
       grokKey, setGrokKey,
       qwenKey, setQwenKey,

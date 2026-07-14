@@ -31,6 +31,7 @@ import type { AIProvider, PrimaryExam, UserAudioSettings } from '../components/s
 const PROVIDER_OPTIONS: { value: AIProvider; label: string }[] = [
   { value: 'gemini', label: 'Google Gemini' },
   { value: 'openai', label: 'OpenAI (ChatGPT)' },
+  { value: 'anthropic', label: 'Anthropic (Claude)' },
   { value: 'deepseek', label: 'DeepSeek' },
   { value: 'grok', label: 'xAI (Grok)' },
 ];
@@ -39,6 +40,7 @@ const PROVIDER_OPTIONS: { value: AIProvider; label: string }[] = [
 const PROVIDER_DEFAULT_MODEL: Record<AIProvider, string> = {
   gemini: 'gemini-2.5-flash',
   openai: 'gpt-4o-mini',
+  anthropic: 'claude-opus-4-8',
   deepseek: 'deepseek-chat',
   grok: 'grok-3-mini',
   qwen: 'qwen-plus',
@@ -63,6 +65,11 @@ const MODELS_BY_PROVIDER: Record<AIProvider, { id: string; label: string }[]> = 
     { id: 'gpt-4.1', label: 'gpt-4.1' },
     { id: 'gpt-5-mini', label: 'gpt-5-mini' },
     { id: 'gpt-5', label: 'gpt-5 (latest)' },
+  ],
+  anthropic: [
+    { id: 'claude-haiku-4-5', label: 'claude-haiku-4.5' },
+    { id: 'claude-sonnet-5', label: 'claude-sonnet-5' },
+    { id: 'claude-opus-4-8', label: 'claude-opus-4.8 (latest)' },
   ],
   deepseek: [
     { id: 'deepseek-v4-flash', label: 'deepseek-v4-flash' },
@@ -98,6 +105,7 @@ const MODELS_BY_PROVIDER: Record<AIProvider, { id: string; label: string }[]> = 
 const KEY_META: Record<AIProvider, { label: string; link: string; placeholder: string }> = {
   gemini: { label: 'Gemini API Key', link: 'https://aistudio.google.com/app/apikey', placeholder: 'AIzaSy...' },
   openai: { label: 'OpenAI API Key', link: 'https://platform.openai.com/api-keys', placeholder: 'sk-...' },
+  anthropic: { label: 'Anthropic (Claude) API Key', link: 'https://console.anthropic.com/settings/keys', placeholder: 'sk-ant-...' },
   deepseek: { label: 'DeepSeek API Key', link: 'https://platform.deepseek.com/api_keys', placeholder: 'sk-...' },
   grok: { label: 'xAI (Grok) API Key', link: 'https://console.x.ai', placeholder: 'xai-...' },
   qwen: { label: 'Qwen (DashScope) API Key', link: 'https://bailian.console.alibabacloud.com/', placeholder: 'sk-...' },
@@ -113,6 +121,7 @@ const SettingsView = () => {
     primaryExam, setPrimaryExam,
     geminiKey, setGeminiKey,
     openAiKey, setOpenAiKey,
+    anthropicKey, setAnthropicKey,
     deepseekKey, setDeepseekKey,
     grokKey, setGrokKey,
     qwenKey, setQwenKey,
@@ -126,6 +135,7 @@ const SettingsView = () => {
   const API_KEYS: Record<AIProvider, { value: string; set: (v: string) => void }> = {
     gemini: { value: geminiKey, set: setGeminiKey },
     openai: { value: openAiKey, set: setOpenAiKey },
+    anthropic: { value: anthropicKey, set: setAnthropicKey },
     deepseek: { value: deepseekKey, set: setDeepseekKey },
     grok: { value: grokKey, set: setGrokKey },
     qwen: { value: qwenKey, set: setQwenKey },

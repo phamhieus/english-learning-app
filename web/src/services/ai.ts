@@ -1,3 +1,4 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
 import type { AppSettings, AIProvider } from "../components/settings-context";
@@ -35,10 +36,10 @@ interface PracticeListResponse {
 
 type GeminiChatSession = ReturnType<ReturnType<GoogleGenerativeAI['getGenerativeModel']>['startChat']>;
 
-// Every provider except Gemini speaks the OpenAI chat-completions protocol, so
-// they all run through the OpenAI SDK with a provider-specific baseURL + key.
-// Adding a new OpenAI-compatible provider is just one entry here.
-type OpenAICompatProvider = Exclude<AIProvider, 'gemini'>;
+// Every provider except Gemini and Anthropic speaks the OpenAI chat-completions
+// protocol, so they all run through the OpenAI SDK with a provider-specific
+// baseURL + key. Adding a new OpenAI-compatible provider is just one entry here.
+type OpenAICompatProvider = Exclude<AIProvider, 'gemini' | 'anthropic'>;
 
 const OPENAI_COMPAT: Record<OpenAICompatProvider, {
   label: string;
@@ -56,7 +57,8 @@ const OPENAI_COMPAT: Record<OpenAICompatProvider, {
 };
 
 const getOpenAIClient = (settings: AppSettings) => {
-  const cfg = OPENAI_COMPAT[settings.aiProvider as OpenAICompatProvider];
+  const provider = settings.aiProvider as OpenAICompatProvider;
+  const cfg = OPENAI_COMPAT[provider];
   if (!cfg) throw new Error("Invalid OpenAI-compatible provider");
   const key = (settings[cfg.keyField] as string) || '';
   if (!key) throw new Error(`${cfg.label} API Key is missing`);
@@ -81,12 +83,70 @@ const modelSupportsJsonMode = (model: string): boolean => {
   return true;
 };
 
+const isJsonPayload = (t: string): boolean =>
+  (t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']'));
+
 // Newer/reasoning models often wrap JSON in ```json fences even in JSON tasks —
 // strip them so JSON.parse downstream stays happy across every provider.
+// Anthropic has no JSON response mode at all (see callAnthropic), so it can also
+// frame the object in a sentence; fall back to the outermost object/array then.
 const stripJsonFences = (text: string): string => {
   const t = text.trim();
-  const fenced = t.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-  return (fenced ? fenced[1] : t).trim();
+  if (isJsonPayload(t)) return t;
+
+  const fenced = t.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  const body = (fenced ? fenced[1] : t).trim();
+  if (isJsonPayload(body)) return body;
+
+  const start = body.search(/[{[]/);
+  const end = Math.max(body.lastIndexOf('}'), body.lastIndexOf(']'));
+  return start !== -1 && end > start ? body.slice(start, end + 1) : body;
+};
+
+// Anthropic speaks the Messages API, not chat-completions: the system prompt is
+// its own top-level field and there is no JSON response_format, so JSON is asked
+// for in the prompt and fences are stripped on the way out.
+const ANTHROPIC_DEFAULT_MODEL = 'claude-opus-4-8';
+
+const resolveAnthropicModel = (settings: AppSettings): string =>
+  settings.textModel?.startsWith('claude') ? settings.textModel : ANTHROPIC_DEFAULT_MODEL;
+
+// Haiku 4.5 rejects both `thinking: adaptive` and `effort`; the 4.6+ families
+// require adaptive (a fixed `budget_tokens` is no longer accepted).
+const supportsAdaptiveThinking = (model: string): boolean =>
+  /^claude-(opus-4-[678]|sonnet-5|sonnet-4-6|fable-5)/.test(model);
+
+const callAnthropic = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean): Promise<string> => {
+  if (!settings.anthropicKey) throw new Error("Anthropic (Claude) API Key is missing");
+  const anthropic = new Anthropic({ apiKey: settings.anthropicKey, dangerouslyAllowBrowser: true });
+
+  const model = resolveAnthropicModel(settings);
+  const options: Anthropic.MessageCreateParamsNonStreaming = {
+    model,
+    max_tokens: 16000,
+    system: systemInstruction,
+    messages: [{ role: 'user', content: userContent }],
+  };
+  if (supportsAdaptiveThinking(model)) {
+    options.thinking = { type: 'adaptive' };
+    options.output_config = { effort: 'medium' };
+  }
+
+  const response = await anthropic.messages.create(options);
+  if (response.stop_reason === 'refusal') {
+    throw new Error('Claude declined to answer this request.');
+  }
+  // Thinking tokens share the max_tokens budget, so a truncated turn yields
+  // half-written JSON. Fail with a readable message instead of a parse error.
+  if (response.stop_reason === 'max_tokens') {
+    throw new Error('Claude ran out of output tokens before finishing. Try a shorter submission.');
+  }
+
+  const text = response.content
+    .filter((block): block is Anthropic.TextBlock => block.type === 'text')
+    .map((block) => block.text)
+    .join('');
+  return isJson ? stripJsonFences(text) : text;
 };
 
 // Installed AI runtime: a single combined prompt is handed to a local CLI tool
@@ -129,6 +189,8 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
       generationConfig
     });
     return result.response.text();
+  } else if (settings.aiProvider === 'anthropic') {
+    return callAnthropic(settings, systemInstruction, userContent, isJson);
   } else {
     const openai = getOpenAIClient(settings);
 

@@ -10,14 +10,23 @@ export type PasswordInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'ty
 
 const baseInput =
   'w-full rounded-xl px-4 py-3 pr-12 font-mono outline-none ' +
-  'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700';
+  'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 ' +
+  // Background stays put on hover/focus; `no-autofill-bg` also kills the
+  // browser's autofill tint (see index.css).
+  'hover:bg-slate-50 dark:hover:bg-slate-900 focus:bg-slate-50 dark:focus:bg-slate-900 no-autofill-bg';
 
 export const PasswordInput = ({ className, ...props }: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);
 
   return (
     <div className="relative">
-      <input type={visible ? 'text' : 'password'} className={cn(baseInput, className)} {...props} />
+      <input
+        type={visible ? 'text' : 'password'}
+        autoComplete="off"
+        spellCheck={false}
+        className={cn(baseInput, className)}
+        {...props}
+      />
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}

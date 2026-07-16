@@ -48,7 +48,7 @@ const SentenceWritingPractice = () => {
     if (!sentence.trim()) return;
     setIsEvaluating(true);
     try {
-      const result = await evaluateSentenceWriting(settings, practice.title, practice.words, sentence);
+      const result = await evaluateSentenceWriting(settings, practice.title, practice.words, sentence, practice.imageUrl);
       addHistory({
         title: practice.title,
         type: 'Write a Sentence',

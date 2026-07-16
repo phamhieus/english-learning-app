@@ -13,7 +13,6 @@ import {
   PICTURE_CATEGORIES,
   PICTURE_LEVELS,
   getFilteredPictures,
-  samplePictures,
 } from '../features/picture-description/data/sample-images';
 import type { PictureDescriptionPractice } from '../features/picture-description/types/picture-description.types';
 
@@ -40,7 +39,10 @@ const PictureDescriptionList = () => {
   const { error: showError } = useToast();
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeLevel, setActiveLevel] = useState('All');
-  const [practices, setPractices] = useState<PictureDescriptionPractice[]>(samplePictures);
+  // Only set when the (currently hidden) AI-generate flow replaces the list;
+  // otherwise the display list is always derived fresh from samplePictures so
+  // every curated item shows without any stale copy living in state.
+  const [aiPractices, setAiPractices] = useState<PictureDescriptionPractice[] | null>(null);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -54,25 +56,24 @@ const PictureDescriptionList = () => {
     gsap.from('.gs-pd-filters', { y: 16, autoAlpha: 0, duration: 0.45, ease: 'power3.out', delay: 0.15 });
   }, { scope: containerRef });
 
+  const displayPractices = aiPractices ?? getFilteredPictures(activeCategory, activeLevel);
+
   useGSAP(() => {
-    if (!practices.length) return;
+    if (!displayPractices.length) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     gsap.from('.gs-pd-card', {
       y: 32, autoAlpha: 1, scale: 0.97,
       stagger: { amount: 0.4, from: 'start' },
       duration: 0.45, ease: 'back.out(1.4)',
     });
-  }, { scope: containerRef, dependencies: [practices, activeCategory, activeLevel] });
-
-  const filtered = getFilteredPictures(activeCategory, activeLevel);
-  const displayPractices = activeCategory === 'All' && activeLevel === 'All' ? practices : filtered;
+  }, { scope: containerRef, dependencies: [displayPractices, activeCategory, activeLevel] });
 
   const handleGenerateAI = async () => {
     setLoading(true);
     try {
       const result = await generatePictureDescriptions(settings, activeCategory === 'All' ? 'mixed everyday scenes' : activeCategory);
       if (result.length > 0) {
-        setPractices(result as PictureDescriptionPractice[]);
+        setAiPractices(result as PictureDescriptionPractice[]);
       }
     } catch {
       showError('Failed to generate AI pictures. Using sample images.');

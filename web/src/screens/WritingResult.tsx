@@ -225,7 +225,7 @@ const WritingResult = () => {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pb-2.5">
         <button
           onClick={() => navigate('/writing/editor', {
             state: { practice, taskKey, taskLabel, exam: activeExam },

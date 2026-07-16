@@ -84,9 +84,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [moonshotKey, setMoonshotKey] = useState(localStorage.getItem('moonshotKey') || '');
   const [zhipuKey, setZhipuKey] = useState(localStorage.getItem('zhipuKey') || '');
   const [textModel, setTextModel] = useState(localStorage.getItem('textModel') || 'gemini-2.0-flash');
-  const [deepseekVisionBaseUrl, setDeepseekVisionBaseUrl] = useState(localStorage.getItem('deepseekVisionBaseUrl') || '');
-  const [deepseekVisionKey, setDeepseekVisionKey] = useState(localStorage.getItem('deepseekVisionKey') || '');
-  const [deepseekVisionModel, setDeepseekVisionModel] = useState(localStorage.getItem('deepseekVisionModel') || '');
   const [userAudioSettings, setAudioSettings] = useState<UserAudioSettings>(readAudioSettings);
 
   useEffect(() => {
@@ -103,10 +100,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('moonshotKey', moonshotKey);
     localStorage.setItem('zhipuKey', zhipuKey);
     localStorage.setItem('textModel', textModel);
-    localStorage.setItem('deepseekVisionBaseUrl', deepseekVisionBaseUrl);
-    localStorage.setItem('deepseekVisionKey', deepseekVisionKey);
-    localStorage.setItem('deepseekVisionModel', deepseekVisionModel);
-  }, [aiRuntimeType, selectedInstalledToolId, aiProvider, primaryExam, geminiKey, openAiKey, anthropicKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel, deepseekVisionBaseUrl, deepseekVisionKey, deepseekVisionModel]);
+  }, [aiRuntimeType, selectedInstalledToolId, aiProvider, primaryExam, geminiKey, openAiKey, anthropicKey, deepseekKey, grokKey, qwenKey, moonshotKey, zhipuKey, textModel]);
 
   useEffect(() => {
     localStorage.setItem(AUDIO_SETTINGS_KEY, JSON.stringify(userAudioSettings));
@@ -135,9 +129,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       moonshotKey, setMoonshotKey,
       zhipuKey, setZhipuKey,
       textModel, setTextModel,
-      deepseekVisionBaseUrl, setDeepseekVisionBaseUrl,
-      deepseekVisionKey, setDeepseekVisionKey,
-      deepseekVisionModel, setDeepseekVisionModel,
       userAudioSettings, setUserAudioSettings
     }}>
       {children}

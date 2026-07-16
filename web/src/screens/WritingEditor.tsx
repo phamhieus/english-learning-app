@@ -204,17 +204,27 @@ const WritingEditor = () => {
       // figures to fact-check the candidate's report against.
       const chartData = isChartTask ? describeChartData(practice.title) : undefined;
 
-      // Run both evaluations in parallel: legacy (for WritingResult) + rich teacher feedback
+      // Run both evaluations in parallel: legacy (for WritingResult) + rich teacher feedback.
+      // TOEIC and IELTS get their own rubric so the detailed feedback matches the exam
+      // (the Opinion Essay has its own screen/module and never reaches this editor).
       const feedbackModule = activeExam === 'IELTS'
         ? (taskKey === 't2' ? 'ielts-writing-task-2' : 'ielts-writing-task-1')
-        : 'ielts-writing-task-1'; // TOEIC uses the same page structure
+        : isPictureWriting
+          ? 'toeic-writing-picture'
+          : 'toeic-writing-request';
+
+      // Picture tasks are graded against the exact photo the learner saw, so both
+      // graders receive it. Chart tasks draw from known data (not an image), so
+      // they keep the text-only + chartData path.
+      const gradingImage = isPictureWriting ? promptImage : undefined;
 
       const [result, teacherFeedback] = await Promise.all([
-        evaluateWriting(settings, prompt, text, taskKey, chartData),
+        evaluateWriting(settings, prompt, text, taskKey, chartData, gradingImage),
         generateTeacherFeedback(settings, feedbackModule as import('../features/feedback/types/feedback.types').FeedbackModule, {
           originalAnswer: text,
           prompt: chartData ? `${prompt}\n\n${chartData}` : prompt,
           taskKey,
+          imageUrl: gradingImage,
         }).catch(() => null), // teacher feedback is non-critical
       ]);
 

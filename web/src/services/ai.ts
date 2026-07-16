@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from "openai";
 import type { AppSettings, AIProvider } from "../components/settings-context";
 import type { Practice } from "./storage";
+import { getBakedImageDescription } from "./image-descriptions";
 import { runInstalledAiPrompt } from "./local-ai-helper";
 
 export interface WritingFeedback {
@@ -49,8 +50,8 @@ const OPENAI_COMPAT: Record<OpenAICompatProvider, {
   prefixes: string[];
   // Vision-capable model to use for image tasks when the provider's default text
   // model can't see images. Omitted for OpenAI (gpt-4o-mini already sees images)
-  // and DeepSeek (its main API is text-only; DeepSeek vision uses a separate
-  // user-configured endpoint — settings.deepseekVision* — handled in callAIWithImage).
+  // and DeepSeek (its API is text-only — picture tasks grade from the baked
+  // reference description instead; see gradeMaybeWithImage).
   // Verify these IDs against each provider's current model list before relying on them.
   visionModel?: string;
 }> = {
@@ -249,32 +250,44 @@ const resolveVisionModel = (settings: AppSettings): string => {
 };
 
 // True when the active provider + runtime can accept an image in this pass.
-// DeepSeek (no vision API yet) and the installed CLI runtime return false.
-export const providerSupportsVision = (settings: AppSettings): boolean => {
+// DeepSeek (its API is text-only) and the installed CLI runtime return false —
+// they grade from the baked reference description or the title instead.
+const providerSupportsVision = (settings: AppSettings): boolean => {
   if (settings.aiRuntimeType === 'installed') return false;
   const p = settings.aiProvider;
   if (p === 'gemini' || p === 'openai' || p === 'anthropic') return true;
-  // DeepSeek's main API is text-only; vision needs a fully configured VL endpoint.
-  if (p === 'deepseek') return !!(settings.deepseekVisionBaseUrl && settings.deepseekVisionKey && settings.deepseekVisionModel);
   return !!OPENAI_COMPAT[p as OpenAICompatProvider]?.visionModel;
 };
 
 // Fetch a (possibly remote) image URL in the browser and return raw base64 + its
 // mime type — the one format that works across every provider. Throws on a
 // network/CORS failure so the caller can fall back to text-only grading.
-const fetchImageAsBase64 = async (url: string): Promise<{ mimeType: string; base64: string }> => {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to fetch image (${res.status})`);
-  const blob = await res.blob();
-  const mimeType = blob.type || 'image/jpeg';
-  const base64 = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve((reader.result as string).split(',')[1] ?? '');
-    reader.onerror = () => reject(reader.error ?? new Error('Failed to read image'));
-    reader.readAsDataURL(blob);
-  });
-  if (!base64) throw new Error('Image produced empty data');
-  return { mimeType, base64 };
+// Results are cached by URL (as promises, so concurrent callers coalesce): a
+// picture submission runs two graders in parallel on the same photo, and without
+// this the image would be downloaded and encoded twice per submission.
+const imageBase64Cache = new Map<string, Promise<{ mimeType: string; base64: string }>>();
+
+const fetchImageAsBase64 = (url: string): Promise<{ mimeType: string; base64: string }> => {
+  const cached = imageBase64Cache.get(url);
+  if (cached) return cached;
+  const pending = (async () => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch image (${res.status})`);
+    const blob = await res.blob();
+    const mimeType = blob.type || 'image/jpeg';
+    const base64 = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve((reader.result as string).split(',')[1] ?? '');
+      reader.onerror = () => reject(reader.error ?? new Error('Failed to read image'));
+      reader.readAsDataURL(blob);
+    });
+    if (!base64) throw new Error('Image produced empty data');
+    return { mimeType, base64 };
+  })();
+  // Drop failed fetches from the cache so a transient error can be retried.
+  pending.catch(() => imageBase64Cache.delete(url));
+  imageBase64Cache.set(url, pending);
+  return pending;
 };
 
 // Grade/answer with an image attached. Routes per provider exactly like callAI,
@@ -308,21 +321,10 @@ const callAIWithImage = async (
     return callAnthropic(settings, systemInstruction, userContent, isJson, { mimeType, base64 });
   }
 
-  // OpenAI-compatible providers. DeepSeek's vision lives on a separate, user-
-  // configured host (its main API is text-only), so it gets its own client +
-  // model; the others reuse their text client with a vision-capable model.
-  let openai: OpenAI;
-  let model: string;
-  if (settings.aiProvider === 'deepseek') {
-    if (!settings.deepseekVisionBaseUrl || !settings.deepseekVisionKey || !settings.deepseekVisionModel) {
-      throw new Error('DeepSeek image endpoint is not configured');
-    }
-    openai = new OpenAI({ apiKey: settings.deepseekVisionKey, baseURL: settings.deepseekVisionBaseUrl, dangerouslyAllowBrowser: true });
-    model = settings.deepseekVisionModel;
-  } else {
-    openai = getOpenAIClient(settings);
-    model = resolveVisionModel(settings);
-  }
+  // OpenAI-compatible providers reuse their text client with a vision-capable
+  // model (providerSupportsVision guarantees one exists before we get here).
+  const openai = getOpenAIClient(settings);
+  const model = resolveVisionModel(settings);
   const options: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
     model,
     messages: [
@@ -342,6 +344,42 @@ const callAIWithImage = async (
   const response = await openai.chat.completions.create(options);
   const content = response.choices[0].message.content || (isJson ? '{}' : '');
   return isJson ? stripJsonFences(content) : content;
+};
+
+// How much of the picture the grading prompt can rely on:
+//   'image'       — the real photo is attached to the message (vision provider)
+//   'description' — no photo, but a baked human-verified description of it is
+//                   appended as ground truth (curated photos on text-only providers)
+//   'none'        — neither; the model grades blind from the title
+export type PictureContext = 'image' | 'description' | 'none';
+
+// Run a JSON grading call with the richest picture context the current provider
+// allows. `buildInstruction(picture)` returns the system prompt matching that
+// context, so the model is never told a picture is attached when it isn't (and
+// never told it can't see one when a ground-truth description follows). If the
+// vision call fails (fetch/CORS blocked or the model rejects the image) it falls
+// back to text-only so the learner still gets feedback instead of an error.
+const gradeMaybeWithImage = async (
+  settings: AppSettings,
+  buildInstruction: (picture: PictureContext) => string,
+  userContent: string,
+  imageUrl?: string,
+): Promise<string> => {
+  if (imageUrl && providerSupportsVision(settings)) {
+    try {
+      return await callAIWithImage(settings, buildInstruction('image'), userContent, imageUrl);
+    } catch (imageErr) {
+      console.warn('Image-based grading failed; falling back to text-only.', imageErr);
+    }
+  }
+  const bakedDescription = imageUrl ? getBakedImageDescription(imageUrl) : undefined;
+  const instruction = bakedDescription
+    ? `${buildInstruction('description')}
+
+REFERENCE PICTURE DESCRIPTION (verified ground truth of the actual picture):
+${bakedDescription}`
+    : buildInstruction('none');
+  return callAI(settings, instruction, userContent, true);
 };
 
 const buildScoringInstruction = (exam: string, taskKey: string, prompt: string): string => {
@@ -626,7 +664,7 @@ function calibrateIeltsWritingResult(result: WritingFeedback, text: string, task
   };
 }
 
-export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = '', chartData?: string): Promise<WritingFeedback> => {
+export const evaluateWriting = async (settings: AppSettings, prompt: string, text: string, taskKey = '', chartData?: string, imageUrl?: string): Promise<WritingFeedback> => {
   const exam = settings.primaryExam;
   const scoringInstruction = buildScoringInstruction(exam, taskKey, prompt);
 
@@ -637,8 +675,19 @@ export const evaluateWriting = async (settings: AppSettings, prompt: string, tex
     ? `\nThe candidate was shown a Task 1 visual containing EXACTLY this data:\n${chartData}\nFact-check every figure, trend, and comparison the candidate makes against this data. Treat any wrong number, misread trend (e.g. saying "rose" when it fell), or invented/extrapolated data point as a Task Achievement error: deduct accordingly, and list each inaccuracy specifically in "corrections" and "overallFeedback".`
     : '';
 
-  const systemInstruction = `You are an expert ${exam} English writing coach. Evaluate the user's writing based on the given prompt and task type.
-${scoringInstruction}${chartReference}
+  // When the real photo (or its verified description) is available for TOEIC
+  // "Describe a Picture", grade the writing against what is genuinely in the
+  // picture instead of guessing from the title alone.
+  const pictureReference = (picture: PictureContext) => {
+    if (picture === 'image')
+      return `\nThe ACTUAL picture the candidate had to describe is attached to this message. Judge how accurately and completely their writing describes what is genuinely visible in the attached image — its real objects, people, actions, and spatial layout. Treat anything they mention that is NOT present in the image as an accuracy error and point it out specifically in "corrections" and "overallFeedback"; treat prominent visible elements they fail to mention as coverage gaps.`;
+    if (picture === 'description')
+      return `\nA verified reference description of the ACTUAL picture the candidate had to describe is appended at the end of these instructions. Treat it as ground truth: judge how accurately and completely their writing matches it. Treat anything they mention that contradicts the reference description as an accuracy error and point it out specifically in "corrections" and "overallFeedback"; treat prominent elements it lists that they fail to mention as coverage gaps.`;
+    return '';
+  };
+
+  const buildSystemInstruction = (picture: PictureContext) => `You are an expert ${exam} English writing coach. Evaluate the user's writing based on the given prompt and task type.
+${scoringInstruction}${chartReference}${pictureReference(picture)}
 Return your evaluation strictly as a JSON object matching this schema:
 {
   "score": number (0-100 overall score),
@@ -660,7 +709,7 @@ Return your evaluation strictly as a JSON object matching this schema:
   const userContent = `Prompt/Topic: ${prompt}\n\nUser's Text:\n${text}`;
 
   try {
-    const responseText = await callAI(settings, systemInstruction, userContent);
+    const responseText = await gradeMaybeWithImage(settings, buildSystemInstruction, userContent, imageUrl);
     const parsed: WritingFeedback = JSON.parse(responseText);
     return exam === 'IELTS' ? calibrateIeltsWritingResult(parsed, text, taskKey) : parsed;
   } catch (e) {
@@ -812,29 +861,40 @@ export const evaluatePictureDescription = async (
   imageUrl?: string,
 ): Promise<PictureDescriptionFeedback> => {
   const exam = settings.primaryExam;
-  // Only send the real photo when both an image and a vision-capable provider are
-  // available; otherwise the model grades against the title as before.
-  const useImage = !!imageUrl && providerSupportsVision(settings);
 
-  const buildInstruction = (withImage: boolean) => `You are an expert ${exam} English speaking coach specializing in picture description tasks.
+  const pictureNote: Record<PictureContext, string> = {
+    image: 'The ACTUAL picture is attached to this message. Judge the description against what is genuinely visible in the attached image — its real objects, people, actions, and spatial layout — using the title only as a loose hint. If the user mentions things that are NOT actually present in the image, treat them as accuracy errors and point them out specifically in the feedback.',
+    description: 'A verified reference description of the ACTUAL picture is appended at the end of these instructions. Treat it as ground truth: judge the user\'s description against what it says is really in the picture — using the title only as a loose hint. If the user mentions things that contradict the reference description, treat them as accuracy errors and point them out specifically in the feedback.',
+    none: 'You cannot see the actual image, so evaluate the description for plausibility against the titled scene above.',
+  };
+  const contentHint: Record<PictureContext, string> = {
+    image: 'actually visible in the attached picture',
+    description: 'listed in the reference description',
+    none: 'visible in such a picture',
+  };
+  const sampleTarget: Record<PictureContext, string> = {
+    image: 'the attached picture',
+    description: 'the picture per the reference description',
+    none: 'this picture',
+  };
+
+  const buildInstruction = (picture: PictureContext) => `You are an expert ${exam} English speaking coach specializing in picture description tasks.
 Target exam: ${exam}. Use ${exam === 'TOEIC' ? 'TOEIC picture-description scoring criteria. Do not mention IELTS bands or "Band 7+".' : 'IELTS-style descriptive speaking criteria.'}
 The user was shown a picture titled/depicting: "${imageTitle}".
 They described it verbally and their speech was transcribed via Speech-to-Text.
-${withImage
-    ? 'The ACTUAL picture is attached to this message. Judge the description against what is genuinely visible in the attached image — its real objects, people, actions, and spatial layout — using the title only as a loose hint. If the user mentions things that are NOT actually present in the image, treat them as accuracy errors and point them out specifically in the feedback.'
-    : 'You cannot see the actual image, so evaluate the description for plausibility against the titled scene above.'}
+${pictureNote[picture]}
 
 Evaluate their description and return STRICT JSON matching this schema:
 {
   "score": number (0-100 overall score),
-  "contentScore": number (0-100, how well they described key elements ${withImage ? 'actually visible in the attached picture' : 'visible in such a picture'}),
+  "contentScore": number (0-100, how well they described key elements ${contentHint[picture]}),
   "vocabularyScore": number (0-100, range and accuracy of vocabulary used),
   "grammarScore": number (0-100, grammatical correctness),
   "fluencyScore": number (0-100, natural flow and coherence of description),
   "feedback": "string (2-3 sentences of overall feedback)",
   "keyElementsMissed": ["string (key visual elements they should have mentioned but didn't)"],
   "improvementTips": ["string (specific actionable tips to improve picture description skills)"],
-  "sampleDescription": "string (a model ${exam === 'TOEIC' ? 'high-scoring TOEIC' : 'Band 7+'} description of ${withImage ? 'the attached picture' : 'this picture'}, 3-5 sentences)"
+  "sampleDescription": "string (a model ${exam === 'TOEIC' ? 'high-scoring TOEIC' : 'Band 7+'} description of ${sampleTarget[picture]}, 3-5 sentences)"
 }
 
 Scoring guidelines:
@@ -848,20 +908,9 @@ Scoring guidelines:
   const userContent = `Picture: ${imageTitle}\n\nUser's Description (Speech-to-Text):\n"${userDescription || '(no speech detected)'}"`;
 
   try {
-    let responseText: string;
-    if (useImage) {
-      try {
-        responseText = await callAIWithImage(settings, buildInstruction(true), userContent, imageUrl!);
-      } catch (imageErr) {
-        // Vision path failed (image fetch/CORS blocked, or the model rejected the
-        // image / model id) — fall back to text-only grading so the learner still
-        // gets feedback instead of an error.
-        console.warn('Image-based picture grading failed; falling back to text-only.', imageErr);
-        responseText = await callAI(settings, buildInstruction(false), userContent);
-      }
-    } else {
-      responseText = await callAI(settings, buildInstruction(false), userContent);
-    }
+    // Vision providers get the real photo; text-only providers get the baked
+    // reference description for curated photos (see gradeMaybeWithImage).
+    const responseText = await gradeMaybeWithImage(settings, buildInstruction, userContent, imageUrl);
     return JSON.parse(responseText);
   } catch (e) {
     console.error('Failed to parse picture description evaluation:', e);
@@ -1027,9 +1076,16 @@ export const evaluateSentenceWriting = async (
   imageTitle: string,
   words: [string, string],
   userSentence: string,
+  imageUrl?: string,
 ): Promise<SentenceWritingFeedback> => {
-  const systemInstruction = `You are an official TOEIC Writing examiner grading "Write a Sentence Based on a Picture" (Questions 1-5).
-The picture shows: "${imageTitle}".
+  const pictureNote: Record<PictureContext, string> = {
+    image: ' The ACTUAL picture is attached to this message — judge "relevanceScore" against what is genuinely visible in it, and treat a sentence describing something not present in the image as poorly relevant even if grammatically correct.',
+    description: ' A verified reference description of the ACTUAL picture is appended at the end of these instructions — judge "relevanceScore" against it as ground truth, and treat a sentence describing something it does not support as poorly relevant even if grammatically correct.',
+    none: '',
+  };
+
+  const buildSystemInstruction = (picture: PictureContext) => `You are an official TOEIC Writing examiner grading "Write a Sentence Based on a Picture" (Questions 1-5).
+The picture shows: "${imageTitle}".${pictureNote[picture]}
 The candidate had to write ONE sentence about the picture and MUST use BOTH of these words/phrases: "${words[0]}" and "${words[1]}".
 They may change the form of the words (tense, plural, part of speech) and use them in any order.
 
@@ -1062,7 +1118,7 @@ Candidate's sentence:
 "${userSentence || '(no answer)'}"`;
 
   try {
-    const responseText = await callAI(settings, systemInstruction, userContent);
+    const responseText = await gradeMaybeWithImage(settings, buildSystemInstruction, userContent, imageUrl);
     return JSON.parse(responseText);
   } catch (e) {
     console.error('Failed to parse sentence writing evaluation:', e);
@@ -1479,9 +1535,18 @@ export async function generateTeacherFeedback(
     prompt?: string;
     taskKey?: string;
     audioAnalysisSummary?: string;
+    imageUrl?: string;
   }
 ): Promise<FeedbackResult> {
-  const systemInstruction = buildFeedbackSystemInstruction(module, input.taskKey, input.prompt);
+  // For picture-based tasks, ground Content Coverage and factual accuracy in the
+  // real photo (or its verified description), not just the title.
+  const pictureNote: Record<PictureContext, string> = {
+    image: '\nThe ACTUAL picture the candidate described is attached to this message. Base content coverage and factual accuracy on what is genuinely visible in the attached image, not on the title: reward mentioning real prominent elements, and flag anything the candidate describes that is not actually present.',
+    description: '\nA verified reference description of the ACTUAL picture the candidate described is appended at the end of these instructions. Treat it as ground truth for content coverage and factual accuracy: reward mentioning prominent elements it lists, and flag anything the candidate describes that it does not support.',
+    none: '',
+  };
+  const buildInstruction = (picture: PictureContext) =>
+    `${buildFeedbackSystemInstruction(module, input.taskKey, input.prompt)}${pictureNote[picture]}`;
 
   const userContent = JSON.stringify({
     module,
@@ -1490,7 +1555,7 @@ export async function generateTeacherFeedback(
     audioAnalysisSummary: input.audioAnalysisSummary,
   });
 
-  const raw = await callAI(settings, systemInstruction, userContent, true);
+  const raw = await gradeMaybeWithImage(settings, buildInstruction, userContent, input.imageUrl);
   const parsed = JSON.parse(stripJsonFences(raw)) as Partial<FeedbackResult>;
 
   // Merge required fields with safe defaults so the UI never crashes
@@ -1537,6 +1602,20 @@ Score on four criteria: Opinion & Support (clear position, reasons, specific exa
 A 5 needs a clear thesis, fully developed reasons with concrete examples, varied vocabulary, and almost no grammar errors.
 Penalise: no clear position, listing without development, missing examples, memorised templates, off-topic content, and essays under 300 words.
 In teacherComment, state the 0-5 band and the single most impactful next step.`,
+    'toeic-writing-picture': `
+You are a TOEIC Writing rater providing detailed teacher-style feedback on a "Describe a Picture" writing response (a short descriptive paragraph based on a photo).
+Do NOT use IELTS bands. Use a 0-100 scale, scoreLabel like "78/100" and a 0-100 overallScore.
+Score on four criteria: Content Coverage (main subject, actions, setting, notable details), Vocabulary (precise, varied descriptive words), Grammar (correct tenses and sentence structure), Organisation (logical flow from overview to detail).
+A strong response opens with a clear overview sentence, describes foreground and background, uses specific visual vocabulary, and has clean grammar. Around 60+ words is expected — do not require 300 words.
+Penalise: vague or off-topic description, listing single words without full sentences, missing key elements of the scene, and repeated grammar errors.
+In teacherComment, state the score and the single most impactful next step.`,
+    'toeic-writing-request': `
+You are a TOEIC Writing rater providing detailed teacher-style feedback on a "Respond to a Written Request" email response.
+Do NOT use IELTS bands. Use a 0-100 scale, scoreLabel like "78/100" and a 0-100 overallScore.
+Score on four criteria: Task Completion (addresses every point the request asks for), Organisation (appropriate email format — greeting, body, closing — and logical order), Vocabulary (appropriate professional/business register), Grammar (accurate sentences and email conventions).
+A strong response answers all required points, keeps a polite professional tone, and is well organised as an email. Around 50+ words is typical — do not require 300 words.
+Penalise: missing any requested point, wrong or too-casual register, disorganised structure, and repeated grammar errors.
+In teacherComment, state the score and the single most impactful next step.`,
     'ielts-speaking': `
 You are an expert IELTS Speaking examiner providing detailed teacher-style feedback.
 Apply the official IELTS Speaking rubric: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation.

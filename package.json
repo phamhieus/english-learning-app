@@ -18,5 +18,8 @@
     "deploy": "npm --prefix web run deploy",
     "install:web": "npm --prefix web install",
     "postinstall": "npm --prefix web install"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
   }
 }

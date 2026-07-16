@@ -16,6 +16,7 @@ import {
   Mic2,
   LoaderCircle,
   ChevronDown,
+  RotateCcw,
 } from 'lucide-react';
 import { useSettings } from '../components/useSettings';
 import { AiRuntimeSection } from '../features/ai-runtime/components/AiRuntimeSection';
@@ -113,6 +114,9 @@ const KEY_META: Record<AIProvider, { label: string; link: string; placeholder: s
   zhipu: { label: 'Zhipu (GLM) API Key', link: 'https://open.bigmodel.cn/usercenter/apikeys', placeholder: '...' },
 };
 
+const LOCAL_AUDIO_URL_KEY = 'localAudioUrl';
+const DEFAULT_LOCAL_AUDIO_URL = 'http://127.0.0.1:8000';
+
 const SettingsView = () => {
   const toast = useToast();
   const { theme, setTheme } = useTheme();
@@ -128,9 +132,6 @@ const SettingsView = () => {
     moonshotKey, setMoonshotKey,
     zhipuKey, setZhipuKey,
     textModel, setTextModel,
-    deepseekVisionBaseUrl, setDeepseekVisionBaseUrl,
-    deepseekVisionKey, setDeepseekVisionKey,
-    deepseekVisionModel, setDeepseekVisionModel,
     userAudioSettings, setUserAudioSettings
   } = useSettings();
 
@@ -147,6 +148,26 @@ const SettingsView = () => {
   };
   const activeKey = API_KEYS[aiProvider];
   const activeKeyMeta = KEY_META[aiProvider];
+
+  // Draft state for the API key: edits only persist when the user hits Save.
+  const [keyDraft, setKeyDraft] = useState(() => activeKey.value);
+  const isKeyDirty = keyDraft !== activeKey.value;
+  const saveKeyDraft = () => {
+    activeKey.set(keyDraft);
+    toast.success(`${activeKeyMeta.label} saved!`);
+  };
+
+  // Draft state for the local audio URL, persisted separately in localStorage.
+  const [savedLocalAudioUrl, setSavedLocalAudioUrl] = useState(
+    () => localStorage.getItem(LOCAL_AUDIO_URL_KEY) || DEFAULT_LOCAL_AUDIO_URL
+  );
+  const [localAudioUrlDraft, setLocalAudioUrlDraft] = useState(savedLocalAudioUrl);
+  const isLocalAudioUrlDirty = localAudioUrlDraft !== savedLocalAudioUrl;
+  const saveLocalAudioUrl = () => {
+    localStorage.setItem(LOCAL_AUDIO_URL_KEY, localAudioUrlDraft);
+    setSavedLocalAudioUrl(localAudioUrlDraft);
+    toast.success('Local audio URL saved!');
+  };
 
   const [isVoiceInitializing, setIsVoiceInitializing] = useState(false);
   const [isAudioOpen, setIsAudioOpen] = useState(false);
@@ -291,6 +312,7 @@ const SettingsView = () => {
                       const newProvider = e.target.value as AIProvider;
                       setAiProvider(newProvider);
                       setTextModel(PROVIDER_DEFAULT_MODEL[newProvider]);
+                      setKeyDraft(API_KEYS[newProvider].value);
                     }}
                   >
                     {PROVIDER_OPTIONS.map((p) => (
@@ -308,8 +330,8 @@ const SettingsView = () => {
                   </label>
                   <PasswordInput
                     placeholder={activeKeyMeta.placeholder}
-                    value={activeKey.value}
-                    onChange={(e) => activeKey.set(e.target.value)}
+                    value={keyDraft}
+                    onChange={(e) => setKeyDraft(e.target.value)}
                   />
                 </div>
 
@@ -325,55 +347,15 @@ const SettingsView = () => {
                   </Select>
                 </div>
 
-                {/* DeepSeek can't read images on its main API — optional VL endpoint enables photo grading. */}
-                {aiProvider === 'deepseek' && (
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4 space-y-4">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">DeepSeek image analysis (optional)</p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        DeepSeek's main API can't read images. To grade photo-description exercises, point it at an
-                        OpenAI-compatible DeepSeek-VL endpoint (its own base URL, key and model). Leave blank to grade
-                        photos from the title only.
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image endpoint base URL</label>
-                      <input
-                        type="url"
-                        spellCheck={false}
-                        autoComplete="off"
-                        placeholder="https://api.siliconflow.cn/v1"
-                        value={deepseekVisionBaseUrl}
-                        onChange={(e) => setDeepseekVisionBaseUrl(e.target.value)}
-                        className="w-full rounded-xl px-4 py-3 font-mono outline-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 no-autofill-bg"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image model</label>
-                      <input
-                        type="text"
-                        spellCheck={false}
-                        autoComplete="off"
-                        placeholder="deepseek-ai/deepseek-vl2"
-                        value={deepseekVisionModel}
-                        onChange={(e) => setDeepseekVisionModel(e.target.value)}
-                        className="w-full rounded-xl px-4 py-3 font-mono outline-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 no-autofill-bg"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image endpoint API key</label>
-                      <PasswordInput
-                        placeholder="sk-..."
-                        value={deepseekVisionKey}
-                        onChange={(e) => setDeepseekVisionKey(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
-
                 <p className="text-xs text-slate-500 mt-2">Your keys are stored locally on your device and never sent to our servers.</p>
               </div>
             }
+          />
+
+          <SaveRevertRow
+            dirty={isKeyDirty}
+            onSave={saveKeyDraft}
+            onRevert={() => setKeyDraft(activeKey.value)}
           />
         </section>
 
@@ -533,10 +515,11 @@ const SettingsView = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Whisper / TTS Local URL</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="http://localhost:8080"
-                defaultValue="http://127.0.0.1:8000"
+                value={localAudioUrlDraft}
+                onChange={(e) => setLocalAudioUrlDraft(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono"
               />
             </div>
@@ -551,20 +534,42 @@ const SettingsView = () => {
                </div>
             </div>
           </div>
+
+          <SaveRevertRow
+            dirty={isLocalAudioUrlDirty}
+            onSave={saveLocalAudioUrl}
+            onRevert={() => setLocalAudioUrlDraft(savedLocalAudioUrl)}
+          />
         </section>
 
-        <div className="flex justify-end">
-           <button 
-             onClick={() => toast.success('Settings saved successfully!')}
-             className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 transition-all hover:scale-105"
-           >
-             <Save className="w-5 h-5" /> Save Changes
-           </button>
-        </div>
       </div>
     </div>
   );
 };
+
+// Save / Revert pair shown under a draft field. Renders nothing until the
+// draft differs from the persisted value.
+function SaveRevertRow({ dirty, onSave, onRevert }: { dirty: boolean; onSave: () => void; onRevert: () => void }) {
+  if (!dirty) return null;
+  return (
+    <div className="flex justify-end gap-2 mt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+      <button
+        type="button"
+        onClick={onRevert}
+        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      >
+        <RotateCcw className="w-3.5 h-3.5" /> Revert
+      </button>
+      <button
+        type="button"
+        onClick={onSave}
+        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-colors"
+      >
+        <Save className="w-3.5 h-3.5" /> Save changes
+      </button>
+    </div>
+  );
+}
 
 function ToggleSwitch({ checked, disabled, onClick }: { checked: boolean; disabled?: boolean; onClick: () => void }) {
   return (

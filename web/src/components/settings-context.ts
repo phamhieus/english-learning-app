@@ -35,12 +35,6 @@ export interface AppSettings {
   moonshotKey: string;
   zhipuKey: string;
   textModel: string;
-  // DeepSeek's main API is text-only. These point its image step at a separate
-  // OpenAI-compatible DeepSeek-VL host (own base URL + key + model). Empty until
-  // the user configures them; when unset, photo grading falls back to text-only.
-  deepseekVisionBaseUrl: string;
-  deepseekVisionKey: string;
-  deepseekVisionModel: string;
   userAudioSettings: UserAudioSettings;
 }
 
@@ -58,9 +52,6 @@ export interface SettingsContextType extends AppSettings {
   setMoonshotKey: (key: string) => void;
   setZhipuKey: (key: string) => void;
   setTextModel: (model: string) => void;
-  setDeepseekVisionBaseUrl: (url: string) => void;
-  setDeepseekVisionKey: (key: string) => void;
-  setDeepseekVisionModel: (model: string) => void;
   setUserAudioSettings: (patch: Partial<UserAudioSettings>) => void;
 }
 

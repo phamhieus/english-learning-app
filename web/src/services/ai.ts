@@ -47,13 +47,19 @@ const OPENAI_COMPAT: Record<OpenAICompatProvider, {
   baseURL?: string;
   defaultModel: string;
   prefixes: string[];
+  // Vision-capable model to use for image tasks when the provider's default text
+  // model can't see images. Omitted for OpenAI (gpt-4o-mini already sees images)
+  // and DeepSeek (its main API is text-only; DeepSeek vision uses a separate
+  // user-configured endpoint — settings.deepseekVision* — handled in callAIWithImage).
+  // Verify these IDs against each provider's current model list before relying on them.
+  visionModel?: string;
 }> = {
   openai:   { label: 'OpenAI',          keyField: 'openAiKey',   defaultModel: 'gpt-4o-mini',  prefixes: ['gpt', 'o1', 'o3', 'o4', 'chatgpt'] },
   deepseek: { label: 'DeepSeek',        keyField: 'deepseekKey', baseURL: 'https://api.deepseek.com/v1',                  defaultModel: 'deepseek-chat',  prefixes: ['deepseek'] },
-  grok:     { label: 'xAI (Grok)',      keyField: 'grokKey',     baseURL: 'https://api.x.ai/v1',                          defaultModel: 'grok-3-mini',    prefixes: ['grok'] },
-  qwen:     { label: 'Qwen',            keyField: 'qwenKey',     baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1', defaultModel: 'qwen-plus', prefixes: ['qwen', 'qwq'] },
-  moonshot: { label: 'Moonshot (Kimi)', keyField: 'moonshotKey', baseURL: 'https://api.moonshot.cn/v1',                   defaultModel: 'moonshot-v1-8k', prefixes: ['moonshot', 'kimi'] },
-  zhipu:    { label: 'Zhipu (GLM)',     keyField: 'zhipuKey',    baseURL: 'https://open.bigmodel.cn/api/paas/v4',         defaultModel: 'glm-4-flash',    prefixes: ['glm'] },
+  grok:     { label: 'xAI (Grok)',      keyField: 'grokKey',     baseURL: 'https://api.x.ai/v1',                          defaultModel: 'grok-3-mini',    prefixes: ['grok'], visionModel: 'grok-2-vision-1212' },
+  qwen:     { label: 'Qwen',            keyField: 'qwenKey',     baseURL: 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1', defaultModel: 'qwen-plus', prefixes: ['qwen', 'qwq'], visionModel: 'qwen-vl-max' },
+  moonshot: { label: 'Moonshot (Kimi)', keyField: 'moonshotKey', baseURL: 'https://api.moonshot.cn/v1',                   defaultModel: 'moonshot-v1-8k', prefixes: ['moonshot', 'kimi'], visionModel: 'moonshot-v1-8k-vision-preview' },
+  zhipu:    { label: 'Zhipu (GLM)',     keyField: 'zhipuKey',    baseURL: 'https://open.bigmodel.cn/api/paas/v4',         defaultModel: 'glm-4-flash',    prefixes: ['glm'], visionModel: 'glm-4v-flash' },
 };
 
 const getOpenAIClient = (settings: AppSettings) => {
@@ -116,16 +122,24 @@ const resolveAnthropicModel = (settings: AppSettings): string =>
 const supportsAdaptiveThinking = (model: string): boolean =>
   /^claude-(opus-4-[678]|sonnet-5|sonnet-4-6|fable-5)/.test(model);
 
-const callAnthropic = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean): Promise<string> => {
+const callAnthropic = async (settings: AppSettings, systemInstruction: string, userContent: string, isJson: boolean, image?: { mimeType: string; base64: string }): Promise<string> => {
   if (!settings.anthropicKey) throw new Error("Anthropic (Claude) API Key is missing");
   const anthropic = new Anthropic({ apiKey: settings.anthropicKey, dangerouslyAllowBrowser: true });
 
   const model = resolveAnthropicModel(settings);
+  // With an image, the user turn becomes a text + image block array; otherwise a
+  // plain string. Claude reads the base64 image inline (see callAIWithImage).
+  const content: Anthropic.MessageParam['content'] = image
+    ? [
+        { type: 'text', text: userContent },
+        { type: 'image', source: { type: 'base64', media_type: toAnthropicMediaType(image.mimeType), data: image.base64 } },
+      ]
+    : userContent;
   const options: Anthropic.MessageCreateParamsNonStreaming = {
     model,
     max_tokens: 16000,
     system: systemInstruction,
-    messages: [{ role: 'user', content: userContent }],
+    messages: [{ role: 'user', content }],
   };
   if (supportsAdaptiveThinking(model)) {
     options.thinking = { type: 'adaptive' };
@@ -211,6 +225,123 @@ const callAI = async (settings: AppSettings, systemInstruction: string, userCont
     const content = response.choices[0].message.content || (isJson ? '{}' : '');
     return isJson ? stripJsonFences(content) : content;
   }
+};
+
+// ── Image-aware AI calls (photo / picture-description tasks) ─────────────────
+// Most providers can read an image directly with the user's own key, so the
+// picture-description grader can send the real photo instead of grading blind
+// from the title. DeepSeek has no vision API yet (a DeepSeek-OCR worker is
+// planned) and the installed-CLI runtime can't take images, so both stay on the
+// text-only path via providerSupportsVision() + the caller's fallback.
+
+const ANTHROPIC_MEDIA_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const;
+type AnthropicMediaType = (typeof ANTHROPIC_MEDIA_TYPES)[number];
+const toAnthropicMediaType = (mime: string): AnthropicMediaType =>
+  (ANTHROPIC_MEDIA_TYPES as readonly string[]).includes(mime) ? (mime as AnthropicMediaType) : 'image/jpeg';
+
+// OpenAI-compatible providers store a single text model, but several need a
+// different vision-capable model to see images (grok-3-mini, qwen-plus… are
+// text-only). Prefer the per-provider vision model; otherwise reuse the resolved
+// text model (OpenAI's gpt-4o-mini already handles images).
+const resolveVisionModel = (settings: AppSettings): string => {
+  const cfg = OPENAI_COMPAT[settings.aiProvider as OpenAICompatProvider];
+  return cfg?.visionModel || resolveOpenAIModel(settings);
+};
+
+// True when the active provider + runtime can accept an image in this pass.
+// DeepSeek (no vision API yet) and the installed CLI runtime return false.
+export const providerSupportsVision = (settings: AppSettings): boolean => {
+  if (settings.aiRuntimeType === 'installed') return false;
+  const p = settings.aiProvider;
+  if (p === 'gemini' || p === 'openai' || p === 'anthropic') return true;
+  // DeepSeek's main API is text-only; vision needs a fully configured VL endpoint.
+  if (p === 'deepseek') return !!(settings.deepseekVisionBaseUrl && settings.deepseekVisionKey && settings.deepseekVisionModel);
+  return !!OPENAI_COMPAT[p as OpenAICompatProvider]?.visionModel;
+};
+
+// Fetch a (possibly remote) image URL in the browser and return raw base64 + its
+// mime type — the one format that works across every provider. Throws on a
+// network/CORS failure so the caller can fall back to text-only grading.
+const fetchImageAsBase64 = async (url: string): Promise<{ mimeType: string; base64: string }> => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch image (${res.status})`);
+  const blob = await res.blob();
+  const mimeType = blob.type || 'image/jpeg';
+  const base64 = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve((reader.result as string).split(',')[1] ?? '');
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read image'));
+    reader.readAsDataURL(blob);
+  });
+  if (!base64) throw new Error('Image produced empty data');
+  return { mimeType, base64 };
+};
+
+// Grade/answer with an image attached. Routes per provider exactly like callAI,
+// but each provider frames the image in its own message format.
+const callAIWithImage = async (
+  settings: AppSettings,
+  systemInstruction: string,
+  userContent: string,
+  imageUrl: string,
+  isJson: boolean = true,
+): Promise<string> => {
+  const { mimeType, base64 } = await fetchImageAsBase64(imageUrl);
+
+  if (settings.aiProvider === 'gemini') {
+    if (!settings.geminiKey) throw new Error('Gemini API Key is missing');
+    const genAI = new GoogleGenerativeAI(settings.geminiKey);
+    const model = genAI.getGenerativeModel({
+      model: settings.textModel || 'gemini-2.0-flash',
+      systemInstruction,
+    });
+    const generationConfig: { responseMimeType?: string } = {};
+    if (isJson) generationConfig.responseMimeType = 'application/json';
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: userContent }, { inlineData: { mimeType, data: base64 } }] }],
+      generationConfig,
+    });
+    return result.response.text();
+  }
+
+  if (settings.aiProvider === 'anthropic') {
+    return callAnthropic(settings, systemInstruction, userContent, isJson, { mimeType, base64 });
+  }
+
+  // OpenAI-compatible providers. DeepSeek's vision lives on a separate, user-
+  // configured host (its main API is text-only), so it gets its own client +
+  // model; the others reuse their text client with a vision-capable model.
+  let openai: OpenAI;
+  let model: string;
+  if (settings.aiProvider === 'deepseek') {
+    if (!settings.deepseekVisionBaseUrl || !settings.deepseekVisionKey || !settings.deepseekVisionModel) {
+      throw new Error('DeepSeek image endpoint is not configured');
+    }
+    openai = new OpenAI({ apiKey: settings.deepseekVisionKey, baseURL: settings.deepseekVisionBaseUrl, dangerouslyAllowBrowser: true });
+    model = settings.deepseekVisionModel;
+  } else {
+    openai = getOpenAIClient(settings);
+    model = resolveVisionModel(settings);
+  }
+  const options: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
+    model,
+    messages: [
+      { role: 'system', content: systemInstruction },
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: userContent },
+          { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}` } },
+        ],
+      },
+    ],
+  };
+  if (isJson && modelSupportsJsonMode(model)) {
+    options.response_format = { type: 'json_object' };
+  }
+  const response = await openai.chat.completions.create(options);
+  const content = response.choices[0].message.content || (isJson ? '{}' : '');
+  return isJson ? stripJsonFences(content) : content;
 };
 
 const buildScoringInstruction = (exam: string, taskKey: string, prompt: string): string => {
@@ -677,25 +808,33 @@ export interface PictureDescriptionFeedback {
 export const evaluatePictureDescription = async (
   settings: AppSettings,
   imageTitle: string,
-  userDescription: string
+  userDescription: string,
+  imageUrl?: string,
 ): Promise<PictureDescriptionFeedback> => {
   const exam = settings.primaryExam;
-  const systemInstruction = `You are an expert ${exam} English speaking coach specializing in picture description tasks.
+  // Only send the real photo when both an image and a vision-capable provider are
+  // available; otherwise the model grades against the title as before.
+  const useImage = !!imageUrl && providerSupportsVision(settings);
+
+  const buildInstruction = (withImage: boolean) => `You are an expert ${exam} English speaking coach specializing in picture description tasks.
 Target exam: ${exam}. Use ${exam === 'TOEIC' ? 'TOEIC picture-description scoring criteria. Do not mention IELTS bands or "Band 7+".' : 'IELTS-style descriptive speaking criteria.'}
 The user was shown a picture titled/depicting: "${imageTitle}".
 They described it verbally and their speech was transcribed via Speech-to-Text.
+${withImage
+    ? 'The ACTUAL picture is attached to this message. Judge the description against what is genuinely visible in the attached image — its real objects, people, actions, and spatial layout — using the title only as a loose hint. If the user mentions things that are NOT actually present in the image, treat them as accuracy errors and point them out specifically in the feedback.'
+    : 'You cannot see the actual image, so evaluate the description for plausibility against the titled scene above.'}
 
 Evaluate their description and return STRICT JSON matching this schema:
 {
   "score": number (0-100 overall score),
-  "contentScore": number (0-100, how well they described key elements visible in such a picture),
+  "contentScore": number (0-100, how well they described key elements ${withImage ? 'actually visible in the attached picture' : 'visible in such a picture'}),
   "vocabularyScore": number (0-100, range and accuracy of vocabulary used),
   "grammarScore": number (0-100, grammatical correctness),
   "fluencyScore": number (0-100, natural flow and coherence of description),
   "feedback": "string (2-3 sentences of overall feedback)",
   "keyElementsMissed": ["string (key visual elements they should have mentioned but didn't)"],
   "improvementTips": ["string (specific actionable tips to improve picture description skills)"],
-  "sampleDescription": "string (a model ${exam === 'TOEIC' ? 'high-scoring TOEIC' : 'Band 7+'} description of this picture, 3-5 sentences)"
+  "sampleDescription": "string (a model ${exam === 'TOEIC' ? 'high-scoring TOEIC' : 'Band 7+'} description of ${withImage ? 'the attached picture' : 'this picture'}, 3-5 sentences)"
 }
 
 Scoring guidelines:
@@ -709,7 +848,20 @@ Scoring guidelines:
   const userContent = `Picture: ${imageTitle}\n\nUser's Description (Speech-to-Text):\n"${userDescription || '(no speech detected)'}"`;
 
   try {
-    const responseText = await callAI(settings, systemInstruction, userContent);
+    let responseText: string;
+    if (useImage) {
+      try {
+        responseText = await callAIWithImage(settings, buildInstruction(true), userContent, imageUrl!);
+      } catch (imageErr) {
+        // Vision path failed (image fetch/CORS blocked, or the model rejected the
+        // image / model id) — fall back to text-only grading so the learner still
+        // gets feedback instead of an error.
+        console.warn('Image-based picture grading failed; falling back to text-only.', imageErr);
+        responseText = await callAI(settings, buildInstruction(false), userContent);
+      }
+    } else {
+      responseText = await callAI(settings, buildInstruction(false), userContent);
+    }
     return JSON.parse(responseText);
   } catch (e) {
     console.error('Failed to parse picture description evaluation:', e);

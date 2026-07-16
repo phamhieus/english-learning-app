@@ -128,6 +128,9 @@ const SettingsView = () => {
     moonshotKey, setMoonshotKey,
     zhipuKey, setZhipuKey,
     textModel, setTextModel,
+    deepseekVisionBaseUrl, setDeepseekVisionBaseUrl,
+    deepseekVisionKey, setDeepseekVisionKey,
+    deepseekVisionModel, setDeepseekVisionModel,
     userAudioSettings, setUserAudioSettings
   } = useSettings();
 
@@ -321,6 +324,52 @@ const SettingsView = () => {
                     ))}
                   </Select>
                 </div>
+
+                {/* DeepSeek can't read images on its main API — optional VL endpoint enables photo grading. */}
+                {aiProvider === 'deepseek' && (
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4 space-y-4">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">DeepSeek image analysis (optional)</p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        DeepSeek's main API can't read images. To grade photo-description exercises, point it at an
+                        OpenAI-compatible DeepSeek-VL endpoint (its own base URL, key and model). Leave blank to grade
+                        photos from the title only.
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image endpoint base URL</label>
+                      <input
+                        type="url"
+                        spellCheck={false}
+                        autoComplete="off"
+                        placeholder="https://api.siliconflow.cn/v1"
+                        value={deepseekVisionBaseUrl}
+                        onChange={(e) => setDeepseekVisionBaseUrl(e.target.value)}
+                        className="w-full rounded-xl px-4 py-3 font-mono outline-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 no-autofill-bg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image model</label>
+                      <input
+                        type="text"
+                        spellCheck={false}
+                        autoComplete="off"
+                        placeholder="deepseek-ai/deepseek-vl2"
+                        value={deepseekVisionModel}
+                        onChange={(e) => setDeepseekVisionModel(e.target.value)}
+                        className="w-full rounded-xl px-4 py-3 font-mono outline-none bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 no-autofill-bg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Image endpoint API key</label>
+                      <PasswordInput
+                        placeholder="sk-..."
+                        value={deepseekVisionKey}
+                        onChange={(e) => setDeepseekVisionKey(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <p className="text-xs text-slate-500 mt-2">Your keys are stored locally on your device and never sent to our servers.</p>
               </div>

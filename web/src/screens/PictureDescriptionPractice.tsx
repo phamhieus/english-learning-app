@@ -133,7 +133,7 @@ const PictureDescriptionPractice = () => {
     setIsRecording(false);
     setIsEvaluating(true);
     try {
-      const result = await evaluatePictureDescription(settings, practice.title, recognizedText);
+      const result = await evaluatePictureDescription(settings, practice.title, recognizedText, practice.imageUrl);
       addHistory({
         title: practice.title,
         type: 'Picture Description',

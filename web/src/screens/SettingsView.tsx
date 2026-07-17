@@ -27,7 +27,7 @@ import { Select } from '../components/Select';
 import { PasswordInput } from '../components/PasswordInput';
 import type { AIProvider, PrimaryExam, UserAudioSettings } from '../components/settings-context';
 
-// Providers shown in the Settings dropdown. Qwen / Moonshot / Zhipu are kept
+// Providers shown in the Settings dropdown. Moonshot / Zhipu are kept
 // wired up in the backend (ai.ts registry + key storage) but hidden from the UI.
 const PROVIDER_OPTIONS: { value: AIProvider; label: string }[] = [
   { value: 'gemini', label: 'Google Gemini' },
@@ -35,6 +35,7 @@ const PROVIDER_OPTIONS: { value: AIProvider; label: string }[] = [
   { value: 'anthropic', label: 'Anthropic (Claude)' },
   { value: 'deepseek', label: 'DeepSeek' },
   { value: 'grok', label: 'xAI (Grok)' },
+  { value: 'qwen', label: 'Qwen (Alibaba)' },
 ];
 
 // Sensible cheap/fast default selected when switching to a provider.

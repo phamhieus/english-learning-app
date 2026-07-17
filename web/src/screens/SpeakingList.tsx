@@ -6,6 +6,10 @@ import { useSettings } from '../components/useSettings';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { getExamTopics } from '../services/localData';
+import { samplePictures } from '../features/picture-description/data/sample-images';
+import { MultiPartTestFab } from '../features/combo-practice/components/MultiPartTestFab';
+import { OptimizedImage } from '../components/OptimizedImage';
+import { thumbnailUrl, preloadImage } from '../components/imageUrl';
 import type { Practice } from '../services/storage';
 
 type Exam = 'TOEIC' | 'IELTS';
@@ -58,10 +62,22 @@ const SpeakingList = () => {
   const conf = SPEAKING_TASKS[activeExam];
   const activeTask = conf.tasks.find(t => t.key === activeTaskKey) || conf.tasks[0];
 
-  const practices: Practice[] = useMemo(
-    () => getExamTopics(activeExam, 'Speaking', activeTask.section),
-    [activeExam, activeTask.section]
-  );
+  const practices: Practice[] = useMemo(() => {
+    // Describe a Picture uses the curated photo set (shared with the Writing
+    // module) so the cards can show the actual image to describe.
+    if (activeExam === 'TOEIC' && activeTask.key === 'pic') {
+      return samplePictures.map((picture) => ({
+        id: picture.id,
+        title: picture.title,
+        shortTitle: picture.title,
+        type: `Picture Description · ${picture.category}`,
+        level: picture.level,
+        duration: picture.duration,
+        image: picture.imageUrl,
+      }));
+    }
+    return getExamTopics(activeExam, 'Speaking', activeTask.section);
+  }, [activeExam, activeTask.key, activeTask.section]);
 
   const openIeltsPart1Lobby = (selectedTopic?: string) => {
     navigate('/speaking/ielts-p1', selectedTopic ? { state: { selectedTopic } } : undefined);
@@ -77,14 +93,20 @@ const SpeakingList = () => {
       openIeltsPractice(activeTaskKey, practice.title);
       return;
     }
+    // The picture practice screen expects the original sample-picture shape
+    // (imageUrl, category), so hand it the source object rather than the card.
+    if (activeTaskKey === 'pic') {
+      const picture = samplePictures.find((p) => p.id === practice.id) ?? samplePictures[0];
+      navigate('/speaking/picture/practice', { state: { practice: picture } });
+      return;
+    }
     const state = { practice, exam: activeExam, taskKey: activeTaskKey, taskLabel: activeTask.label };
     // Q5-7 / Q8-10 / Q11 are open-response tasks with their own question flow.
     if (activeTaskKey === 'resp' || activeTaskKey === 'info' || activeTaskKey === 'op') {
       navigate('/speaking/respond', { state });
       return;
     }
-    const route = activeTaskKey === 'pic' ? '/speaking/picture' : '/speaking/record';
-    navigate(route, { state });
+    navigate('/speaking/record', { state });
   };
 
   const openIeltsPractice = (taskKey: string, selectedTopic?: string) => {
@@ -154,6 +176,7 @@ const SpeakingList = () => {
 
     return (
       <div ref={containerRef} className="animate-in fade-in duration-300">
+        <MultiPartTestFab skill="speaking" />
         <div className="gs-sp-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold mb-2">IELTS Speaking</h1>
@@ -221,6 +244,7 @@ const SpeakingList = () => {
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
+      <MultiPartTestFab skill="speaking" />
       <div className="gs-sp-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Speaking Practice</h1>
@@ -263,13 +287,7 @@ const SpeakingList = () => {
             return (
               <button
                 key={t.key}
-                onClick={() => {
-                  if (t.key === 'pic') {
-                    navigate('/speaking/picture');
-                    return;
-                  }
-                  setActiveTaskKey(t.key);
-                }}
+                onClick={() => setActiveTaskKey(t.key)}
                 className={cn(
                   'flex items-center gap-2 px-3.5 py-2 rounded-full text-[13px] font-semibold transition border shrink-0 whitespace-nowrap',
                   on
@@ -302,14 +320,29 @@ const SpeakingList = () => {
               role="button"
               tabIndex={0}
               onClick={() => startPractice(practice)}
+              onMouseEnter={() => practice.image && preloadImage(practice.image)}
+              onFocus={() => practice.image && preloadImage(practice.image)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
                   startPractice(practice);
                 }
               }}
-              className="gs-sp-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+              className="gs-sp-card glass-card rounded-2xl shadow p-5 sm:p-6 border border-transparent hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
             >
+              {/* Picture preview — small thumbnail only, lazily loaded */}
+              {practice.image && (
+                <div className="relative -mx-5 -mt-5 sm:-mx-6 sm:-mt-6 mb-5 aspect-video overflow-hidden">
+                  <OptimizedImage
+                    src={thumbnailUrl(practice.image)}
+                    alt={practice.title}
+                    width={320}
+                    height={180}
+                    className="h-full w-full"
+                  />
+                </div>
+              )}
+
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
                   <ExamPill exam={activeExam} />

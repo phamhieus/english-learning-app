@@ -10,6 +10,7 @@ import { useGSAP } from '@gsap/react';
 import { getExamTopics } from '../services/localData';
 import { samplePictures } from '../features/picture-description/data/sample-images';
 import { classifyTheme, themeLabel } from '../features/toeic-writing/utils/essayThemes';
+import { MultiPartTestFab } from '../features/combo-practice/components/MultiPartTestFab';
 import type { Practice } from '../services/storage';
 
 type Exam = 'TOEIC' | 'IELTS';
@@ -160,6 +161,7 @@ const WritingList = () => {
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
+      <MultiPartTestFab skill="writing" />
       <div className="gs-wr-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Writing Practice</h1>

@@ -1,26 +1,32 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 import { cn } from './classNames';
-import { ToastContext, type ToastType } from './toast-context';
+import { ToastContext, type ToastType, type ToastAction, type ToastOptions } from './toast-context';
 
 interface Toast {
   id: string;
   message: string;
   type: ToastType;
+  action?: ToastAction;
 }
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((message: string, type: ToastType) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
-    
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3000);
+  const dismiss = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
+
+  const addToast = useCallback((message: string, type: ToastType, options?: ToastOptions) => {
+    const id = Math.random().toString(36).substr(2, 9);
+    setToasts(prev => [...prev, { id, message, type, action: options?.action }]);
+
+    const duration = options?.duration === undefined ? 3000 : options.duration;
+    if (duration !== null && duration > 0) {
+      setTimeout(() => dismiss(id), duration);
+    }
+  }, [dismiss]);
 
   const success = useCallback((message: string) => addToast(message, 'success'), [addToast]);
   const error = useCallback((message: string) => addToast(message, 'error'), [addToast]);
@@ -42,15 +48,24 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
               "bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800/50"
             )}
           >
-            {toast.type === 'success' && <CheckCircle className="w-5 h-5 text-green-500" />}
-            {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-red-500" />}
-            {toast.type === 'info' && <Info className="w-5 h-5 text-blue-500" />}
-            
+            {toast.type === 'success' && <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />}
+            {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />}
+            {toast.type === 'info' && <Info className="w-5 h-5 text-blue-500 shrink-0" />}
+
             <span className="font-medium flex-1">{toast.message}</span>
-            
-            <button 
-              onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))}
-              className="opacity-50 hover:opacity-100 transition-opacity"
+
+            {toast.action && (
+              <button
+                onClick={() => { toast.action!.onClick(); dismiss(toast.id); }}
+                className="font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity shrink-0"
+              >
+                {toast.action.label}
+              </button>
+            )}
+
+            <button
+              onClick={() => dismiss(toast.id)}
+              className="opacity-50 hover:opacity-100 transition-opacity shrink-0"
             >
               <X className="w-4 h-4" />
             </button>

@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import { SettingsProvider } from './components/SettingsContext';
 import { ToastProvider } from './components/ToastContext';
+import { PwaReloadPrompt } from './components/PwaReloadPrompt';
 import { Layout } from './components/Layout';
 import { SplashScreen } from './components/SplashScreen';
 
@@ -53,6 +54,7 @@ function App() {
       <ThemeProvider>
         <SettingsProvider>
           <ToastProvider>
+            <PwaReloadPrompt />
             <HashRouter>
               <Layout>
                 <Routes>

@@ -7,6 +7,7 @@ import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
 import { PART3_DISCUSSION_SETS, generatePart3DiscussionSet, getLinkedPart3Set, getPart3ThemeGroup } from '../data/part3DiscussionSets';
+import { finishComboStep } from '../../combo-practice/services/comboSession';
 import type { IeltsP3AnswerInput } from '../types/ielts-speaking.types';
 
 const QUESTION_COUNT = 5;
@@ -103,14 +104,21 @@ const IeltsSpeakingP3Session = () => {
     setAnswers(nextAnswers);
 
     if (idx + 1 >= questions.length) {
-      navigate('/speaking/ielts/result', {
-        state: {
-          part: 'part_3',
-          discussionSet,
-          durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
-          answers: nextAnswers,
-        },
+      const resultState = {
+        part: 'part_3',
+        discussionSet,
+        durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
+        answers: nextAnswers,
+      };
+      // Band is estimated on the result page, so no score is available yet.
+      const comboNext = finishComboStep({
+        resultRoute: '/speaking/ielts/result',
+        resultState,
+        score: null,
+        title: discussionSet.title,
       });
+      if (comboNext) navigate(comboNext.route, { state: comboNext.state });
+      else navigate('/speaking/ielts/result', { state: resultState });
       return;
     }
 

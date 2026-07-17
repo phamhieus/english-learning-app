@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings, Shuffle } from 'lucide-react';
+import { PenTool, Clock, Image, Mail, FileText, BarChart3, Target, Settings, Shuffle, Layers } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { OptimizedImage } from '../components/OptimizedImage';
@@ -160,9 +160,17 @@ const WritingList = () => {
 
   return (
     <div ref={containerRef} className="animate-in fade-in duration-300">
-      <div className="gs-wr-header mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Writing Practice</h1>
-        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
+      <div className="gs-wr-header flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Writing Practice</h1>
+          <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
+        </div>
+        <button
+          onClick={() => navigate('/practice-combo?skill=writing')}
+          className="hidden sm:flex items-center justify-center gap-2 shrink-0 bg-white dark:bg-slate-800 border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-300 px-5 py-2.5 rounded-xl font-medium hover:bg-orange-50 dark:hover:bg-orange-900/30 transition-all"
+        >
+          <Layers className="w-4 h-4" /> Multi-Part Test
+        </button>
       </div>
 
       <div className="gs-wr-filters space-y-5 mb-7">

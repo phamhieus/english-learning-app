@@ -41,6 +41,8 @@ import IeltsSpeakingP3Session from './features/ielts-speaking/pages/IeltsSpeakin
 import IeltsSpeakingPracticeResult from './features/ielts-speaking/pages/IeltsSpeakingPracticeResult';
 import { FeedbackResultPage } from './features/feedback/FeedbackResultPage';
 import { FeedbackDemo } from './features/feedback/FeedbackDemo';
+import ComboBuilder from './features/combo-practice/pages/ComboBuilder';
+import ComboResult from './features/combo-practice/pages/ComboResult';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -88,6 +90,9 @@ function App() {
                   <Route path="/speaking/ielts/part-2" element={<IeltsSpeakingP2Session />} />
                   <Route path="/speaking/ielts/part-3" element={<IeltsSpeakingP3Session />} />
                   <Route path="/speaking/ielts/result" element={<IeltsSpeakingPracticeResult />} />
+
+                  <Route path="/practice-combo" element={<ComboBuilder />} />
+                  <Route path="/practice-combo/result" element={<ComboResult />} />
 
                   {videoShadowingRoutes()}
 

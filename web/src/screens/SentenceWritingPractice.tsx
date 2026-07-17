@@ -7,6 +7,7 @@ import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import { evaluateSentenceWriting } from '../services/ai';
 import { addHistory } from '../services/storage';
+import { runComboStepInBackground } from '../features/combo-practice/services/comboSession';
 import { useToast } from '../components/useToast';
 import type { SentenceWritingPractice as Practice } from '../features/picture-sentence/types/picture-sentence.types';
 
@@ -46,8 +47,7 @@ const SentenceWritingPractice = () => {
 
   const handleEvaluate = async () => {
     if (!sentence.trim()) return;
-    setIsEvaluating(true);
-    try {
+    const runEvaluation = async () => {
       const result = await evaluateSentenceWriting(settings, practice.title, practice.words, sentence, practice.imageUrl);
       addHistory({
         title: practice.title,
@@ -55,6 +55,25 @@ const SentenceWritingPractice = () => {
         score: result.score,
         focus: 'Write a Sentence',
       });
+      return result;
+    };
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/writing/sentence/result',
+      title: practice.title,
+      evaluate: async () => {
+        const result = await runEvaluation();
+        return { score: result.score ?? null, resultState: { result, sentence, practice } };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
+    setIsEvaluating(true);
+    try {
+      const result = await runEvaluation();
       showSuccess('Evaluation completed!');
       navigate('/writing/sentence/result', { state: { result, sentence, practice } });
     } catch (e) {

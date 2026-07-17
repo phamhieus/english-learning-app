@@ -8,6 +8,7 @@ import { generateTeacherFeedback } from '../../../services/ai';
 import { getWritingTaskTiming } from '../../../services/examTiming';
 import { addHistory } from '../../../services/storage';
 import type { Practice } from '../../../services/storage';
+import { runComboStepInBackground } from '../../combo-practice/services/comboSession';
 import {
   ESSAY_MIN_WORDS,
   buildEssayChecklist,
@@ -101,8 +102,7 @@ const ToeicWritingP3Session = () => {
     setReasons((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
 
   const handleSubmit = async () => {
-    setIsEvaluating(true);
-    try {
+    const runEvaluation = async () => {
       const prompt = practice.title;
       // Part 3 is graded with the teacher-style feedback system (0-5 TOEIC
       // rubric) and shown on the shared FeedbackResultPage.
@@ -117,6 +117,27 @@ const ToeicWritingP3Session = () => {
         ? Math.round(Math.max(0, Math.min(5, result.overallScore)) * 20)
         : 0;
       addHistory({ title: practice.title, type: practice.type, score, focus: 'Writing' });
+      return { result, score };
+    };
+
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/writing/toeic-p3/result',
+      title: practice.title,
+      evaluate: async () => {
+        const { result, score } = await runEvaluation();
+        return { score, resultState: { result, practice } };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
+
+    setIsEvaluating(true);
+    try {
+      const { result } = await runEvaluation();
       toast.success('Evaluation completed!');
       navigate('/writing/toeic-p3/result', { state: { result, practice } });
     } catch (e) {

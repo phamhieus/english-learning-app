@@ -22,6 +22,7 @@ import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
 import { PART2_CUE_CARDS, getRandomCueCard } from '../data/part2CueCards';
+import { finishComboStep } from '../../combo-practice/services/comboSession';
 import type { IeltsP2AnswerInput, Part2CueCard } from '../types/ielts-speaking.types';
 import { IELTS_P2_PREP_SECONDS, IELTS_P2_LONG_TURN_SECONDS } from '../../../services/examTiming';
 
@@ -197,16 +198,23 @@ const IeltsSpeakingP2Session = () => {
     speech.stop();
     reader.stop();
     setPhase('complete');
-    navigate('/speaking/ielts/result', {
-      state: {
-        part: 'part_2',
-        cueCard,
-        notes,
-        durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
-        longTurn: longTurnRef.current ?? longTurn,
-        roundingOff,
-      },
+    const resultState = {
+      part: 'part_2',
+      cueCard,
+      notes,
+      durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
+      longTurn: longTurnRef.current ?? longTurn,
+      roundingOff,
+    };
+    // Band is estimated on the result page, so no score is available yet.
+    const comboNext = finishComboStep({
+      resultRoute: '/speaking/ielts/result',
+      resultState,
+      score: null,
+      title: cueCard.title,
     });
+    if (comboNext) navigate(comboNext.route, { state: comboNext.state });
+    else navigate('/speaking/ielts/result', { state: resultState });
   };
 
   const finishFollowUp = () => {

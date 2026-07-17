@@ -13,6 +13,7 @@ import {
   type SpeakingTaskContent,
 } from '../services/ai';
 import { addHistory } from '../services/storage';
+import { runComboStepInBackground } from '../features/combo-practice/services/comboSession';
 import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
 import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
 import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
@@ -147,14 +148,35 @@ const SpeakingResponse = () => {
 
   const submit = useCallback(async (allAnswers: string[]) => {
     if (!content) return;
-    setPhase('submitting');
-    try {
+    const runEvaluation = async () => {
       const items = content.questions.map((q, i) => ({ question: q, answer: allAnswers[i] ?? '' }));
       const result = await evaluateSpeakingResponses(settings, taskKey, items, {
         scenario: content.scenario,
         info: content.info,
       });
       addHistory({ title: practice.title, type: meta.label, score: result.score, focus: 'Speaking' });
+      return result;
+    };
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/speaking/respond/result',
+      title: practice.title,
+      evaluate: async () => {
+        const result = await runEvaluation();
+        return {
+          score: result.score ?? null,
+          resultState: { result, content, answers: allAnswers, practice, taskKey, taskLabel: meta.label },
+        };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
+    setPhase('submitting');
+    try {
+      const result = await runEvaluation();
       showSuccess('Evaluation completed!');
       navigate('/speaking/respond/result', {
         state: { result, content, answers: allAnswers, practice, taskKey, taskLabel: meta.label },

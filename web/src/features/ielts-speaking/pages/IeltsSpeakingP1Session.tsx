@@ -5,6 +5,7 @@ import { cn } from '../../../components/classNames';
 import { useSpeechRecognition } from '../../../services/useSpeechRecognition';
 import { useVoiceReader } from '../../voice-reader/useVoiceReader';
 import { makeVoiceReaderSegments } from '../../voice-reader/voiceReaderText';
+import { finishComboStep } from '../../combo-practice/services/comboSession';
 import type { IeltsSpeakingMode, IeltsSpeakingTopic, IeltsAnswerRecord } from '../types/ielts-speaking.types';
 
 interface SessionInput {
@@ -114,14 +115,21 @@ const IeltsSpeakingP1Session = () => {
     const nextIdx = idxRef.current + 1;
 
     if (nextIdx >= queue.current.length) {
-      navigate('/speaking/ielts-p1/result', {
-        state: {
-          answers: answersRef.current,
-          mode: input?.mode,
-          durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
-          isMock,
-        },
+      const resultState = {
+        answers: answersRef.current,
+        mode: input?.mode,
+        durationSeconds: Math.round((Date.now() - sessionStartRef.current) / 1000),
+        isMock,
+      };
+      // Band is estimated on the result page, so no score is available yet.
+      const comboNext = finishComboStep({
+        resultRoute: '/speaking/ielts-p1/result',
+        resultState,
+        score: null,
+        title: 'IELTS Speaking Part 1',
       });
+      if (comboNext) navigate(comboNext.route, { state: comboNext.state });
+      else navigate('/speaking/ielts-p1/result', { state: resultState });
     } else {
       idxRef.current = nextIdx;
       setIdx(nextIdx);

@@ -8,6 +8,7 @@ import { addHistory } from '../services/storage';
 import { useToast } from '../components/useToast';
 import { useSpeechRecognition } from '../services/useSpeechRecognition';
 import { TOEIC_SPEAKING_TIMING } from '../services/examTiming';
+import { runComboStepInBackground } from '../features/combo-practice/services/comboSession';
 import { VoiceReaderControls } from '../features/voice-reader/VoiceReaderControls';
 import { splitVoiceReaderText } from '../features/voice-reader/voiceReaderText';
 import { useVoiceReader } from '../features/voice-reader/useVoiceReader';
@@ -143,6 +144,21 @@ const SpeakingRecording = () => {
 
   const handleEvaluate = async () => {
     if (speech.isListening) speech.stop();
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/speaking/result',
+      title: practice.title,
+      evaluate: async () => {
+        const result = await evaluateSpeaking(settings, transcript, recognizedText);
+        addHistory({ title: practice.title, type: practice.type, score: result.score, focus: 'Speaking' });
+        return { score: result.score ?? null, resultState: { result, recognizedText, transcript, practice } };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
     setIsEvaluating(true);
     try {
       const result = await evaluateSpeaking(settings, transcript, recognizedText);

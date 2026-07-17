@@ -5,6 +5,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { cn } from './classNames';
 import { useSettings } from './useSettings';
 import { hasApiKey, PROVIDER_LABEL } from './settings-context';
+import { ComboBanner } from '../features/combo-practice/components/ComboBanner';
 
 // Primary mobile destinations; full nav lives behind the "More" drawer.
 const MOBILE_TABS = [
@@ -70,6 +71,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <main className="flex-1 overflow-y-auto px-4 py-4 pb-28 md:px-10 md:py-8 md:pb-8 relative">
+        <div className="max-w-6xl mx-auto w-full">
+          <ComboBanner />
+        </div>
         <div
           key={location.pathname}
           className="max-w-6xl mx-auto w-full min-h-full pb-10 animate-in fade-in slide-in-from-bottom-8 duration-500 fill-mode-both"

@@ -7,6 +7,7 @@ import { thumbnailUrl } from '../components/imageUrl';
 import { useSettings } from '../components/useSettings';
 import { evaluatePictureDescription } from '../services/ai';
 import { addHistory } from '../services/storage';
+import { runComboStepInBackground } from '../features/combo-practice/services/comboSession';
 import { useToast } from '../components/useToast';
 import { createSpeechRecognition, type SpeechRecognition } from '../services/speechRecognition';
 import { TOEIC_SPEAKING_TIMING } from '../services/examTiming';
@@ -131,8 +132,7 @@ const PictureDescriptionPractice = () => {
   const handleEvaluate = async () => {
     if (isRecording) recognitionRef.current?.stop();
     setIsRecording(false);
-    setIsEvaluating(true);
-    try {
+    const runEvaluation = async () => {
       const result = await evaluatePictureDescription(settings, practice.title, recognizedText, practice.imageUrl);
       addHistory({
         title: practice.title,
@@ -140,6 +140,28 @@ const PictureDescriptionPractice = () => {
         score: result.score,
         focus: 'Picture Description',
       });
+      return result;
+    };
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/speaking/picture/result',
+      title: practice.title,
+      evaluate: async () => {
+        const result = await runEvaluation();
+        return {
+          score: result.score ?? null,
+          resultState: { result, recognizedText, practice, exam: settings.primaryExam },
+        };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
+    setIsEvaluating(true);
+    try {
+      const result = await runEvaluation();
       showSuccess('Evaluation completed!');
       navigate('/speaking/picture/result', { state: { result, recognizedText, practice, exam: settings.primaryExam } });
     } catch (e) {

@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { Play, Volume2, Image, MessagesSquare, Table2, Megaphone, UserRound, MessageCircle, Timer, Target, Settings, Mic2 } from 'lucide-react';
+import { Play, Volume2, Image, MessagesSquare, Table2, Megaphone, UserRound, MessageCircle, Timer, Target, Settings, Mic2, Layers } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useSettings } from '../components/useSettings';
@@ -161,12 +161,20 @@ const SpeakingList = () => {
               Practice the IELTS Speaking test by part. Part 1 topics are managed inside the Part 1 lobby, so this page stays focused on the three-part structure.
             </p>
           </div>
-          <button
-            onClick={() => navigate('/speaking/ielts')}
-            className="hidden sm:flex items-center justify-center gap-2 shrink-0 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
-          >
-            <MessageCircle className="w-4 h-4" /> IELTS Overview
-          </button>
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
+            <button
+              onClick={() => navigate('/practice-combo?skill=speaking')}
+              className="flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300 px-5 py-2.5 rounded-xl font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"
+            >
+              <Layers className="w-4 h-4" /> Multi-Part Test
+            </button>
+            <button
+              onClick={() => navigate('/speaking/ielts')}
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
+            >
+              <MessageCircle className="w-4 h-4" /> IELTS Overview
+            </button>
+          </div>
         </div>
 
         <div className="gs-sp-filters flex items-center gap-3 mb-7">
@@ -218,12 +226,20 @@ const SpeakingList = () => {
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Speaking Practice</h1>
           <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xl">{conf.blurb}</p>
         </div>
-        <button
-          onClick={() => navigate('/shadowing/mock-dialogue')}
-          className="hidden sm:flex items-center justify-center gap-2 shrink-0 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
-        >
-          <MessageCircle className="w-4 h-4" /> Mock Interview
-        </button>
+        <div className="hidden sm:flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => navigate('/practice-combo?skill=speaking')}
+            className="flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300 px-5 py-2.5 rounded-xl font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all"
+          >
+            <Layers className="w-4 h-4" /> Multi-Part Test
+          </button>
+          <button
+            onClick={() => navigate('/shadowing/mock-dialogue')}
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:scale-105 transition-all"
+          >
+            <MessageCircle className="w-4 h-4" /> Mock Interview
+          </button>
+        </div>
       </div>
 
       <div className="gs-sp-filters space-y-5 mb-7">

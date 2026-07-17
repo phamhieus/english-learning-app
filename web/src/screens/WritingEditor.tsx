@@ -8,6 +8,7 @@ import { useSettings } from '../components/useSettings';
 import { evaluateWriting, generateTeacherFeedback } from '../services/ai';
 import { getWritingTaskTiming } from '../services/examTiming';
 import { addHistory } from '../services/storage';
+import { runComboStepInBackground } from '../features/combo-practice/services/comboSession';
 import { useToast } from '../components/useToast';
 import ChartPrompt, { describeChartData } from '../features/writing/IELTSChart';
 
@@ -194,8 +195,7 @@ const WritingEditor = () => {
   };
 
   const handleSubmit = async () => {
-    setIsEvaluating(true);
-    try {
+    const runEvaluation = async () => {
       const prompt = isPictureWriting
         ? `${practice.title}\nWrite a picture description paragraph.`
         : practice.title;
@@ -229,6 +229,30 @@ const WritingEditor = () => {
       ]);
 
       addHistory({ title: practice.title, type: practice.type, score: result.score, focus: 'Writing' });
+      return { result, teacherFeedback };
+    };
+
+    // Combo mode: move straight to the next part; the AI scores this one in
+    // the background and the combined result page fills in when it resolves.
+    const comboNext = runComboStepInBackground({
+      resultRoute: '/writing/result',
+      title: practice.title,
+      evaluate: async () => {
+        const { result, teacherFeedback } = await runEvaluation();
+        return {
+          score: result.score ?? null,
+          resultState: { result, originalText: text, practice, exam: activeExam, taskKey, teacherFeedback },
+        };
+      },
+    });
+    if (comboNext) {
+      navigate(comboNext.route, { state: comboNext.state });
+      return;
+    }
+
+    setIsEvaluating(true);
+    try {
+      const { result, teacherFeedback } = await runEvaluation();
       toast.success('Evaluation completed!');
       navigate('/writing/result', { state: { result, originalText: text, practice, exam: activeExam, taskKey, teacherFeedback } });
     } catch (e) {

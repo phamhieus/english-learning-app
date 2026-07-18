@@ -106,7 +106,7 @@ const MockDialogue = () => {
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col glass-card rounded-3xl overflow-hidden shadow-xl animate-in fade-in duration-500">
+    <div className="h-[calc(100dvh-8rem)] flex flex-col glass-card rounded-3xl overflow-hidden shadow-xl animate-in fade-in duration-500">
       {/* Header */}
       <div className="h-16 border-b border-[var(--border)] flex items-center justify-between px-6 shrink-0 bg-white/50 dark:bg-slate-900/50">
         <div className="flex items-center gap-3">

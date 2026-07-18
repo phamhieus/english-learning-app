@@ -97,7 +97,7 @@ export default function VideoShadowingResultPage() {
           </span>
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-2">Total Score</span>
         </div>
-        <div className="flex-1 grid grid-cols-3 gap-6 min-w-[300px]">
+        <div className="w-full sm:w-auto sm:flex-1 sm:min-w-[300px] grid grid-cols-3 gap-3 sm:gap-6">
           {([['Recorded', `${recordedCount} / ${segments.length}`, ListChecks, 'text-indigo-500'],
              ['Practice time', formatClock(session?.practiceDurationMs ?? 0), Clock, 'text-purple-500'],
              ['Avg. accuracy', hasScores ? `${total}%` : '—', Target, 'text-green-500']] as const).map(([k, v, Icon, col]) => (

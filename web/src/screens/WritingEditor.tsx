@@ -264,7 +264,7 @@ const WritingEditor = () => {
   };
 
   return (
-    <div className="lg:h-[calc(100vh-8rem)] flex flex-col pb-32 md:pb-0 animate-in slide-in-from-bottom-8 duration-500">
+    <div className="lg:h-[calc(100dvh-8rem)] flex flex-col pb-32 md:pb-0 animate-in slide-in-from-bottom-8 duration-500">
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white font-medium">
           ← Exit

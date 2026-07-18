@@ -135,7 +135,7 @@ export default function ShadowingPracticePage() {
   // ── Main layout ───────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] animate-in slide-in-from-bottom-6 duration-500">
+    <div className="flex flex-col h-[calc(100dvh-8.5rem)] md:h-[calc(100dvh-5rem)] animate-in slide-in-from-bottom-6 duration-500">
 
       {/* ── Header ── */}
       <div className="flex items-center justify-between gap-4 mb-4 shrink-0 px-1">

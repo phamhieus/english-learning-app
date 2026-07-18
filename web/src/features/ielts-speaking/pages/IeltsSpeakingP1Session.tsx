@@ -214,7 +214,7 @@ const IeltsSpeakingP1Session = () => {
   const liveText = speech.transcript + (speech.interimTranscript ? ' ' + speech.interimTranscript : '');
 
   return (
-    <div className="max-w-2xl mx-auto min-h-[calc(100vh-8rem)] flex flex-col animate-in fade-in duration-300">
+    <div className="max-w-2xl mx-auto min-h-[calc(100dvh-8rem)] flex flex-col animate-in fade-in duration-300">
 
       {/* ── Countdown overlay ─────────────────────────────────── */}
       {phase === 'countdown' && (

@@ -74,7 +74,7 @@ export function VirtualConversationView({ scenario }: VirtualConversationViewPro
     errorMessage?.toLowerCase().includes("microphone");
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-80px)] bg-[var(--background)]">
+    <div className="flex flex-col h-full max-h-[calc(100dvh-80px)] bg-[var(--background)]">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div className="flex items-center gap-3">

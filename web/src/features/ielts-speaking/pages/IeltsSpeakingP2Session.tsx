@@ -322,7 +322,7 @@ const IeltsSpeakingP2Session = () => {
   const speakingCaution = speakingRemaining > 10 && speakingRemaining <= 30;
 
   return (
-    <div className="max-w-6xl mx-auto min-h-[calc(100vh-8rem)] animate-in fade-in duration-300">
+    <div className="max-w-6xl mx-auto min-h-[calc(100dvh-8rem)] animate-in fade-in duration-300">
       <div className="flex items-center justify-between gap-3 mb-5">
         <button
           onClick={() => navigate('/speaking/ielts')}

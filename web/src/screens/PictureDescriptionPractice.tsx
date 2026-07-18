@@ -186,7 +186,7 @@ const PictureDescriptionPractice = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
+    <div className="max-w-4xl mx-auto h-[calc(100dvh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button

@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle, Mic2, Edit3, Repeat2, Flame, Gauge, LineChart } from 'lucide-react';
+import { ArrowRight, MessageCircle, Mic2, Edit3, Repeat2, Flame, Gauge, LineChart, Clapperboard, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../components/classNames';
 import { useUserStats } from '../services/useUserStats';
@@ -85,6 +85,8 @@ const Dashboard = () => {
           },
           { title: 'Shadowing',      sub: 'Listen · repeat · video',    icon: Repeat2,       color: 'bg-purple-500',  path: '/shadowing', highlight: true },
           { title: 'Mock Interview', sub: 'Full speaking test',         icon: MessageCircle, color: 'bg-emerald-500', path: '/shadowing/mock-dialogue' },
+          { title: 'Video Shadowing',   sub: 'Practice with real videos', icon: Clapperboard, color: 'bg-fuchsia-500', path: '/video-shadowing' },
+          { title: 'Learning Progress', sub: 'Streak · scores · history', icon: Activity,     color: 'bg-teal-500',    path: '/progress' },
         ].map((it, i) => (
           <button
             key={i}

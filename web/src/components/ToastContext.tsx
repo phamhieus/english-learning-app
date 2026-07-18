@@ -37,12 +37,13 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      {/* Mobile: full-width above the bottom tab bar; desktop: bottom-right stack */}
+      <div className="fixed bottom-24 inset-x-4 md:bottom-6 md:left-auto md:right-6 z-50 flex flex-col gap-3 items-stretch md:items-end">
         {toasts.map(toast => (
-          <div 
+          <div
             key={toast.id}
             className={cn(
-              "flex items-center gap-3 px-5 py-3 rounded-2xl shadow-xl animate-in slide-in-from-right-8 fade-in duration-300 min-w-[300px]",
+              "flex items-center gap-3 px-5 py-3 rounded-2xl shadow-xl animate-in slide-in-from-bottom-4 md:slide-in-from-right-8 fade-in duration-300 md:min-w-[300px]",
               toast.type === 'success' ? "bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800/50" :
               toast.type === 'error' ? "bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800/50" :
               "bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800/50"

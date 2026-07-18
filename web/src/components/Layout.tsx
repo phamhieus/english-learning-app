@@ -32,7 +32,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
   if (!hasKey && !keyExempt) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[var(--background)] p-6">
+      <div className="flex h-[100dvh] w-full items-center justify-center bg-[var(--background)] p-6">
         <div className="glass-card rounded-3xl p-10 max-w-md w-full text-center shadow-xl animate-in fade-in zoom-in-95 duration-500">
           <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
             <Key className="w-10 h-10" />

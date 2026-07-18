@@ -234,7 +234,7 @@ const SpeakingResponse = () => {
   const isLastQuestion = qIndex === questions.length - 1;
 
   return (
-    <div className="max-w-4xl mx-auto min-h-[calc(100vh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
+    <div className="max-w-4xl mx-auto min-h-[calc(100dvh-8rem)] flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">

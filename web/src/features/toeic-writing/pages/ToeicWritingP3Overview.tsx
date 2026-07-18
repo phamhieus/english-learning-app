@@ -115,7 +115,7 @@ const ToeicWritingP3Overview = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {STATS.map(([value, label]) => (
             <div key={label} className="glass-card rounded-2xl p-4 text-center border border-transparent">
               <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">{value}</p>

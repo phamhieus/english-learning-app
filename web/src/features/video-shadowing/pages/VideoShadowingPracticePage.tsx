@@ -307,7 +307,7 @@ export default function VideoShadowingPracticePage() {
           className={cn(
             'group relative overflow-hidden bg-black transition-all',
             isFullscreen
-              ? 'w-screen h-screen rounded-none shadow-none'
+              ? 'w-screen h-[100dvh] rounded-none shadow-none'
               : 'w-full lg:w-auto lg:h-full aspect-video lg:max-w-full rounded-3xl shadow-xl shadow-slate-200/60 dark:shadow-black/40',
           )}
         >

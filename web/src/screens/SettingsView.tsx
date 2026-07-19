@@ -25,6 +25,7 @@ import { useTheme } from '../components/useTheme';
 import { cn } from '../components/classNames';
 import { Select } from '../components/Select';
 import { PasswordInput } from '../components/PasswordInput';
+import { SOFT_VOLUME, softenedPitch } from '../features/voice-reader/voiceSoftening';
 import type { AIProvider, PrimaryExam, UserAudioSettings } from '../components/settings-context';
 
 // Providers shown in the Settings dropdown. Moonshot / Zhipu are kept
@@ -211,7 +212,8 @@ const SettingsView = () => {
       const matchingVoice = pickVoiceForLanguage(voices, userAudioSettings.language, userAudioSettings.voiceGender);
       utterance.lang = userAudioSettings.language;
       utterance.rate = userAudioSettings.speed;
-      utterance.pitch = userAudioSettings.pitch;
+      utterance.pitch = softenedPitch(userAudioSettings.pitch);
+      utterance.volume = SOFT_VOLUME;
       if (matchingVoice) utterance.voice = matchingVoice;
       synth.speak(utterance);
     } finally {

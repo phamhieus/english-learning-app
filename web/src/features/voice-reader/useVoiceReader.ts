@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSettings } from '../../components/useSettings';
+import { SOFT_VOLUME, softenedPitch } from './voiceSoftening';
 import type { VoiceReaderSegment } from './voiceReaderText';
 
 export type VoiceReaderStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'completed' | 'error';
@@ -121,7 +122,8 @@ export function useVoiceReader({ exerciseId }: UseVoiceReaderOptions) {
         const utterance = new SpeechSynthesisUtterance(segment.text);
         utterance.lang = userAudioSettings.language;
         utterance.rate = userAudioSettings.speed;
-        utterance.pitch = userAudioSettings.pitch;
+        utterance.pitch = softenedPitch(userAudioSettings.pitch);
+        utterance.volume = SOFT_VOLUME;
         if (voice) utterance.voice = voice;
 
         utterance.onstart = () => {

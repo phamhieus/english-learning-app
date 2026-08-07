@@ -3900,7 +3900,7 @@
       "level": "Beginner to Intermediate",
       "taskType": "Personal response",
       "topicGroup": "Daily and workplace questions",
-      "topicCount": 16,
+      "topicCount": 24,
       "topics": [
         {
           "id": "toeic-speaking-respond-to-questions-01",
@@ -4199,6 +4199,158 @@
             "Create TOEIC Speaking response questions about Managing time. Include model answers at different levels.",
             "Generate a teacher-friendly lesson activity for the topic: Managing time.",
             "Create vocabulary, useful expressions, and follow-up questions for: Managing time."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-17",
+          "topicNo": 17,
+          "topicName": "Cell phone usage",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Cell phone usage.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Cell phone usage. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Cell phone usage.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Cell phone usage."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-18",
+          "topicNo": 18,
+          "topicName": "Visiting amusement parks",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Visiting amusement parks.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Visiting amusement parks. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Visiting amusement parks.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Visiting amusement parks."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-19",
+          "topicNo": 19,
+          "topicName": "Conversation habits",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Conversation habits.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Conversation habits. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Conversation habits.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Conversation habits."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-20",
+          "topicNo": 20,
+          "topicName": "Watching television",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Watching television.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Watching television. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Watching television.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Watching television."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-21",
+          "topicNo": 21,
+          "topicName": "Where you live",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Where you live.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Where you live. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Where you live.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Where you live."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-22",
+          "topicNo": 22,
+          "topicName": "Music and the radio",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Music and the radio.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Music and the radio. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Music and the radio.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Music and the radio."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-23",
+          "topicNo": 23,
+          "topicName": "Reading news and newspapers",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Reading news and newspapers.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Reading news and newspapers. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Reading news and newspapers.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Reading news and newspapers."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-respond-to-questions-24",
+          "topicNo": 24,
+          "topicName": "Health and diet",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Beginner to Intermediate",
+          "taskType": "Personal response",
+          "description": "Practice topic for TOEIC Speaking - Respond to Questions: Health and diet.",
+          "samplePrompts": [
+            "Create TOEIC Speaking response questions about Health and diet. Include model answers at different levels.",
+            "Generate a teacher-friendly lesson activity for the topic: Health and diet.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Health and diet."
           ],
           "teacherNotes": [
             "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
@@ -4532,7 +4684,7 @@
       "level": "Intermediate to Upper-Intermediate",
       "taskType": "Opinion speaking",
       "topicGroup": "Work and society",
-      "topicCount": 16,
+      "topicCount": 26,
       "topics": [
         {
           "id": "toeic-speaking-express-an-opinion-01",
@@ -4831,6 +4983,196 @@
             "Create a TOEIC Speaking opinion task about Healthy lifestyle at work. Include a 45-second model answer.",
             "Generate a teacher-friendly lesson activity for the topic: Healthy lifestyle at work.",
             "Create vocabulary, useful expressions, and follow-up questions for: Healthy lifestyle at work."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-17",
+          "topicNo": 17,
+          "topicName": "Students should take part in physical activities at school",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Students should take part in physical activities at school.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Students should take part in physical activities at school. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Students should take part in physical activities at school.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Students should take part in physical activities at school."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-18",
+          "topicNo": 18,
+          "topicName": "Living with parents while attending university",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Living with parents while attending university.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Living with parents while attending university. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Living with parents while attending university.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Living with parents while attending university."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-19",
+          "topicNo": 19,
+          "topicName": "Teachers should use humor in class",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Teachers should use humor in class.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Teachers should use humor in class. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Teachers should use humor in class.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Teachers should use humor in class."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-20",
+          "topicNo": 20,
+          "topicName": "A good diet is more important than regular exercise",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: A good diet is more important than regular exercise.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about A good diet is more important than regular exercise. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A good diet is more important than regular exercise.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A good diet is more important than regular exercise."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-21",
+          "topicNo": 21,
+          "topicName": "Traveling to one country is better than visiting several",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Traveling to one country is better than visiting several.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Traveling to one country is better than visiting several. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Traveling to one country is better than visiting several.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Traveling to one country is better than visiting several."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-22",
+          "topicNo": 22,
+          "topicName": "Job satisfaction matters more than a high salary",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Job satisfaction matters more than a high salary.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Job satisfaction matters more than a high salary. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Job satisfaction matters more than a high salary.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Job satisfaction matters more than a high salary."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-23",
+          "topicNo": 23,
+          "topicName": "A lower-paying job with more free time is worth it",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: A lower-paying job with more free time is worth it.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about A lower-paying job with more free time is worth it. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A lower-paying job with more free time is worth it.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A lower-paying job with more free time is worth it."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-24",
+          "topicNo": 24,
+          "topicName": "Cooking at home is better than eating out",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: Cooking at home is better than eating out.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about Cooking at home is better than eating out. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Cooking at home is better than eating out.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Cooking at home is better than eating out."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-25",
+          "topicNo": 25,
+          "topicName": "City life is better than living in a small town",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: City life is better than living in a small town.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about City life is better than living in a small town. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: City life is better than living in a small town.",
+            "Create vocabulary, useful expressions, and follow-up questions for: City life is better than living in a small town."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-speaking-express-an-opinion-26",
+          "topicNo": 26,
+          "topicName": "The most challenging part of working in a group",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion speaking",
+          "description": "Practice topic for TOEIC Speaking - Express an Opinion: The most challenging part of working in a group.",
+          "samplePrompts": [
+            "Create a TOEIC Speaking opinion task about The most challenging part of working in a group. Include a 45-second model answer.",
+            "Generate a teacher-friendly lesson activity for the topic: The most challenging part of working in a group.",
+            "Create vocabulary, useful expressions, and follow-up questions for: The most challenging part of working in a group."
           ],
           "teacherNotes": [
             "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
@@ -5486,7 +5828,7 @@
       "level": "Intermediate",
       "taskType": "Email reply",
       "topicGroup": "Business email writing",
-      "topicCount": 16,
+      "topicCount": 22,
       "topics": [
         {
           "id": "toeic-writing-respond-to-a-written-request-01",
@@ -5791,6 +6133,120 @@
             "Adjust output difficulty based on learner level.",
             "Prioritize natural English, exam format, and clear scoring criteria."
           ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-17",
+          "topicNo": 17,
+          "topicName": "Requesting a refund for a faulty product",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Requesting a refund for a faulty product.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Requesting a refund for a faulty product. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Requesting a refund for a faulty product.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Requesting a refund for a faulty product."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-18",
+          "topicNo": 18,
+          "topicName": "Applying for a job vacancy",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Applying for a job vacancy.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Applying for a job vacancy. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Applying for a job vacancy.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Applying for a job vacancy."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-19",
+          "topicNo": 19,
+          "topicName": "Enquiring about a delayed shipment",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Enquiring about a delayed shipment.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Enquiring about a delayed shipment. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Enquiring about a delayed shipment.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Enquiring about a delayed shipment."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-20",
+          "topicNo": 20,
+          "topicName": "Recommending a colleague for a position",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Recommending a colleague for a position.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Recommending a colleague for a position. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Recommending a colleague for a position.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Recommending a colleague for a position."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-21",
+          "topicNo": 21,
+          "topicName": "Requesting time off from work",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Requesting time off from work.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Requesting time off from work. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Requesting time off from work.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Requesting time off from work."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-respond-to-a-written-request-22",
+          "topicNo": 22,
+          "topicName": "Asking about a training course",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate",
+          "taskType": "Email reply",
+          "description": "Practice topic for TOEIC Writing - Respond to a Written Request: Asking about a training course.",
+          "samplePrompts": [
+            "Create a TOEIC Writing email response task about Asking about a training course. Include request email, requirements, and sample reply.",
+            "Generate a teacher-friendly lesson activity for the topic: Asking about a training course.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Asking about a training course."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
         }
       ],
       "requiresPhoto": false
@@ -5802,7 +6258,7 @@
       "level": "Intermediate to Upper-Intermediate",
       "taskType": "Opinion essay",
       "topicGroup": "Business and daily issues",
-      "topicCount": 16,
+      "topicCount": 26,
       "topics": [
         {
           "id": "toeic-writing-write-an-opinion-essay-01",
@@ -6101,6 +6557,196 @@
             "Create a TOEIC Writing opinion essay question about Cities should limit private cars. Include outline, model answer, and scoring rubric.",
             "Generate a teacher-friendly lesson activity for the topic: Cities should limit private cars.",
             "Create vocabulary, useful expressions, and follow-up questions for: Cities should limit private cars."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-17",
+          "topicNo": 17,
+          "topicName": "Students should take part in physical activities at school",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Students should take part in physical activities at school.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Students should take part in physical activities at school. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Students should take part in physical activities at school.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Students should take part in physical activities at school."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-18",
+          "topicNo": 18,
+          "topicName": "It is better to live with your parents while attending university",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: It is better to live with your parents while attending university.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about It is better to live with your parents while attending university. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: It is better to live with your parents while attending university.",
+            "Create vocabulary, useful expressions, and follow-up questions for: It is better to live with your parents while attending university."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-19",
+          "topicNo": 19,
+          "topicName": "A humorous teaching style helps students learn more effectively",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: A humorous teaching style helps students learn more effectively.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about A humorous teaching style helps students learn more effectively. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: A humorous teaching style helps students learn more effectively.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A humorous teaching style helps students learn more effectively."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-20",
+          "topicNo": 20,
+          "topicName": "A healthy diet is more important than regular exercise",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: A healthy diet is more important than regular exercise.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about A healthy diet is more important than regular exercise. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: A healthy diet is more important than regular exercise.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A healthy diet is more important than regular exercise."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-21",
+          "topicNo": 21,
+          "topicName": "It is better to spend a holiday in one country than to visit several",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: It is better to spend a holiday in one country than to visit several.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about It is better to spend a holiday in one country than to visit several. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: It is better to spend a holiday in one country than to visit several.",
+            "Create vocabulary, useful expressions, and follow-up questions for: It is better to spend a holiday in one country than to visit several."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-22",
+          "topicNo": 22,
+          "topicName": "Job satisfaction matters more than a high salary",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Job satisfaction matters more than a high salary.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Job satisfaction matters more than a high salary. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Job satisfaction matters more than a high salary.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Job satisfaction matters more than a high salary."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-23",
+          "topicNo": 23,
+          "topicName": "Social media does more harm than good",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Social media does more harm than good.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Social media does more harm than good. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Social media does more harm than good.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Social media does more harm than good."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-24",
+          "topicNo": 24,
+          "topicName": "Everyone should learn how to cook their own meals",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Everyone should learn how to cook their own meals.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Everyone should learn how to cook their own meals. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Everyone should learn how to cook their own meals.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Everyone should learn how to cook their own meals."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-25",
+          "topicNo": 25,
+          "topicName": "Living in a big city is better than living in a small town",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Living in a big city is better than living in a small town.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Living in a big city is better than living in a small town. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Living in a big city is better than living in a small town.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Living in a big city is better than living in a small town."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "toeic-writing-write-an-opinion-essay-26",
+          "topicNo": 26,
+          "topicName": "Children should start learning a foreign language at an early age",
+          "topicGroup": "TOEIC sample questions",
+          "level": "Intermediate to Upper-Intermediate",
+          "taskType": "Opinion essay",
+          "description": "Practice topic for TOEIC Writing - Write an Opinion Essay: Children should start learning a foreign language at an early age.",
+          "samplePrompts": [
+            "Create a TOEIC Writing opinion essay question about Children should start learning a foreign language at an early age. Include outline, model answer, and scoring rubric.",
+            "Generate a teacher-friendly lesson activity for the topic: Children should start learning a foreign language at an early age.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Children should start learning a foreign language at an early age."
           ],
           "teacherNotes": [
             "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",

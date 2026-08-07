@@ -1,9 +1,9 @@
 {
   "metadata": {
     "name": "English Learning Topic Bank",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "createdAt": "2026-05-24T15:44:23Z",
-    "updatedAt": "2026-06-12T00:00:00Z",
+    "updatedAt": "2026-08-07T00:00:00Z",
     "description": "Hard-coded topic bank for an English learning app. TOEIC 4 skills and IELTS Speaking/Writing. IELTS Writing sections include real reported exam questions (2025-2026) and predicted trending topics, graded from easy to hard via the per-topic level field.",
     "contentSources": [
       {
@@ -35,6 +35,11 @@
         "name": "AllThingsIELTS — speaking topics and 50 cue cards 2026",
         "url": "https://allthingsielts.com/ielts-speaking/cue-cards-2026",
         "usedFor": "Speaking Part 2 recurring topic list"
+      },
+      {
+        "name": "IELTS Datio — IELTS Speaking Q3 2026 forecast",
+        "url": "https://ieltsdatio.edu.vn/chi-tiet-luyen-thi/forecast-ielts-speaking-2026/",
+        "usedFor": "Reported Speaking Part 2 cue card forecast (Forecast Q3 2026 topic group)"
       },
       {
         "name": "IELTSPodcast — 250+ recent Task 2 questions",
@@ -6429,7 +6434,7 @@
       "level": "Intermediate",
       "taskType": "Long turn speaking",
       "topicGroup": "Personal experience",
-      "topicCount": 16,
+      "topicCount": 49,
       "topics": [
         {
           "id": "ielts-speaking-part-2-cue-card-01",
@@ -6728,6 +6733,633 @@
             "Create an IELTS Speaking Part 2 cue card about A goal you achieved. Include bullet points and a band 6.5 sample answer.",
             "Generate a teacher-friendly lesson activity for the topic: A goal you achieved.",
             "Create vocabulary, useful expressions, and follow-up questions for: A goal you achieved."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-17",
+          "topicNo": 17,
+          "topicName": "A special cake you received",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A special cake you received.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A special cake you received. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A special cake you received.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A special cake you received."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-18",
+          "topicNo": 18,
+          "topicName": "A TV programme you have watched recently",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A TV programme you have watched recently.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A TV programme you have watched recently. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A TV programme you have watched recently.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A TV programme you have watched recently."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-19",
+          "topicNo": 19,
+          "topicName": "An interesting video you saw online",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An interesting video you saw online.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An interesting video you saw online. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An interesting video you saw online.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An interesting video you saw online."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-20",
+          "topicNo": 20,
+          "topicName": "A tall building you like or dislike",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A tall building you like or dislike.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A tall building you like or dislike. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A tall building you like or dislike.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A tall building you like or dislike."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-21",
+          "topicNo": 21,
+          "topicName": "A boring place you have been to",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A boring place you have been to.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A boring place you have been to. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A boring place you have been to.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A boring place you have been to."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-22",
+          "topicNo": 22,
+          "topicName": "An important decision you made",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An important decision you made.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An important decision you made. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An important decision you made.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An important decision you made."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-23",
+          "topicNo": 23,
+          "topicName": "Something you did to learn a foreign language",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: Something you did to learn a foreign language.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about Something you did to learn a foreign language. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Something you did to learn a foreign language.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Something you did to learn a foreign language."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-24",
+          "topicNo": 24,
+          "topicName": "An important river or lake in your country",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An important river or lake in your country.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An important river or lake in your country. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An important river or lake in your country.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An important river or lake in your country."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-25",
+          "topicNo": 25,
+          "topicName": "A city you enjoyed visiting",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A city you enjoyed visiting.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A city you enjoyed visiting. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A city you enjoyed visiting.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A city you enjoyed visiting."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-26",
+          "topicNo": 26,
+          "topicName": "A person who looks after the natural world",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A person who looks after the natural world.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A person who looks after the natural world. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A person who looks after the natural world.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A person who looks after the natural world."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-27",
+          "topicNo": 27,
+          "topicName": "A home you would like to visit but not live in",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A home you would like to visit but not live in.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A home you would like to visit but not live in. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A home you would like to visit but not live in.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A home you would like to visit but not live in."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-28",
+          "topicNo": 28,
+          "topicName": "A time you gave advice to someone",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A time you gave advice to someone.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A time you gave advice to someone. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A time you gave advice to someone.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A time you gave advice to someone."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-29",
+          "topicNo": 29,
+          "topicName": "An event where you did not enjoy the music",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An event where you did not enjoy the music.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An event where you did not enjoy the music. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An event where you did not enjoy the music.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An event where you did not enjoy the music."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-30",
+          "topicNo": 30,
+          "topicName": "A piece of technology (not a phone) you would like to own",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A piece of technology (not a phone) you would like to own.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A piece of technology (not a phone) you would like to own. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A piece of technology (not a phone) you would like to own.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A piece of technology (not a phone) you would like to own."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-31",
+          "topicNo": 31,
+          "topicName": "A person who is good at planning",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A person who is good at planning.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A person who is good at planning. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A person who is good at planning.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A person who is good at planning."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-32",
+          "topicNo": 32,
+          "topicName": "A movie you watched and enjoyed recently",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A movie you watched and enjoyed recently.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A movie you watched and enjoyed recently. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A movie you watched and enjoyed recently.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A movie you watched and enjoyed recently."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-33",
+          "topicNo": 33,
+          "topicName": "An item you spent more on than expected",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An item you spent more on than expected.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An item you spent more on than expected. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An item you spent more on than expected.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An item you spent more on than expected."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-34",
+          "topicNo": 34,
+          "topicName": "A time you felt proud of a family member",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A time you felt proud of a family member.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A time you felt proud of a family member. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A time you felt proud of a family member.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A time you felt proud of a family member."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-35",
+          "topicNo": 35,
+          "topicName": "A person who solved a problem in a clever way",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A person who solved a problem in a clever way.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A person who solved a problem in a clever way. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A person who solved a problem in a clever way.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A person who solved a problem in a clever way."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-36",
+          "topicNo": 36,
+          "topicName": "An occasion when many people were smiling",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An occasion when many people were smiling.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An occasion when many people were smiling. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An occasion when many people were smiling.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An occasion when many people were smiling."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-37",
+          "topicNo": 37,
+          "topicName": "A time you were not allowed to use your mobile phone",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A time you were not allowed to use your mobile phone.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A time you were not allowed to use your mobile phone. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A time you were not allowed to use your mobile phone.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A time you were not allowed to use your mobile phone."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-38",
+          "topicNo": 38,
+          "topicName": "A time you encouraged someone to do something",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A time you encouraged someone to do something.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A time you encouraged someone to do something. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A time you encouraged someone to do something.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A time you encouraged someone to do something."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-39",
+          "topicNo": 39,
+          "topicName": "A time you needed to use your imagination",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A time you needed to use your imagination.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A time you needed to use your imagination. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A time you needed to use your imagination.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A time you needed to use your imagination."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-40",
+          "topicNo": 40,
+          "topicName": "A plan you had to change recently",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A plan you had to change recently.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A plan you had to change recently. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A plan you had to change recently.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A plan you had to change recently."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-41",
+          "topicNo": 41,
+          "topicName": "A new law you would like to introduce in your country",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A new law you would like to introduce in your country.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A new law you would like to introduce in your country. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A new law you would like to introduce in your country.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A new law you would like to introduce in your country."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-42",
+          "topicNo": 42,
+          "topicName": "A perfect job you would like to have in the future",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A perfect job you would like to have in the future.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A perfect job you would like to have in the future. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A perfect job you would like to have in the future.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A perfect job you would like to have in the future."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-43",
+          "topicNo": 43,
+          "topicName": "A famous person you would like to meet",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A famous person you would like to meet.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A famous person you would like to meet. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A famous person you would like to meet.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A famous person you would like to meet."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-44",
+          "topicNo": 44,
+          "topicName": "A food that people eat on special occasions",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A food that people eat on special occasions.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A food that people eat on special occasions. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A food that people eat on special occasions.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A food that people eat on special occasions."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-45",
+          "topicNo": 45,
+          "topicName": "A trip by bike, motorbike or car you would like to take",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A trip by bike, motorbike or car you would like to take.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A trip by bike, motorbike or car you would like to take. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A trip by bike, motorbike or car you would like to take.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A trip by bike, motorbike or car you would like to take."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-46",
+          "topicNo": 46,
+          "topicName": "Something kept in your family for a long time",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: Something kept in your family for a long time.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about Something kept in your family for a long time. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: Something kept in your family for a long time.",
+            "Create vocabulary, useful expressions, and follow-up questions for: Something kept in your family for a long time."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-47",
+          "topicNo": 47,
+          "topicName": "A person who is good at learning languages",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A person who is good at learning languages.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A person who is good at learning languages. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A person who is good at learning languages.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A person who is good at learning languages."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-48",
+          "topicNo": 48,
+          "topicName": "An advertisement with a famous person in it",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: An advertisement with a famous person in it.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about An advertisement with a famous person in it. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: An advertisement with a famous person in it.",
+            "Create vocabulary, useful expressions, and follow-up questions for: An advertisement with a famous person in it."
+          ],
+          "teacherNotes": [
+            "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
+            "Adjust output difficulty based on learner level.",
+            "Prioritize natural English, exam format, and clear scoring criteria."
+          ]
+        },
+        {
+          "id": "ielts-speaking-part-2-cue-card-49",
+          "topicNo": 49,
+          "topicName": "A child who loves drawing or painting",
+          "topicGroup": "Forecast Q3 2026",
+          "level": "Intermediate",
+          "taskType": "Long turn speaking",
+          "description": "Practice topic for IELTS Speaking - Part 2 - Cue Card: A child who loves drawing or painting.",
+          "samplePrompts": [
+            "Create an IELTS Speaking Part 2 cue card about A child who loves drawing or painting. Include bullet points and a band 6.5 sample answer.",
+            "Generate a teacher-friendly lesson activity for the topic: A child who loves drawing or painting.",
+            "Create vocabulary, useful expressions, and follow-up questions for: A child who loves drawing or painting."
           ],
           "teacherNotes": [
             "Use this as a fixed topic seed; let AI generate varied tasks, questions, answers, and feedback.",
